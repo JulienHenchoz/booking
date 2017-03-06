@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Booking
@@ -25,13 +26,14 @@ class Booking
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="subscribe_date", type="integer")
+     * @ORM\Column(name="subscribe_date", type="datetime")
      */
     private $subscribeDate;
 
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(name="first_name", type="string")
      */
     private $firstName;
@@ -39,6 +41,7 @@ class Booking
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(name="last_name", type="string")
      */
     private $lastName;
@@ -46,13 +49,29 @@ class Booking
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true
+     * )
      * @ORM\Column(name="email", type="string")
      */
     private $email;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="phone", type="string")
+     */
+    private $phone;
+
+    /**
      * @var int
      *
+     * @Assert\GreaterThan(
+     *     value = 0,
+     *     message = "The bumber of expected persons must be at least one"
+     * )
      * @ORM\Column(name="nb_expected", type="integer")
      */
     private $nbExpected;
@@ -62,7 +81,7 @@ class Booking
      *
      * @ORM\Column(name="approved", type="boolean")
      */
-    private $approved;
+    private $approved = false;
 
     /**
      *
@@ -76,7 +95,7 @@ class Booking
      *
      * @ORM\Column(name="cancelled", type="boolean")
      */
-    private $cancelled;
+    private $cancelled = false;
 
     /**
      * @return int
@@ -159,6 +178,22 @@ class Booking
     }
 
     /**
+     * @return string
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param string $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
      * @return int
      */
     public function getNbExpected()
@@ -220,5 +255,18 @@ class Booking
     public function setCancelled($cancelled)
     {
         $this->cancelled = $cancelled;
+    }
+
+    /**
+     * Return the publicly visible description for this entity
+     * @return string
+     */
+    public function getLabel() {
+        return sprintf('%s %s - %d personnes - %s',
+            $this->getFirstName(),
+            $this->getLastName(),
+            $this->getNbExpected(),
+            $this->getEvent()->getName()
+        );
     }
 }

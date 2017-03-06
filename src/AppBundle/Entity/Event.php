@@ -132,4 +132,29 @@ class Event
     {
         $this->bookings = $bookings;
     }
+
+
+    /**
+     * Returns the total number of persons expected at this event
+     * @return integer
+     */
+    public function getTotalExpected() {
+        $nbPersons = 0;
+        $bookings = $this->getBookings();
+
+        /** @var Booking $booking */
+        foreach ($bookings as $booking) {
+            $nbPersons += $booking->getNbExpected();
+        }
+        return $nbPersons;
+    }
+
+
+    /**
+     * Return the publicly visible description for this entity
+     * @return string
+     */
+    public function getLabel() {
+        return $this->getName();
+    }
 }

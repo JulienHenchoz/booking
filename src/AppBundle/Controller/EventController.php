@@ -18,7 +18,7 @@ class EventController extends AbstractApiController
 
     /**
      * @param int $id
-     * @Route("/events/get/{id}", name="get_events", defaults={"id" = null})
+     * @Route("/api/events/get/{id}", name="api_get_events", defaults={"id" = null})
      * @return JsonResponse
      */
     public function getAction($id = null)

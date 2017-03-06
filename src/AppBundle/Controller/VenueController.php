@@ -18,7 +18,7 @@ class VenueController extends AbstractApiController
 
     /**
      * @param int $id
-     * @Route("/venues/get/{id}", name="get_venues", defaults={"id" = null})
+     * @Route("/api/venues/get/{id}", name="api_get_venues", defaults={"id" = null})
      * @return JsonResponse
      */
     public function getAction($id = null)

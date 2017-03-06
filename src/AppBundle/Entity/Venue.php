@@ -199,5 +199,11 @@ class Venue
         $this->capacity = $capacity;
     }
 
-
+    /**
+     * Return the publicly visible description for this entity
+     * @return string
+     */
+    public function getLabel() {
+        return $this->getName();
+    }
 }
