@@ -67,7 +67,7 @@ class Venue
     /**
      * @var int
      *
-     * @ORM\Column(name="capacity", type="int")
+     * @ORM\Column(name="capacity", type="integer")
      */
     private $capacity;
 
