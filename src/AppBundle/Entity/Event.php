@@ -5,6 +5,10 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Event
@@ -20,13 +24,17 @@ class Event
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"public", "authenticated"})
      */
     private $id;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="start_date", type="integer")
+     * @ORM\Column(name="start_date", type="date")
+     * @Groups({"public", "authenticated"})
+     * @Assert\Date()
+     * @Assert\NotBlank()
      */
     private $startDate;
 
@@ -35,13 +43,17 @@ class Event
      * @var string
      *
      * @ORM\Column(name="name", type="string")
+     * @Groups({"public", "authenticated"})
+     * @Assert\NotBlank()
      */
     private $name;
 
     /**
      *
      * @ORM\ManyToOne(targetEntity="Venue")
-     * @ORM\JoinColumn(name="venue_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="venue_id", referencedColumnName="id", onDelete="CASCADE")
+     * @Groups({"public", "authenticated"})
+     * @Assert\NotBlank()
      */
     private $venue;
 
@@ -50,6 +62,7 @@ class Event
      *
      * @ORM\OneToMany(targetEntity="Booking", mappedBy="event", cascade={"remove"})
      * @ORM\JoinColumn(name="event_id", referencedColumnName="id", onDelete="CASCADE")
+     * @Groups({"authenticated"})
      */
     protected $bookings;
 
@@ -137,6 +150,7 @@ class Event
     /**
      * Returns the total number of persons expected at this event
      * @return integer
+     * @Groups({"authenticated"})
      */
     public function getTotalExpected() {
         $nbPersons = 0;
@@ -156,5 +170,16 @@ class Event
      */
     public function getLabel() {
         return $this->getName();
+    }
+
+    /**
+     * @Groups({"public", "authenticated"})
+     */
+    public function getBookingsCount() {
+        $bookingsCount = 0;
+        if ($this->getBookings()) {
+            $bookingsCount = $this->getBookings()->count();
+        }
+        return $bookingsCount;
     }
 }

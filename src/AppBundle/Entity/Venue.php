@@ -1,9 +1,11 @@
 <?php
 
 namespace AppBundle\Entity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Venue
@@ -19,6 +21,7 @@ class Venue
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"public", "authenticated"})
      */
     private $id;
 
@@ -26,6 +29,8 @@ class Venue
      * @var string
      *
      * @ORM\Column(name="name", type="string")
+     * @Groups({"public", "authenticated"})
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -33,6 +38,8 @@ class Venue
      * @var string
      *
      * @ORM\Column(name="address", type="string")
+     * @Groups({"public", "authenticated"})
+     * @Assert\NotBlank()
      */
     private $address;
 
@@ -40,27 +47,33 @@ class Venue
      * @var string
      *
      * @ORM\Column(name="phone", type="string")
+     * @Groups({"public", "authenticated"})
+     * @Assert\NotBlank()
      */
     private $phone;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="website", type="string")
+     * @ORM\Column(name="website", type="string", nullable=true)
+     * @Groups({"public", "authenticated"})
+     * @Assert\Url()
      */
     private $website;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="latitude", type="string")
+     * @ORM\Column(name="latitude", type="string", nullable=true)
+     * @Groups({"public", "authenticated"})
      */
     private $latitude;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="longitude", type="string")
+     * @ORM\Column(name="longitude", type="string", nullable=true)
+     * @Groups({"public", "authenticated"})
      */
     private $longitude;
 
@@ -68,8 +81,10 @@ class Venue
      * @var int
      *
      * @ORM\Column(name="capacity", type="integer")
+     * @Groups({"public", "authenticated"})
+     * @Assert\GreaterThan(1)
      */
-    private $capacity;
+    private $capacity = 0;
 
     /**
      * @return int

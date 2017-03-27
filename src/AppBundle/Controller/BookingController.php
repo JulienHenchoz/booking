@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Booking;
 use AppBundle\Repository\BookingRepository;
-use AppBundle\Repository\EventRepository;
 use AppBundle\Repository\VenueRepository;
 use Doctrine\ORM\EntityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -32,6 +31,8 @@ class BookingController extends AbstractApiController
         'email',
         'phone',
         'nbExpected',
+        'subscribeDate',
+        'event',
     ];
 
     /**
@@ -46,6 +47,7 @@ class BookingController extends AbstractApiController
     /**
      * @param int $id
      * @Route("/api/bookings/get/{id}", name="api_get_bookings", defaults={"id" = null})
+     * @Method({"GET"})
      * @return JsonResponse
      */
     public function getAction($id = null)
@@ -54,45 +56,52 @@ class BookingController extends AbstractApiController
     }
 
     /**
-     * Create a booking
-     * @Route("/api/bookings/create/", name="api_create_booking")
+     * @param int $id
+     * @Route("/api/bookings/getByEvent/{id}", name="api_get_bookings_by_event", defaults={"id" = null})
+     * @Method({"GET"})
+     * @return JsonResponse
+     */
+    public function getByEventAction($id = null)
+    {
+        $subscriptions = $this->getRepository()->findBy(['event' => $id], $this->orderBy);
+        return $this->json($subscriptions);
+    }
+
+    /**
+     * @Route("/api/bookings/new/", name="api_new_booking")
      * @Method({"POST"})
      * @param Request $request
      * @return JsonResponse
      */
-    public function createAction(Request $request)
+    public function newAction(Request $request) {
+        return parent::newAction($request);
+    }
+
+    /**
+     * @Route("/api/bookings/delete/{id}", name="api_delete_booking")
+     * @Method({"DELETE"})
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function deleteAction($id) {
+        return parent::deleteAction($id);
+    }
+
+    /**
+     * @param $fieldName
+     * @param $value
+     * @return mixed
+     */
+    public function preProcessField($fieldName, $value)
     {
-        /** @var EventRepository $eventRepository */
-        $eventRepository = $this->getDoctrine()->getRepository('AppBundle:Event');
-        $em = $this->getDoctrine()->getManager();
-        $response = new JsonResponse();
-
-        /** @var Booking $booking */
-        $booking = $this->hydrate(new Booking(), $request);
-
-        /** @var Validator $validator */
-        $validator = $this->get('validator');
-        $errors = $validator->validate($booking);
-
-        if (count($errors) == 0) {
-            $event = $eventRepository->findOneBy(['id' => (int)$request->get('event')]);
-            if ($event) {
-                $booking->setEvent($event);
-                $booking->setSubscribeDate(new \DateTime());
-                $em->persist($booking);
-                $em->flush();
-
-                $response->setStatusCode(JsonResponse::HTTP_OK)
-                    ->setData(['success' => true]);
-            } else {
-                $response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST)
-                    ->setData(self::$messages['invalid_event']);
-            }
-        } else {
-            $response->setData($errors->__toString())
-                ->setStatusCode(JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        switch ($fieldName) {
+            case 'event':
+                $value = $this->getDoctrine()->getRepository('AppBundle:Event')->find($value);
+                break;
+            case 'subscribeDate':
+                $value = new \DateTime();
+                break;
         }
-
-        return $response;
+        return $value;
     }
 }

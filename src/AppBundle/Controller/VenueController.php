@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 use AppBundle\Repository\VenueRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,12 +19,48 @@ class VenueController extends AbstractApiController
     ];
 
     /**
+     * List of fields allowed during create of a record
+     * @var array
+     */
+    protected $createFields = [
+        'name',
+        'address',
+        'phone',
+        'website',
+        'latitude',
+        'longitude',
+        'capacity',
+    ];
+
+    /**
      * @param int $id
      * @Route("/api/venues/get/{id}", name="api_get_venues", defaults={"id" = null})
+     * @Method({"GET"})
      * @return JsonResponse
      */
     public function getAction($id = null)
     {
         return parent::getAction($id);
     }
+
+    /**
+     * @Route("/api/venues/new/", name="api_new_venue")
+     * @Method({"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function newAction(Request $request) {
+        return parent::newAction($request);
+    }
+
+    /**
+     * @Route("/api/venues/delete/{id}", name="api_delete_venue")
+     * @Method({"DELETE"})
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function deleteAction($id) {
+        return parent::deleteAction($id);
+    }
+
 }

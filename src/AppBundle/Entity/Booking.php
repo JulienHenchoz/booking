@@ -5,18 +5,22 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 
 /**
  * Booking
  *
  * @ORM\Table(name="booking")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BookingRepository")
+ * TODO : Define the public and authenticated properties
  */
 class Booking
 {
     /**
      * @var int
-     *
+     * @Groups({"public", "authenticated"})
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -27,6 +31,9 @@ class Booking
      * @var \DateTime
      *
      * @ORM\Column(name="subscribe_date", type="datetime")
+     * @Groups({"public", "authenticated"})
+     * @Assert\Date()
+     * @Assert\NotBlank()
      */
     private $subscribeDate;
 
@@ -35,6 +42,7 @@ class Booking
      *
      * @Assert\NotBlank()
      * @ORM\Column(name="first_name", type="string")
+     * @Groups({"public", "authenticated"})
      */
     private $firstName;
 
@@ -43,6 +51,7 @@ class Booking
      *
      * @Assert\NotBlank()
      * @ORM\Column(name="last_name", type="string")
+     * @Groups({"public", "authenticated"})
      */
     private $lastName;
 
@@ -55,13 +64,15 @@ class Booking
      *     checkMX = true
      * )
      * @ORM\Column(name="email", type="string")
+     * @Groups({"public", "authenticated"})
      */
     private $email;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="phone", type="string")
+     * @ORM\Column(name="phone", type="string", nullable=true)
+     * @Groups({"public", "authenticated"})
      */
     private $phone;
 
@@ -70,16 +81,19 @@ class Booking
      *
      * @Assert\GreaterThan(
      *     value = 0,
-     *     message = "The bumber of expected persons must be at least one"
+     *     message = "The number of expected persons must be at least one"
      * )
-     * @ORM\Column(name="nb_expected", type="integer")
+     * @Assert\NotBlank()
+     * @ORM\Column(name="nb_expected", type="integer", nullable=true)
+     * @Groups({"public", "authenticated"})
      */
     private $nbExpected;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="approved", type="boolean")
+     * @ORM\Column(name="approved", type="boolean", nullable=true)
+     * @Groups({"public", "authenticated"})
      */
     private $approved = false;
 
@@ -87,15 +101,26 @@ class Booking
      *
      * @ORM\ManyToOne(targetEntity="Event")
      * @ORM\JoinColumn(name="event_id", referencedColumnName="id")
+     * @Groups({"public", "authenticated"})
+     * @Assert\NotBlank()
      */
     private $event;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="cancelled", type="boolean")
+     * @ORM\Column(name="cancelled", type="boolean", nullable=true)
+     * @Groups({"public", "authenticated"})
      */
     private $cancelled = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="subscribed_to_newsletter", type="boolean", nullable=true)
+     * @Groups({"public", "authenticated"})
+     */
+    private $subscribedToNewsletter = false;
 
     /**
      * @return int
@@ -269,4 +294,22 @@ class Booking
             $this->getEvent()->getName()
         );
     }
+
+    /**
+     * @return bool
+     */
+    public function isSubscribedToNewsletter(): bool
+    {
+        return $this->subscribedToNewsletter;
+    }
+
+    /**
+     * @param bool $subscribedToNewsletter
+     */
+    public function setSubscribedToNewsletter(bool $subscribedToNewsletter)
+    {
+        $this->subscribedToNewsletter = $subscribedToNewsletter;
+    }
+
+
 }
