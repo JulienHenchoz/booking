@@ -33,6 +33,20 @@ class VenueController extends AbstractApiController
     ];
 
     /**
+     * List of fields allowed during the update of a record
+     * @var array
+     */
+    protected $updateFields = [
+        'name',
+        'address',
+        'phone',
+        'website',
+        'latitude',
+        'longitude',
+        'capacity',
+    ];
+
+    /**
      * @param int $id
      * @Route("/api/venues/get/{id}", name="api_get_venues", defaults={"id" = null})
      * @Method({"GET"})
@@ -51,6 +65,16 @@ class VenueController extends AbstractApiController
      */
     public function newAction(Request $request) {
         return parent::newAction($request);
+    }
+
+    /**
+     * @Route("/api/venues/edit/{id}", name="api_edit_venue")
+     * @Method({"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function editAction($id, Request $request) {
+        return parent::editAction($id, $request);
     }
 
     /**

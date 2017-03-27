@@ -51,8 +51,9 @@ class EventControllerTest extends WebTestCase
 
         $client->request('POST', '/api/events/new/', [
             'name' => 'my event',
-            'venue' => 1,
-            'startDate' => '2017-03-03'
+            'event' => 1,
+            'startDate' => '2017-03-03',
+            'venue' => 1
         ]);
 
 
@@ -89,8 +90,9 @@ class EventControllerTest extends WebTestCase
         // Create a record
         $client->request('POST', '/api/events/new/', [
             'name' => 'my event',
-            'venue' => 1,
-            'startDate' => '2017-03-03'
+            'event' => 1,
+            'startDate' => '2017-03-03',
+            'venue' => 1
         ]);
 
         $decoded = json_decode($client->getResponse()->getContent(), true);
@@ -105,6 +107,82 @@ class EventControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode(), 'Response code should be 200');
     }
 
+    public function testUpdateWithUnexistingRecord() {
+        $client = static::createClient();
+
+        // And update it
+        $client->request('POST', '/api/events/edit/999999', [
+            'name' => 'hello',
+            'capacity' => 50
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertTrue(is_array($decoded), 'Invalid JSON returned');
+        $this->assertArrayHasKey('success', $decoded, 'Success property should be defined');
+        $this->assertFalse($decoded['success'], 'Success property should be false');
+        $this->assertArrayHasKey('errors', $decoded);
+        $this->assertNotEmpty($decoded['errors']);
+        $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
+    }
+
+    public function testUpdateWithInvalidData() {
+        $client = static::createClient();
+
+        // Create a record
+        $client->request('POST', '/api/events/new/', [
+            'name' => 'my event',
+            'venue' => 1,
+            'startDate' => '2017-03-03'
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $recordId = $decoded['object']['id'];
+
+        // And update it
+        $client->request('POST', '/api/events/edit/' . $recordId, [
+            'name' => '',
+            'capacity' => 0
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertTrue(is_array($decoded), 'Invalid JSON returned');
+        $this->assertArrayHasKey('success', $decoded, 'Success property should be defined');
+        $this->assertFalse($decoded['success'], 'Success property should be false');
+        $this->assertArrayHasKey('errors', $decoded);
+        $this->assertNotEmpty($decoded['errors']);
+        $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
+    }
+
+    public function testUpdate() {
+        $client = static::createClient();
+
+        // Create a record
+        $client->request('POST', '/api/events/new/', [
+            'name' => 'my event',
+            'venue' => 1,
+            'startDate' => '2017-03-03'
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $recordId = $decoded['object']['id'];
+
+        // And update it
+        $client->request('POST', '/api/events/edit/' . $recordId, [
+            'name' => 'my event modified',
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('object', $decoded, 'Inserted object should be returned in "object"');
+        $this->assertNotEmpty($decoded['object'], 'Inserted object should be returned in "object"');
+        $this->assertSame('my event modified', $decoded['object']['name']);
+        $this->assertArrayHasKey('success', $decoded, 'Missing success property in response');
+        $this->assertTrue($decoded['success'], 'Property success should be true in response');
+        $this->assertArrayNotHasKey('errors', $decoded, 'There should be no errors in response');
+        $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode(), 'Response code should be 200');
+    }
 
     /**
      * Close doctrine connections to avoid having a 'too many connections'

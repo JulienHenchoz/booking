@@ -110,6 +110,92 @@ class VenueControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode(), 'Response code should be 200');
     }
 
+    public function testUpdateWithUnexistingRecord() {
+        $client = static::createClient();
+
+        // And update it
+        $client->request('POST', '/api/venues/edit/999999', [
+            'name' => 'hello',
+            'capacity' => 50
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertTrue(is_array($decoded), 'Invalid JSON returned');
+        $this->assertArrayHasKey('success', $decoded, 'Success property should be defined');
+        $this->assertFalse($decoded['success'], 'Success property should be false');
+        $this->assertArrayHasKey('errors', $decoded);
+        $this->assertNotEmpty($decoded['errors']);
+        $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
+    }
+
+    public function testUpdateWithInvalidData() {
+        $client = static::createClient();
+
+        // Create a record
+        $client->request('POST', '/api/venues/new/', [
+            'name' => 'my venue',
+            'address' => '5 route du test',
+            'phone' => '12345678',
+            'website' => 'http://www.website.com/',
+            'latitude' => '1.12345',
+            'longitude' => '1.12345',
+            'capacity' => 50,
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $recordId = $decoded['object']['id'];
+
+        // And update it
+        $client->request('POST', '/api/venues/edit/' . $recordId, [
+            'name' => '',
+            'capacity' => 0
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertTrue(is_array($decoded), 'Invalid JSON returned');
+        $this->assertArrayHasKey('success', $decoded, 'Success property should be defined');
+        $this->assertFalse($decoded['success'], 'Success property should be false');
+        $this->assertArrayHasKey('errors', $decoded);
+        $this->assertNotEmpty($decoded['errors']);
+        $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
+    }
+
+    public function testUpdate() {
+        $client = static::createClient();
+
+        // Create a record
+        $client->request('POST', '/api/venues/new/', [
+            'name' => 'my venue',
+            'address' => '5 route du test',
+            'phone' => '12345678',
+            'website' => 'http://www.website.com/',
+            'latitude' => '1.12345',
+            'longitude' => '1.12345',
+            'capacity' => 50,
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $recordId = $decoded['object']['id'];
+
+        // And update it
+        $client->request('POST', '/api/venues/edit/' . $recordId, [
+            'name' => 'my venue modified',
+            'capacity' => 100
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('object', $decoded, 'Inserted object should be returned in "object"');
+        $this->assertNotEmpty($decoded['object'], 'Inserted object should be returned in "object"');
+        $this->assertSame('my venue modified', $decoded['object']['name']);
+        $this->assertArrayHasKey('success', $decoded, 'Missing success property in response');
+        $this->assertTrue($decoded['success'], 'Property success should be true in response');
+        $this->assertArrayNotHasKey('errors', $decoded, 'There should be no errors in response');
+        $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode(), 'Response code should be 200');
+    }
+
     /**
      * Close doctrine connections to avoid having a 'too many connections'
      * message when running many tests
@@ -118,4 +204,5 @@ class VenueControllerTest extends WebTestCase
 
         parent::tearDown();
     }
+
 }

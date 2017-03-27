@@ -40,8 +40,11 @@ class BookingController extends AbstractApiController
      * @var array
      */
     protected $updateFields = [
-        'approved',
-        'cancelled'
+        'firstName',
+        'lastName',
+        'email',
+        'phone',
+        'nbExpected',
     ];
 
     /**
@@ -75,6 +78,17 @@ class BookingController extends AbstractApiController
      */
     public function newAction(Request $request) {
         return parent::newAction($request);
+    }
+
+
+    /**
+     * @Route("/api/bookings/edit/{id}", name="api_edit_booking")
+     * @Method({"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function editAction($id, Request $request) {
+        return parent::editAction($id, $request);
     }
 
     /**

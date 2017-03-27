@@ -60,8 +60,7 @@ abstract class AbstractApiController extends Controller
                 'success' => false,
                 'errors' => 'Record does not exist.'
             ];
-        }
-        else {
+        } else {
             $httpCode = Response::HTTP_OK;
             $this->removeObject($object);
             $resultData = [
@@ -76,8 +75,8 @@ abstract class AbstractApiController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function newAction(Request $request) {
-        $data = $request->request->all();
+    public function newAction(Request $request)
+    {
         /** @var RecursiveValidator $validator */
         $validator = $this->get('validator');
 
@@ -100,8 +99,7 @@ abstract class AbstractApiController extends Controller
                 'errors' => $errors
             ];
             $statusCode = Response::HTTP_BAD_REQUEST;
-        }
-        else {
+        } else {
             // If the validation succeeded, persist the new object
             $this->persistObject($newObject);
             $resultData = [
@@ -114,12 +112,61 @@ abstract class AbstractApiController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function editAction($id, Request $request)
+    {
+        $object = $this->getRepository()->find($id);
+        if ($object) {
+
+            /** @var RecursiveValidator $validator */
+            $validator = $this->get('validator');
+
+            /**
+             * Browse each createField to build the new object
+             */
+            $object = $this->hydrate($object, $this->updateFields, $request);
+
+            $statusCode = Response::HTTP_OK;
+
+            // If the object validation returned some errors, format them into an array and returns then using json
+            $validationResult = $validator->validate($object);
+            $errors = $this->getErrors($validationResult);
+            if (!empty($errors)) {
+                $resultData = [
+                    'success' => false,
+                    'errors' => $errors
+                ];
+                $statusCode = Response::HTTP_BAD_REQUEST;
+            } else {
+                // If the validation succeeded, persist the new object
+                $this->persistObject($object);
+                $resultData = [
+                    'success' => true,
+                    'object' => $this->normalize($object)
+                ];
+            }
+        } else {
+            $statusCode = Response::HTTP_BAD_REQUEST;
+
+            $resultData = [
+                'success' => false,
+                'errors' => ['This record does not exist.']
+            ];
+        }
+        return new JsonResponse($resultData, $statusCode);
+    }
+
+
+    /**
      * Applies any treatment to the given value before returning it
      * @param $fieldName
      * @param $value
      * @return mixed
      */
-    public function preProcessField($fieldName, $value) {
+    public function preProcessField($fieldName, $value)
+    {
         return $value;
     }
 
@@ -127,7 +174,8 @@ abstract class AbstractApiController extends Controller
      * @param ConstraintViolationListInterface $errors
      * @return array
      */
-    public function getErrors($errors) {
+    public function getErrors($errors)
+    {
         $errorsArray = [];
         /** @var ConstraintViolation $error */
         foreach ($errors as $error) {
@@ -191,7 +239,8 @@ abstract class AbstractApiController extends Controller
      * @param $object
      * @return array|object|\Symfony\Component\Serializer\Normalizer\scalar
      */
-    public function normalize($object) {
+    public function normalize($object)
+    {
         // TODO : Add used authentication to decide which group to display : public or authenticated
         return $this->getSerializer()->normalize(
             $object,
@@ -202,7 +251,8 @@ abstract class AbstractApiController extends Controller
         );
     }
 
-    public function getSerializer() {
+    public function getSerializer()
+    {
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $encoder = new JsonEncoder();
         $normalizer = new ObjectNormalizer($classMetadataFactory);
@@ -230,7 +280,8 @@ abstract class AbstractApiController extends Controller
      * Returns the namespaced class name for the current entity
      * @return string
      */
-    public function getEntityClass() {
+    public function getEntityClass()
+    {
         $parts = explode(':', $this->entity);
         return $parts[0] . '\\' . 'Entity' . '\\' . $parts[1];
     }
@@ -238,7 +289,8 @@ abstract class AbstractApiController extends Controller
     /**
      * @param Object $object
      */
-    public function persistObject($object) {
+    public function persistObject($object)
+    {
         $em = $this->getDoctrine()->getManager();
         $em->persist($object);
         $em->flush();
@@ -247,7 +299,8 @@ abstract class AbstractApiController extends Controller
     /**
      * @param Object $object
      */
-    public function removeObject($object) {
+    public function removeObject($object)
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($object);
         $em->flush();
@@ -256,7 +309,8 @@ abstract class AbstractApiController extends Controller
     /**
      * @return ObjectRepository
      */
-    public function getRepository() {
+    public function getRepository()
+    {
         return $this->getDoctrine()->getRepository($this->entity);
     }
 }

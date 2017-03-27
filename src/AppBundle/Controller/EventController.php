@@ -30,6 +30,16 @@ class EventController extends AbstractApiController
     ];
 
     /**
+     * List of fields allowed during create of a record
+     * @var array
+     */
+    protected $updateFields = [
+        'name',
+        'venue',
+        'startDate'
+    ];
+
+    /**
      * @param int $id
      * @Route("/api/events/get/{id}", name="api_get_events", defaults={"id" = null})
      * @Method({"GET"})
@@ -48,6 +58,16 @@ class EventController extends AbstractApiController
      */
     public function newAction(Request $request) {
         return parent::newAction($request);
+    }
+
+    /**
+     * @Route("/api/events/edit/{id}", name="api_edit_event")
+     * @Method({"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function editAction($id, Request $request) {
+        return parent::editAction($id, $request);
     }
 
     /**
