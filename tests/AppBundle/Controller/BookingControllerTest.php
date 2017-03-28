@@ -18,14 +18,50 @@ class BookingControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Create a new record
+        $client->request('POST', '/api/venues/new/', [
+            'name' => 'my venue',
+            'address' => '5 route du test',
+            'phone' => '12345678',
+            'website' => 'http://www.website.com/',
+            'latitude' => '1.12345',
+            'longitude' => '1.12345',
+            'capacity' => 50,
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $venueId = $decoded['object']['id'];
+
+        $client->request('POST', '/api/events/new/', [
+            'name' => 'my event',
+            'startDate' => '2017-03-03',
+            'venue' => $venueId
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $eventId = $decoded['object']['id'];
+
+        // Create a new record
         $client->request('POST', '/api/bookings/new/', [
             'firstName' => 'Julien',
             'lastName' => 'Henchoz',
             'email' => 'jhenchoz@cobweb.ch',
-            'event' => 1,
+            'event' => $eventId,
             'nbExpected' => 2,
             'subscribeDate' => ''
         ]);
+
+        // Create a new record
+        $client->request('POST', '/api/bookings/new/', [
+            'firstName' => 'Julien',
+            'lastName' => 'Henchoz',
+            'email' => 'jhenchoz@cobweb.ch',
+            'event' => $eventId,
+            'nbExpected' => 2,
+            'subscribeDate' => ''
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $recordId = $decoded['object']['id'];
 
         $crawler = $client->request('GET', '/api/bookings/get');
 
@@ -40,6 +76,11 @@ class BookingControllerTest extends WebTestCase
 
         $this->assertArrayNotHasKey('bookings', $decoded[0], 'Bookings property should not be visible in public');
         $this->assertArrayNotHasKey('totalExpected', $decoded[0]);
+
+        $client->request('DELETE', '/api/bookings/delete/' . $recordId);
+        $client->request('DELETE', '/api/events/delete/' . $eventId);
+        $client->request('DELETE', '/api/venues/delete/' . $venueId);
+
     }
 
     public function testGetByEvent()
@@ -47,16 +88,52 @@ class BookingControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Create a new record
+        $client->request('POST', '/api/venues/new/', [
+            'name' => 'my venue',
+            'address' => '5 route du test',
+            'phone' => '12345678',
+            'website' => 'http://www.website.com/',
+            'latitude' => '1.12345',
+            'longitude' => '1.12345',
+            'capacity' => 50,
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $venueId = $decoded['object']['id'];
+
+        $client->request('POST', '/api/events/new/', [
+            'name' => 'my event',
+            'startDate' => '2017-03-03',
+            'venue' => $venueId
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $eventId = $decoded['object']['id'];
+
+        // Create a new record
         $client->request('POST', '/api/bookings/new/', [
             'firstName' => 'Julien',
             'lastName' => 'Henchoz',
             'email' => 'jhenchoz@cobweb.ch',
-            'event' => 1,
+            'event' => $eventId,
             'nbExpected' => 2,
             'subscribeDate' => ''
         ]);
 
-        $crawler = $client->request('GET', '/api/bookings/getByEvent/1');
+        // Create a new record
+        $client->request('POST', '/api/bookings/new/', [
+            'firstName' => 'Julien',
+            'lastName' => 'Henchoz',
+            'email' => 'jhenchoz@cobweb.ch',
+            'event' => $eventId,
+            'nbExpected' => 2,
+            'subscribeDate' => ''
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $recordId = $decoded['object']['id'];
+
+        $crawler = $client->request('GET', '/api/bookings/getByEvent/' . $eventId);
 
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
 
@@ -69,6 +146,10 @@ class BookingControllerTest extends WebTestCase
 
         $this->assertArrayNotHasKey('bookings', $decoded[0], 'Bookings property should not be visible in public');
         $this->assertArrayNotHasKey('totalExpected', $decoded[0]);
+
+        $client->request('DELETE', '/api/bookings/delete/' . $recordId);
+        $client->request('DELETE', '/api/events/delete/' . $eventId);
+        $client->request('DELETE', '/api/venues/delete/' . $venueId);
     }
 
     public function testNewWithInvalidData() {
@@ -87,17 +168,50 @@ class BookingControllerTest extends WebTestCase
 
     public function testNew() {
         $client = static::createClient();
+        // Create a new record
+        $client->request('POST', '/api/venues/new/', [
+            'name' => 'my venue',
+            'address' => '5 route du test',
+            'phone' => '12345678',
+            'website' => 'http://www.website.com/',
+            'latitude' => '1.12345',
+            'longitude' => '1.12345',
+            'capacity' => 50,
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $venueId = $decoded['object']['id'];
+
+        $client->request('POST', '/api/events/new/', [
+            'name' => 'my event',
+            'startDate' => '2017-03-03',
+            'venue' => $venueId
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $eventId = $decoded['object']['id'];
+
+        // Create a new record
+        $client->request('POST', '/api/bookings/new/', [
+            'firstName' => 'Julien',
+            'lastName' => 'Henchoz',
+            'email' => 'jhenchoz@cobweb.ch',
+            'event' => $eventId,
+            'nbExpected' => 2,
+            'subscribeDate' => ''
+        ]);
 
         $client->request('POST', '/api/bookings/new/', [
             'firstName' => 'Julien',
             'lastName' => 'Henchoz',
             'email' => 'jhenchoz@cobweb.ch',
-            'event' => 1,
+            'event' => $eventId,
             'nbExpected' => 2,
             'subscribeDate' => ''
         ]);
 
         $decoded = json_decode($client->getResponse()->getContent(), true);
+        $recordId = $decoded['object']['id'];
 
         $this->assertArrayHasKey('object', $decoded, 'Inserted object should be returned in "object"');
         $this->assertNotEmpty($decoded['object'], 'Inserted object should be returned in "object"');
@@ -105,6 +219,10 @@ class BookingControllerTest extends WebTestCase
         $this->assertTrue($decoded['success'], 'Property success should be true in response');
         $this->assertArrayNotHasKey('errors', $decoded, 'There should be no errors in response');
         $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode(), 'Response code should be 200');
+
+        $client->request('DELETE', '/api/bookings/delete/' . $recordId);
+        $client->request('DELETE', '/api/events/delete/' . $eventId);
+        $client->request('DELETE', '/api/venues/delete/' . $venueId);
     }
 
     public function testDeleteUnknownObject() {
@@ -124,12 +242,35 @@ class BookingControllerTest extends WebTestCase
     public function testDelete() {
         $client = static::createClient();
 
+        // Create a new record
+        $client->request('POST', '/api/venues/new/', [
+            'name' => 'my venue',
+            'address' => '5 route du test',
+            'phone' => '12345678',
+            'website' => 'http://www.website.com/',
+            'latitude' => '1.12345',
+            'longitude' => '1.12345',
+            'capacity' => 50,
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $venueId = $decoded['object']['id'];
+
+        $client->request('POST', '/api/events/new/', [
+            'name' => 'my event',
+            'startDate' => '2017-03-03',
+            'venue' => $venueId
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $eventId = $decoded['object']['id'];
+
         // Create a record
         $client->request('POST', '/api/bookings/new/', [
             'firstName' => 'Julien',
             'lastName' => 'Henchoz',
             'email' => 'jhenchoz@cobweb.ch',
-            'event' => 1,
+            'event' => $eventId,
             'nbExpected' => 2,
             'subscribeDate' => ''
         ]);
@@ -144,6 +285,9 @@ class BookingControllerTest extends WebTestCase
         $this->assertTrue($decoded['success'], 'Property success should be true in response');
         $this->assertArrayNotHasKey('errors', $decoded, 'There should be no errors in response');
         $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode(), 'Response code should be 200');
+
+        $client->request('DELETE', '/api/events/delete/' . $eventId);
+        $client->request('DELETE', '/api/venues/delete/' . $venueId);
     }
 
 

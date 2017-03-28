@@ -17,6 +17,20 @@ class VenueControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
+        // Create a new record
+        $client->request('POST', '/api/venues/new/', [
+            'name' => 'my venue',
+            'address' => '5 route du test',
+            'phone' => '12345678',
+            'website' => 'http://www.website.com/',
+            'latitude' => '1.12345',
+            'longitude' => '1.12345',
+            'capacity' => 50,
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $venueId = $decoded['object']['id'];
+
         $crawler = $client->request('GET', '/api/venues/get');
 
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
@@ -29,6 +43,8 @@ class VenueControllerTest extends WebTestCase
 
         $this->assertArrayNotHasKey('bookings', $decoded[0], 'Bookings property should not be visible in public');
         $this->assertArrayNotHasKey('totalExpected', $decoded[0]);
+
+        $client->request('DELETE', '/api/venues/delete/' . $venueId);
     }
 
     public function testNewWithInvalidData() {
@@ -68,6 +84,9 @@ class VenueControllerTest extends WebTestCase
         $this->assertTrue($decoded['success'], 'Property success should be true in response');
         $this->assertArrayNotHasKey('errors', $decoded, 'There should be no errors in response');
         $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode(), 'Response code should be 200');
+
+        $venueId = $decoded['object']['id'];
+        $client->request('DELETE', '/api/venues/delete/' . $venueId);
     }
 
     public function testDeleteUnknownObject() {
@@ -160,6 +179,9 @@ class VenueControllerTest extends WebTestCase
         $this->assertArrayHasKey('errors', $decoded);
         $this->assertNotEmpty($decoded['errors']);
         $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
+
+        $client->request('DELETE', '/api/venues/delete/' . $recordId);
+
     }
 
     public function testUpdate() {
@@ -194,6 +216,9 @@ class VenueControllerTest extends WebTestCase
         $this->assertTrue($decoded['success'], 'Property success should be true in response');
         $this->assertArrayNotHasKey('errors', $decoded, 'There should be no errors in response');
         $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode(), 'Response code should be 200');
+
+        $client->request('DELETE', '/api/venues/delete/' . $recordId);
+
     }
 
     /**
