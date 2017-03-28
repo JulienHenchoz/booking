@@ -17,6 +17,16 @@ class BookingControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
+        // Create a new record
+        $client->request('POST', '/api/bookings/new/', [
+            'firstName' => 'Julien',
+            'lastName' => 'Henchoz',
+            'email' => 'jhenchoz@cobweb.ch',
+            'event' => 1,
+            'nbExpected' => 2,
+            'subscribeDate' => ''
+        ]);
+
         $crawler = $client->request('GET', '/api/bookings/get');
 
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
@@ -35,6 +45,16 @@ class BookingControllerTest extends WebTestCase
     public function testGetByEvent()
     {
         $client = static::createClient();
+
+        // Create a new record
+        $client->request('POST', '/api/bookings/new/', [
+            'firstName' => 'Julien',
+            'lastName' => 'Henchoz',
+            'email' => 'jhenchoz@cobweb.ch',
+            'event' => 1,
+            'nbExpected' => 2,
+            'subscribeDate' => ''
+        ]);
 
         $crawler = $client->request('GET', '/api/bookings/getByEvent/1');
 
