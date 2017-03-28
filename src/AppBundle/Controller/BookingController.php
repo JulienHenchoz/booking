@@ -13,6 +13,10 @@ use Symfony\Component\Config\Tests\Util\Validator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class BookingController
+ * @package AppBundle\Controller
+ */
 class BookingController extends AbstractApiController
 {
     protected $entity = 'AppBundle:Booking';

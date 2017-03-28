@@ -6,6 +6,10 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class EventControllerTest
+ * @package Tests\AppBundle\Controller
+ */
 class EventControllerTest extends WebTestCase
 {
     public function setUp() {
@@ -33,7 +37,6 @@ class EventControllerTest extends WebTestCase
 
         $client->request('POST', '/api/events/new/', [
             'name' => 'my event',
-            'event' => 1,
             'startDate' => '2017-03-03',
             'venue' => $venueId
         ]);
@@ -56,7 +59,112 @@ class EventControllerTest extends WebTestCase
 
         $client->request('DELETE', '/api/events/delete/' . $recordId);
         $client->request('DELETE', '/api/venues/delete/' . $venueId);
+    }
 
+    public function testGetNextEvents()
+    {
+        $client = static::createClient();
+
+        // Create a new record
+        $client->request('POST', '/api/venues/new/', [
+            'name' => 'my venue',
+            'address' => '5 route du test',
+            'phone' => '12345678',
+            'website' => 'http://www.website.com/',
+            'latitude' => '1.12345',
+            'longitude' => '1.12345',
+            'capacity' => 50,
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $venueId = $decoded['object']['id'];
+
+        // Create two events, only one should be returned
+        $client->request('POST', '/api/events/new/', [
+            'name' => 'my event next',
+            'startDate' => date('Y-m-d', strtotime('next week')),
+            'venue' => $venueId
+        ]);
+
+        $client->request('POST', '/api/events/new/', [
+            'name' => 'my event past',
+            'startDate' => date('Y-m-d', strtotime('last week')),
+            'venue' => $venueId
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $recordId = $decoded['object']['id'];
+
+        $crawler = $client->request('GET', '/api/events/getNext');
+
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertTrue(is_array($decoded), 'Invalid JSON returned');
+        $this->assertNotEmpty($decoded, 'Returned data is empty');
+        $this->assertEquals('my event next', $decoded[0]['name']);
+        $this->assertNotEmpty($decoded[0]['id'], 'Missing ID field in result');
+
+
+        $this->assertArrayNotHasKey('bookings', $decoded[0], 'Bookings property should not be visible in public');
+        $this->assertArrayNotHasKey('totalExpected', $decoded[0]);
+
+        $client->request('DELETE', '/api/events/delete/' . $recordId);
+        $client->request('DELETE', '/api/venues/delete/' . $venueId);
+    }
+
+    public function testGetPastEvents()
+    {
+        $client = static::createClient();
+
+        // Create a new record
+        $client->request('POST', '/api/venues/new/', [
+            'name' => 'my venue',
+            'address' => '5 route du test',
+            'phone' => '12345678',
+            'website' => 'http://www.website.com/',
+            'latitude' => '1.12345',
+            'longitude' => '1.12345',
+            'capacity' => 50,
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $venueId = $decoded['object']['id'];
+
+        // Create two events, only one should be returned
+        $client->request('POST', '/api/events/new/', [
+            'name' => 'my event next',
+            'startDate' => date('Y-m-d', strtotime('next week')),
+            'venue' => $venueId
+        ]);
+
+        $client->request('POST', '/api/events/new/', [
+            'name' => 'my event past',
+            'startDate' => date('Y-m-d', strtotime('last week')),
+            'venue' => $venueId
+        ]);
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+        $recordId = $decoded['object']['id'];
+
+        $crawler = $client->request('GET', '/api/events/getPast');
+
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+
+        $decoded = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertTrue(is_array($decoded), 'Invalid JSON returned');
+        $this->assertNotEmpty($decoded, 'Returned data is empty');
+        $this->assertEquals('my event past', $decoded[0]['name']);
+        $this->assertNotEmpty($decoded[0]['id'], 'Missing ID field in result');
+
+
+        $this->assertArrayNotHasKey('bookings', $decoded[0], 'Bookings property should not be visible in public');
+        $this->assertArrayNotHasKey('totalExpected', $decoded[0]);
+
+        $client->request('DELETE', '/api/events/delete/' . $recordId);
+        $client->request('DELETE', '/api/venues/delete/' . $venueId);
     }
 
     public function testNewWithInvalidData() {

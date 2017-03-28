@@ -10,6 +10,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class VenueController
+ * @package AppBundle\Controller
+ */
 class VenueController extends AbstractApiController
 {
     protected $entity = 'AppBundle:Venue';

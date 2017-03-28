@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 use AppBundle\Entity\Event;
+use AppBundle\Repository\EventRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Repository\VenueRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -11,6 +12,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\RecursiveValidator;
 
+/**
+ * Class EventController
+ * @package AppBundle\Controller
+ */
 class EventController extends AbstractApiController
 {
     protected $entity = 'AppBundle:Event';
@@ -48,6 +53,28 @@ class EventController extends AbstractApiController
     public function getAction($id = null)
     {
         return parent::getAction($id);
+    }
+
+    /**
+     * @Route("/api/events/getPast", name="api_get_past_events")
+     * @Method({"GET"})
+     * @return JsonResponse
+     */
+    public function getPastAction() {
+        /** @var EventRepository $repository */
+        $repository = $this->getRepository();
+        return $this->json($repository->findPast());
+    }
+
+    /**
+     * @Route("/api/events/getNext", name="api_get_next_events")
+     * @Method({"GET"})
+     * @return JsonResponse
+     */
+    public function getNextAction() {
+        /** @var EventRepository $repository */
+        $repository = $this->getRepository();
+        return $this->json($repository->findNext());
     }
 
     /**
