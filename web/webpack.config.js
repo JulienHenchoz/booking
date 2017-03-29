@@ -1,9 +1,9 @@
 module.exports = {
-    context: __dirname + '/bundles/react',
-    entry: './app.js',
+    context: __dirname + '/app',
+    entry: './client.js',
     output: {
-        filename: 'app.js',
-        path: __dirname + '/bundles/react/dist',
+        filename: 'client.js',
+        path: __dirname + '/dist/',
     },
     module: {
         loaders: [{
