@@ -11360,40 +11360,36 @@ var MainMenu = function (_React$Component) {
         key: "render",
         value: function render() {
             return _react2.default.createElement(
-                "div",
-                { className: "container" },
+                _reactMaterialize.Row,
+                null,
                 _react2.default.createElement(
-                    _reactMaterialize.Row,
-                    null,
+                    _reactMaterialize.Navbar,
+                    { brand: "Booking", right: true },
                     _react2.default.createElement(
-                        _reactMaterialize.Navbar,
-                        { brand: "Booking", right: true },
+                        _reactMaterialize.NavItem,
+                        { href: "#" },
                         _react2.default.createElement(
-                            _reactMaterialize.NavItem,
-                            { href: "#" },
-                            _react2.default.createElement(
-                                _reactMaterialize.Icon,
-                                null,
-                                "location_on"
-                            )
-                        ),
+                            _reactMaterialize.Icon,
+                            null,
+                            "location_on"
+                        )
+                    ),
+                    _react2.default.createElement(
+                        _reactMaterialize.NavItem,
+                        { href: "#" },
                         _react2.default.createElement(
-                            _reactMaterialize.NavItem,
-                            { href: "#" },
-                            _react2.default.createElement(
-                                _reactMaterialize.Icon,
-                                null,
-                                "movie"
-                            )
-                        ),
+                            _reactMaterialize.Icon,
+                            null,
+                            "movie"
+                        )
+                    ),
+                    _react2.default.createElement(
+                        _reactMaterialize.NavItem,
+                        { href: "#" },
                         _react2.default.createElement(
-                            _reactMaterialize.NavItem,
-                            { href: "#" },
-                            _react2.default.createElement(
-                                _reactMaterialize.Icon,
-                                null,
-                                "email"
-                            )
+                            _reactMaterialize.Icon,
+                            null,
+                            "email"
                         )
                     )
                 )
@@ -28712,6 +28708,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(1);
@@ -28720,9 +28718,15 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(38);
 
+var _reactMaterialize = __webpack_require__(240);
+
 var _venuesActions = __webpack_require__(271);
 
 var actions = _interopRequireWildcard(_venuesActions);
+
+var _VenueListItem = __webpack_require__(273);
+
+var _VenueListItem2 = _interopRequireDefault(_VenueListItem);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -28747,26 +28751,63 @@ var VenuesList = function (_React$Component) {
     function VenuesList(props) {
         _classCallCheck(this, VenuesList);
 
-        var _this = _possibleConstructorReturn(this, (VenuesList.__proto__ || Object.getPrototypeOf(VenuesList)).call(this, props));
-
-        _this.state = { shownPlaylistIndex: null };
-        return _this;
+        return _possibleConstructorReturn(this, (VenuesList.__proto__ || Object.getPrototypeOf(VenuesList)).call(this, props));
     }
 
     _createClass(VenuesList, [{
         key: "componentWillMount",
         value: function componentWillMount() {
-            var dispatch = this.props.dispatch;
-            dispatch(actions.fetchVenues());
+            this.props.dispatch(actions.fetchVenues());
         }
     }, {
         key: "render",
         value: function render() {
-            console.log(this);
+            var items = [];
+
+            this.props.items.forEach(function (venue) {
+                items.push(_react2.default.createElement(_VenueListItem2.default, _extends({ key: venue.id }, venue)));
+            });
             return _react2.default.createElement(
-                "div",
+                _reactMaterialize.Table,
                 null,
-                this.state
+                _react2.default.createElement(
+                    "thead",
+                    null,
+                    _react2.default.createElement(
+                        "tr",
+                        null,
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "Nom"
+                        ),
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "Capacit\xE9"
+                        ),
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "Adresse"
+                        ),
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "T\xE9l\xE9phone"
+                        ),
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "Site web"
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    "tbody",
+                    null,
+                    items
+                )
             );
         }
     }]);
@@ -28776,7 +28817,9 @@ var VenuesList = function (_React$Component) {
 
 VenuesList.propTypes = propTypes;
 
-exports.default = (0, _reactRedux.connect)()(VenuesList);
+exports.default = (0, _reactRedux.connect)(function (store) {
+    return Object.assign({}, store.venues);
+})(VenuesList);
 
 /***/ }),
 /* 270 */
@@ -28801,9 +28844,9 @@ var _MainMenu = __webpack_require__(108);
 
 var _MainMenu2 = _interopRequireDefault(_MainMenu);
 
-var _VenuesList = __webpack_require__(269);
+var _VenuePage = __webpack_require__(272);
 
-var _VenuesList2 = _interopRequireDefault(_VenuesList);
+var _VenuePage2 = _interopRequireDefault(_VenuePage);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28828,7 +28871,7 @@ var App = function (_React$Component) {
             return _react2.default.createElement(
                 "div",
                 null,
-                _react2.default.createElement(_VenuesList2.default, null)
+                _react2.default.createElement(_VenuePage2.default, null)
             );
         }
     }]);
@@ -28898,6 +28941,150 @@ function fetchVenues() {
         });
     };
 }
+
+/***/ }),
+/* 272 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(38);
+
+var _reactMaterialize = __webpack_require__(240);
+
+var _VenuesList = __webpack_require__(269);
+
+var _VenuesList2 = _interopRequireDefault(_VenuesList);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var VenuePage = function (_React$Component) {
+    _inherits(VenuePage, _React$Component);
+
+    function VenuePage() {
+        _classCallCheck(this, VenuePage);
+
+        return _possibleConstructorReturn(this, (VenuePage.__proto__ || Object.getPrototypeOf(VenuePage)).apply(this, arguments));
+    }
+
+    _createClass(VenuePage, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                _reactMaterialize.Row,
+                null,
+                _react2.default.createElement(
+                    _reactMaterialize.Col,
+                    { s: 12 },
+                    _react2.default.createElement(_VenuesList2.default, null)
+                )
+            );
+        }
+    }]);
+
+    return VenuePage;
+}(_react2.default.Component);
+
+exports.default = (0, _reactRedux.connect)()(VenuePage);
+
+/***/ }),
+/* 273 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(38);
+
+var _venuesActions = __webpack_require__(271);
+
+var actions = _interopRequireWildcard(_venuesActions);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var VenueListItem = function (_React$Component) {
+    _inherits(VenueListItem, _React$Component);
+
+    function VenueListItem(props) {
+        _classCallCheck(this, VenueListItem);
+
+        return _possibleConstructorReturn(this, (VenueListItem.__proto__ || Object.getPrototypeOf(VenueListItem)).call(this, props));
+    }
+
+    _createClass(VenueListItem, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "tr",
+                null,
+                _react2.default.createElement(
+                    "td",
+                    null,
+                    this.props.name
+                ),
+                _react2.default.createElement(
+                    "td",
+                    null,
+                    this.props.capacity
+                ),
+                _react2.default.createElement(
+                    "td",
+                    null,
+                    this.props.address
+                ),
+                _react2.default.createElement(
+                    "td",
+                    null,
+                    this.props.phone
+                ),
+                _react2.default.createElement(
+                    "td",
+                    null,
+                    this.props.website
+                )
+            );
+        }
+    }]);
+
+    return VenueListItem;
+}(_react2.default.Component);
+
+exports.default = VenueListItem;
 
 /***/ })
 /******/ ]);
