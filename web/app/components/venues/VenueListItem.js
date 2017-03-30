@@ -1,5 +1,7 @@
 import React, { PropTypes } from "react"
 import {connect} from "react-redux"
+import {CollectionItem, Icon} from 'react-materialize';
+import {Link} from 'react-router-dom';
 
 import * as actions from '../../actions/venuesActions';
 
@@ -10,13 +12,9 @@ export default class VenueListItem extends React.Component {
 
     render() {
         return (
-            <tr>
-                <td>{this.props.name}</td>
-                <td>{this.props.capacity}</td>
-                <td>{this.props.address}</td>
-                <td>{this.props.phone}</td>
-                <td>{this.props.website}</td>
-            </tr>
+            <Link to={'/venue/' + this.props.id} className="collection-item" href="#">
+                {this.props.name}
+            </Link>
         );
     }
 }

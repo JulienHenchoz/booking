@@ -1,0 +1,52 @@
+"use strict";
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+var convertToCSSPrefix_1 = require("./utils/convertToCSSPrefix");
+;
+function transit(value, duration, timing, delay) {
+    var ret = [value];
+    ret.transitParams = {
+        duration: duration,
+        timing: timing || "ease",
+        delay: delay !== undefined ? delay : 0,
+    };
+    return ret;
+}
+exports.transit = transit;
+var nonWebkitPrefixRegexp = /^-(moz|ms|o)-/;
+function resolveTransit(style, extraDelay) {
+    if (extraDelay === void 0) { extraDelay = 0; }
+    var transitionList = [];
+    var propertyList = [];
+    var processedStyle = __assign({}, style);
+    for (var property in style) {
+        var val = style[property];
+        if (Array.isArray(val) && val.transitParams) {
+            var _a = val.transitParams, duration = _a.duration, timing = _a.timing, delay = _a.delay;
+            var name_1 = convertToCSSPrefix_1.default(property);
+            var transition = name_1 + " " + duration + "ms " + timing + " " + (delay + extraDelay) + "ms";
+            transitionList.push(transition);
+            propertyList.push(name_1);
+            processedStyle[property] = val[0];
+        }
+    }
+    if (transitionList.length > 0) {
+        processedStyle.transition = transitionList.join(", ");
+        processedStyle.WebkitTransition = transitionList.
+            filter(function (item, i) {
+            return !propertyList[i].match(nonWebkitPrefixRegexp) &&
+                propertyList.indexOf("-webkit-" + propertyList[i]) < 0;
+        }).
+            join(", ");
+    }
+    return processedStyle;
+}
+exports.resolveTransit = resolveTransit;
+
+//# sourceMappingURL=transit.js.map

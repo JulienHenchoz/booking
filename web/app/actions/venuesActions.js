@@ -30,7 +30,6 @@ export function receiveVenues(items) {
     };
 }
 
-
 export function fetchVenues() {
     return dispatch =>
     fetch('/api/venues/get')
@@ -41,4 +40,5 @@ export function fetchVenues() {
             dispatch(receiveVenues(json));
         });
 }
+
 

@@ -1,6 +1,7 @@
 import React, {PropTypes} from "react"
 import {connect} from "react-redux"
-import {Table} from 'react-materialize';
+import {Collection, Icon} from 'react-materialize';
+import {CSSTransition, transit} from "react-css-transition";
 
 import * as actions from '../../actions/venuesActions';
 
@@ -10,12 +11,16 @@ const propTypes = {
     dispatch: PropTypes.func.isRequired,
     items: PropTypes.array,
     fetching: PropTypes.bool,
-    error: PropTypes.string
+    error: PropTypes.string,
+    active: PropTypes.bool
 };
 
 class VenuesList extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            active: true
+        };
     }
 
     componentWillMount() {
@@ -28,24 +33,15 @@ class VenuesList extends React.Component {
         this.props.items.forEach(function (venue) {
             items.push(<VenueListItem key={venue.id} {...venue} />);
         });
+
         return (
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Capacité</th>
-                        <th>Adresse</th>
-                        <th>Téléphone</th>
-                        <th>Site web</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div>
+                <h3><Icon className="small">location_on</Icon> Liste des salles</h3>
+                <Collection>
                     {items}
-                </tbody>
-            </Table>
+                </Collection>
+            </div>
         )
-
-
     }
 }
 
