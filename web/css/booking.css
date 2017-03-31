@@ -1,0 +1,25 @@
+@media (min-width: 767px) {
+    .side-nav {
+        transform: translateX(0px) !important;
+    }
+    main {
+        padding-left: 350px;
+        padding-right: 50px;
+    }
+}
+
+@media (max-width: 767px) {
+    main {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+.side-nav .userView {
+    min-height: 300px;
+}
+
+.side-nav .background img {
+    max-width: 100%;
+    height: auto;
+}

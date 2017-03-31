@@ -1,18 +1,23 @@
 import React from "react"
 import {connect} from "react-redux"
-import {Navbar, NavItem, Icon, Row} from 'react-materialize';
+import {Icon, SideNav, SideNavItem, Button} from 'react-materialize';
 
 export default class MainMenu extends React.Component {
 
     render() {
         return (
-            <Row>
-                <Navbar brand="Booking" right>
-                    <NavItem href="#"><Icon>location_on</Icon></NavItem>
-                    <NavItem href="#"><Icon>movie</Icon></NavItem>
-                    <NavItem href="#"><Icon>email</Icon></NavItem>
-                </Navbar>
-            </Row>
+            <div>
+                <SideNav options={{ draggable: true }} trigger={ <div className="show-on-medium-and-down"><Icon>menu</Icon></div> }>
+
+                    <SideNavItem userView
+                        user={{
+                            background: 'img/logo.png',
+                        }} />
+                    <SideNavItem href="#" icon="location_on">Salles</SideNavItem>
+                    <SideNavItem href="#" icon="movie">Evénements</SideNavItem>
+                    <SideNavItem href="#" icon="email">Réservations</SideNavItem>
+                </SideNav>
+            </div>
         );
     }
 }

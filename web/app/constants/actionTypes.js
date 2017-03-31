@@ -5,3 +5,4 @@ export const FETCH_VENUES = 'FETCH_VENUES';
 export const FETCH_VENUE = 'FETCH_VENUE';
 export const RECEIVE_VENUES = 'RECEIVE_VENUES';
 export const RECEIVE_VENUE = 'RECEIVE_VENUE';
+export const LOADING_VENUES = 'LOADING_VENUES';
