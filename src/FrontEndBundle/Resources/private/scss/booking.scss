@@ -1,0 +1,54 @@
+@import './materialize/materialize';
+
+$sideBarWidth: 300px;
+@media (min-width: 767px) {
+  .side-nav {
+    transform: translateX(0px) !important;
+  }
+  main {
+    padding-left: $sideBarWidth - 1;
+  }
+  .navbar-fixed nav {
+    right: 0;
+    left: $sideBarWidth;
+    width: auto;
+  }
+
+}
+
+.side-nav {
+  .userView {
+    min-height: 300px;
+  }
+
+  .background img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.collection-item {
+  .collection-image {
+    min-width: 90px;
+  }
+  p {
+    color: #222;
+  }
+}
+
+ul.collection {
+  margin-top: 0;
+}
+
+.preloader-wrapper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -45px;
+  margin-left: 150px;
+}
+
+nav {
+  background-color: $secondary-color;
+}
+

@@ -87,6 +87,15 @@ class Venue
     private $capacity = 0;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string")
+     * @Groups({"public", "authenticated"})
+     */
+    private $image;
+
+
+    /**
      * @return int
      */
     public function getId()
@@ -220,5 +229,21 @@ class Venue
      */
     public function getLabel() {
         return $this->getName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getImage(): string
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param string $image
+     */
+    public function setImage(string $image)
+    {
+        $this->image = $image;
     }
 }

@@ -1,10 +1,11 @@
 module.exports = {
-    context: __dirname + '/app',
+    context: __dirname + '/../src/FrontEndBundle/Resources/private/app',
     entry: './client.js',
     output: {
         filename: 'client.js',
         path: __dirname + '/dist/',
     },
+    watch: true,
     module: {
         loaders: [{
             test: /\.js$/,
