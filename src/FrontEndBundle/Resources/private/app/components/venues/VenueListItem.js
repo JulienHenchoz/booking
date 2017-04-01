@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react"
-import { Row, Col } from 'react-materialize';
+import { Row, Col, Button } from 'react-materialize';
 import {connect} from "react-redux"
 import {CollectionItem, Icon} from 'react-materialize';
 import {Link} from 'react-router-dom';

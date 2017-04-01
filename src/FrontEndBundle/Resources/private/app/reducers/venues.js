@@ -4,7 +4,8 @@ const initialState = {
     items: [],
     item: {},
     fetching: false,
-    error: null
+    error: null,
+    formErrors: []
 };
 
 export default function venues(state = initialState, action) {
@@ -12,24 +13,40 @@ export default function venues(state = initialState, action) {
 
     switch (action.type) {
         case types.ADD_VENUE:
-            return newState;
+            break;
         case types.EDIT_VENUE:
             newState.item[action.property] = action.payload;
-            return newState;
+            break;
         case types.REMOVE_VENUE:
-            return state;
+            break;
         case types.RECEIVE_VENUE:
             newState.item = action.payload;
             newState.fetching = false;
-            return newState;
+            break;
         case types.RECEIVE_VENUES:
             newState.items = action.payload;
             newState.fetching = false;
-            return newState;
+            break;
         case types.LOADING_VENUES:
             newState.fetching = true;
-            return newState;
-        default:
-            return state;
+            break;
+        case types.SAVING_VENUE:
+            newState.fetching = true;
+            break;
+        case types.VENUE_SAVE_SUCCESS:
+            newState.fetching = false;
+            newState.item = action.payload;
+            newState.formErrors = [];
+            break;
+        case types.VENUE_SAVE_ERROR:
+            newState.fetching = false;
+            newState.formErrors = action.payload;
+            break;
+        case types.LEAVE_FORM:
+            newState.item = {};
+            break;
     }
+
+    return newState;
+
 }

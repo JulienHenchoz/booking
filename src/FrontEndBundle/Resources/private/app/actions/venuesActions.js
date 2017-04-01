@@ -1,8 +1,15 @@
 import * as types from '../constants/actionTypes';
+import * as utils from '../utils/utils';
 
 export function loadingVenues() {
     return {
         type: types.LOADING_VENUES
+    };
+}
+
+export function savingVenue() {
+    return {
+        type: types.SAVING_VENUE
     };
 }
 
@@ -21,7 +28,6 @@ export function editVenue(property, value) {
     };
 }
 
-
 export function removeVenue(id) {
     return {
         type: types.REMOVE_VENUE,
@@ -36,12 +42,57 @@ export function receiveVenues(items) {
     };
 }
 
+export function leaveForm() {
+    return {
+        type: types.LEAVE_FORM
+    }
+}
+
 export function receiveVenue(item) {
     return {
         type: types.RECEIVE_VENUE,
         payload: item
     };
 }
+
+export function saveSuccess(item) {
+    utils.toastSuccess('L\'élément a été sauvegardé avec succès !');
+    return {
+        type: types.VENUE_SAVE_SUCCESS,
+        payload: item
+    };
+}
+
+export function saveError(errors) {
+    utils.toastError('Impossible de sauver l\'élément !');
+    return {
+        type: types.VENUE_SAVE_ERROR,
+        payload: errors
+    };
+}
+
+export function updateVenue(id, form) {
+    return dispatch => {
+        dispatch(savingVenue());
+        // TODO : Dispatch an error if the item has no id
+        fetch('/api/venues/edit/' + id, {
+            method: "POST",
+            body: new FormData(form)
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                if (json.success === true) {
+                    dispatch(saveSuccess(json.object));
+                }
+                else {
+                    dispatch(saveError(json.errors));
+                }
+            });
+    }
+}
+
 
 export function fetchVenues() {
     return dispatch => {

@@ -6591,12 +6591,13 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
     left: 300px;
     width: auto; } }
 
-.side-nav .userView {
-  min-height: 300px; }
-
 .side-nav .background img {
-  max-width: 100%;
+  width: 200px;
   height: auto; }
+
+.side-nav .userView {
+  min-height: 120px;
+  text-align: center; }
 
 .collection-item .collection-image {
   min-width: 90px; }
@@ -6616,3 +6617,9 @@ ul.collection {
 
 nav {
   background-color: #d81b60; }
+
+.input-field label {
+  width: 100%; }
+  .input-field label:not(.active)::after {
+    font-size: 12px;
+    top: 38px; }

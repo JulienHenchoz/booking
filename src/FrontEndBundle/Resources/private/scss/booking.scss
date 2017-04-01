@@ -17,13 +17,14 @@ $sideBarWidth: 300px;
 }
 
 .side-nav {
-  .userView {
-    min-height: 300px;
+  .background img {
+   width: 200px;
+    height: auto;
   }
 
-  .background img {
-    max-width: 100%;
-    height: auto;
+  .userView {
+    min-height: 120px;
+    text-align: center;
   }
 }
 
@@ -52,3 +53,10 @@ nav {
   background-color: $secondary-color;
 }
 
+.input-field label {
+  width: 100%;
+  &:not(.active)::after {
+    font-size: 12px;
+    top: 38px;
+  }
+}

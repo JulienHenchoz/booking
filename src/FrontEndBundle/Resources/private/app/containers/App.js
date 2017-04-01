@@ -14,6 +14,7 @@ class App extends React.Component {
                 <main>
                     <Route path="/" exact={true} component={VenueList} />
                     <Route path="/venues/" exact={true} component={VenueList} />
+                    <Route path="/venues/add/" exact={true} component={VenueForm} />
                     <Route path="/venue/:venueId" component={VenueForm} />
                 </main>
                 </div>
