@@ -6612,8 +6612,11 @@ ul.collection {
   position: absolute;
   left: 50%;
   top: 50%;
-  margin-top: -45px;
-  margin-left: 150px; }
+  margin-top: 32px;
+  margin-left: -32px; }
+  @media (min-width: 767px) {
+    .preloader-wrapper {
+      margin-left: 120px; } }
 
 nav {
   background-color: #d81b60; }
@@ -6623,3 +6626,12 @@ nav {
   .input-field label:not(.active)::after {
     font-size: 12px;
     top: 38px; }
+
+.reload-block {
+  text-align: center;
+  height: 100vh; }
+  .reload-block .valign {
+    margin: auto; }
+  .reload-block p.error {
+    max-width: 65%;
+    margin: auto; }

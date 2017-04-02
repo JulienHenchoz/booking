@@ -3,6 +3,7 @@ import {connect} from "react-redux"
 import {Collection, Icon, Button, Row, Col} from 'react-materialize';
 import {CSSTransition, transit} from "react-css-transition";
 import Loader from '../utils/Loader'
+import Reload from '../utils/Reload'
 import {Link} from 'react-router-dom';
 
 import * as actions from '../../actions/venuesActions';
@@ -24,30 +25,52 @@ class VenuesList extends React.Component {
     }
 
     componentWillMount() {
+        this.fetchVenues();
+    }
+
+    onReload(e) {
+        e.preventDefault();
+        this.fetchVenues();
+    }
+
+    fetchVenues() {
         this.props.dispatch(actions.fetchVenues());
     }
 
+
     render() {
+        let header = (
+            <FixedNavBar title="Salles">
+                <li>
+                    <Link className="blue waves-effect" to="/venues/add/"><Icon>add</Icon></Link>
+                </li>
+            </FixedNavBar>
+        );
+
+        let body = '';
         if (this.props.fetching) {
-            return (
-                <Loader />
-            )
+            // If we're currently loading the list, display the loader in the content
+            body = <Loader />
         }
-
-        const itemList = this.props.items.map(function (venue) {
-            return (<VenueListItem key={venue.id} {...venue} />);
-        });
-
-        return (
-            <div>
-                <FixedNavBar title="Salles">
-                    <li>
-                        <Link to="/venues/add/"><Icon>add</Icon></Link>
-                    </li>
-                </FixedNavBar>
+        else if (this.props.error) {
+            body = <Reload onClick={this.fetchVenues.bind(this)} error={this.props.error} />
+        }
+        else {
+            // Display the list
+            const itemList = this.props.items.map(function (venue) {
+                return (<VenueListItem key={venue.id} {...venue} />);
+            });
+            body = (
                 <Collection>
                     {itemList}
                 </Collection>
+            )
+        }
+
+        return (
+            <div>
+                {header}
+                {body}
             </div>
         )
     }

@@ -19,11 +19,15 @@ class VenueListItem extends React.Component {
     }
 
     render() {
+        let image = <Icon className="large grey-text">business</Icon>
+        if (this.props.image !== undefined && this.props.image) {
+            image = <img className="circle responsive-img" src={"/img/venues/" + this.props.image} />;
+        }
         return (
             <Link to={'/venue/' + this.props.id} className="collection-item" href="#">
                 <Row>
-                    <Col s={2} className="collection-image">
-                        <img className="circle responsive-img" src={"/img/venues/" + this.props.image} />
+                    <Col s={2} className="collection-image center-align">
+                        {image}
                     </Col>
                     <Col s={10}>
                         <h4>{this.props.name}</h4>

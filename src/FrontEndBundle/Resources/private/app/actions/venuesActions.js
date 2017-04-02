@@ -13,11 +13,29 @@ export function savingVenue() {
     };
 }
 
-export function addVenue(properties) {
-    return {
-        type: types.ADD_VENUE,
-        payload: properties
-    };
+export function addVenue(form) {
+    return dispatch => {
+        dispatch(savingVenue());
+        // TODO : Dispatch an error if the item has no id
+        fetch('/api/venues/new/', {
+            method: "POST",
+            body: new FormData(form)
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                if (json.success === true) {
+                    dispatch(saveSuccess(json.object));
+                }
+                else {
+                    dispatch(saveError(json.errors));
+                }
+            })
+            .catch(function() {
+                dispatch(saveError([]));
+            });
+    }
 }
 
 export function editVenue(property, value) {
@@ -71,6 +89,7 @@ export function saveError(errors) {
     };
 }
 
+
 export function updateVenue(id, form) {
     return dispatch => {
         dispatch(savingVenue());
@@ -87,12 +106,24 @@ export function updateVenue(id, form) {
                     dispatch(saveSuccess(json.object));
                 }
                 else {
+                    console.log("HA");
                     dispatch(saveError(json.errors));
                 }
+            })
+            .catch(function(error) {
+                console.error(error);
+                dispatch(saveError([]));
             });
     }
 }
 
+export function getError(message) {
+    utils.toastError(message);
+    return {
+        type: types.VENUES_GET_ERROR,
+        payload: message
+    };
+}
 
 export function fetchVenues() {
     return dispatch => {
@@ -103,6 +134,9 @@ export function fetchVenues() {
             })
             .then(json => {
                 dispatch(receiveVenues(json));
+            })
+            .catch(function() {
+                dispatch(getError('Une erreur est survenue lors de la récupération de la liste des salles.'));
             });
     }
 }
@@ -117,6 +151,9 @@ export function fetchVenue(id) {
             })
             .then(json => {
                 dispatch(receiveVenue(json));
+            })
+            .catch(function() {
+                dispatch(getError('Une erreur est survenue lors de la récupération de la salle.'));
             });
 
     }

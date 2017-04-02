@@ -89,10 +89,10 @@ class Venue
     /**
      * @var string
      *
-     * @ORM\Column(name="image", type="string")
+     * @ORM\Column(name="image", type="string", nullable=true)
      * @Groups({"public", "authenticated"})
      */
-    private $image;
+    private $image = '';
 
 
     /**

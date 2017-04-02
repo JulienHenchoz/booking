@@ -14,7 +14,7 @@ const FixedNavBar = ({title, align, children, icon = null}) => {
                     <div className="nav-wrapper">
                         <Col s={12}>
 
-                        <span className="brand-logo">
+                        <span className="brand-logo center">
                             {iconTag}
                             {title}
                         </span>

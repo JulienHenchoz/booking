@@ -18,14 +18,20 @@ export default function venues(state = initialState, action) {
             newState.item[action.property] = action.payload;
             break;
         case types.REMOVE_VENUE:
+            newState.removeModal = true;
+            break;
+        case types.REMOVING_VENUE:
+            newState.removeModal = false;
             break;
         case types.RECEIVE_VENUE:
             newState.item = action.payload;
             newState.fetching = false;
+            newState.error = null;
             break;
         case types.RECEIVE_VENUES:
             newState.items = action.payload;
             newState.fetching = false;
+            newState.error = null;
             break;
         case types.LOADING_VENUES:
             newState.fetching = true;
@@ -35,15 +41,25 @@ export default function venues(state = initialState, action) {
             break;
         case types.VENUE_SAVE_SUCCESS:
             newState.fetching = false;
+            newState.saveSuccess = true;
             newState.item = action.payload;
             newState.formErrors = [];
+            newState.error = null;
             break;
         case types.VENUE_SAVE_ERROR:
             newState.fetching = false;
             newState.formErrors = action.payload;
             break;
+        case types.VENUE_GET_ERROR:
+        case types.VENUES_GET_ERROR:
+            newState.fetching = false;
+            newState.error = action.payload;
+            break;
         case types.LEAVE_FORM:
             newState.item = {};
+            newState.saveSuccess = null;
+            newState.removeModal = null;
+            newState.formErrors = [];
             break;
     }
 
