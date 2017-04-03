@@ -30,7 +30,10 @@ $sideBarWidth: 300px;
 
 .collection-item {
   .collection-image {
-    min-width: 90px;
+    img {
+      max-width: 200px;
+      width: 100%;
+    }
   }
   p {
     color: #222;

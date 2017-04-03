@@ -37,8 +37,16 @@ class VenueForm extends React.Component {
         }
     }
 
+    componentDidMount() {
+        if (Materialize.updateTextFields !== undefined) {
+            Materialize.updateTextFields();
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
-        this.setState(nextProps.item);
+        if (nextProps.item !== undefined && nextProps.item !== null) {
+            this.setState(nextProps.item);
+        }
     }
 
     componentDidUpdate() {
@@ -54,6 +62,7 @@ class VenueForm extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         let item = this.props.item;
+
         if (item.id !== undefined) {
             // If submitted item already has an ID, send an edit action
             this.props.dispatch(actions.updateVenue(item.id, document.getElementById('venue-form')));
@@ -66,6 +75,7 @@ class VenueForm extends React.Component {
 
     onRemove(e) {
         e.preventDefault();
+        console.log(this.props.item.id);
         this.props.dispatch(actions.removeVenue(this.props.item.id));
     }
 
@@ -90,11 +100,6 @@ class VenueForm extends React.Component {
             loading = <Loader />;
         }
 
-        let removeModal = '';
-        if (this.props.removeModal) {
-            removeModal = <ConfirmModal title="Supprimer" content="Etes vous sur ?" />
-        }
-
         let header = '';
         let removeBtn = '';
         if (this.props.item.id !== undefined) {
@@ -108,13 +113,16 @@ class VenueForm extends React.Component {
             );
         }
         else {
-            header = 'Nouvelle salle'
+            header = 'Nouvelle salle';
         }
 
         return (
             <div>
                 {loading}
-                {removeModal}
+                <ConfirmModal title="Supprimer" content="Etes vous sur ?" active={this.props.removeModal}
+                              dispatch={this.props.dispatch} cancelAction={actions.cancelRemoveVenue}
+                              confirmAction={actions.confirmRemoveVenue} itemId={this.props.item.id ? this.props.item.id : null} />
+
                 <FixedNavBar title={header} icon="business">
                     {removeBtn}
                     <li>

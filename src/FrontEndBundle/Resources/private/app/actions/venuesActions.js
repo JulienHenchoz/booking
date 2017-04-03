@@ -13,6 +13,19 @@ export function savingVenue() {
     };
 }
 
+
+export function cancelRemoveVenue() {
+    return {
+        type: types.CANCEL_REMOVE_VENUE,
+    };
+}
+
+export function removingVenue() {
+    return {
+        type: types.REMOVING_VENUE,
+    };
+}
+
 export function addVenue(form) {
     return dispatch => {
         dispatch(savingVenue());
@@ -53,6 +66,30 @@ export function removeVenue(id) {
     };
 }
 
+export function confirmRemoveVenue(id) {
+    return dispatch => {
+        dispatch(removingVenue());
+        // TODO : Dispatch an error if the item has no id
+        fetch('/api/venues/delete/' + id, {
+            method: "DELETE",
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                if (json.success === true) {
+                    dispatch(removeSuccess(json.object));
+                }
+                else {
+                    dispatch(removeError(json.errors));
+                }
+            })
+            .catch(function() {
+                dispatch(removeError([]));
+            });
+    }
+}
+
 export function receiveVenues(items) {
     return {
         type: types.RECEIVE_VENUES,
@@ -89,6 +126,23 @@ export function saveError(errors) {
     };
 }
 
+export function removeSuccess(item) {
+    utils.toastSuccess('L\'élément a été supprimé avec succès !');
+    return {
+        type: types.VENUE_REMOVE_SUCCESS,
+        payload: item
+    };
+}
+
+export function removeError(errors) {
+    utils.toastError('Impossible de supprimer l\'élément !');
+    return {
+        type: types.VENUE_REMOVE_ERROR,
+        payload: errors
+    };
+}
+
+
 
 export function updateVenue(id, form) {
     return dispatch => {
@@ -106,7 +160,6 @@ export function updateVenue(id, form) {
                     dispatch(saveSuccess(json.object));
                 }
                 else {
-                    console.log("HA");
                     dispatch(saveError(json.errors));
                 }
             })

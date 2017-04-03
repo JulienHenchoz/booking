@@ -1,38 +1,74 @@
 import React from "react"
 import {Button, Icon} from 'react-materialize';
+import * as actions from '../../actions/venuesActions';
+import {connect} from "react-redux"
 
-class ConfirmModal extends React.Component {
+export default class ConfirmModal extends React.Component {
     constructor(props) {
         super(props);
+        this.state = Object.assign({
+            itemId: null,
+            selector: '#confirmModal'
+        }, props);
     }
 
-    componentDidMount() {
-        $('#confirmModal').modal();
-        $('#confirmModal').modal('open');
+    /**
+     * Update the active state, title and content of the component
+     * @param nextProps
+     */
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            active: nextProps.active,
+            title: nextProps.title,
+            content: nextProps.content
+        }, function() {
+            if (this.state.active) {
+                $(this.state.selector).modal({
+                    complete: self.onCancel
+                });
+                $(this.state.selector).modal('open');
+            }
+            else {
+                $(this.state.selector).modal('close');
+            }
+        });
+    }
+
+    onCancel(e) {
+        if (typeof(e.preventDefault) === 'function') {
+            e.preventDefault();
+        }
+        this.state.dispatch(this.state.cancelAction());
+    }
+
+    onConfirm(e) {
+        e.preventDefault();
+        this.state.dispatch(this.state.confirmAction(this.props.itemId));
     }
 
     render() {
         let title = '';
-        if (this.props.title !== undefined && this.props.title) {
-            title = <h4>{this.props.title}</h4>
+        if (this.state.title !== undefined && this.state.title) {
+            title = <h4>{this.state.title}</h4>
         }
         let content = '';
-        if (this.props.content !== undefined && this.props.content) {
-            content = <p>{this.props.content}</p>
+        if (this.state.content !== undefined && this.state.content) {
+            content = <p>{this.state.content}</p>
         }
         return (
-            <div id="confirmModal" className="modal">
+            <div id={this.state.selector.substr(1, this.state.selector.length - 1)} className="modal">
                 <div className="modal-content">
                     {title}
                     {content}
                 </div>
                 <div className="modal-footer">
-                    <a href="#" className="btn modal-action modal-close waves-effect red">Confirmer</a>
-                    <a href="#" className="btn modal-action modal-close waves-effect btn-flat">Annuler</a>
+                    <a href="#" onClick={this.onConfirm.bind(this)}
+                       className="btn modal-action modal-close waves-effect red">Confirmer</a>
+                    <a href="#" onClick={this.onCancel.bind(this)}
+                       className="btn modal-action modal-close waves-effect btn-flat">Annuler</a>
                 </div>
             </div>
         );
     }
 }
 
-export default ConfirmModal;

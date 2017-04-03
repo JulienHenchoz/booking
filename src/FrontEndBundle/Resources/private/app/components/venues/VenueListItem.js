@@ -24,12 +24,12 @@ class VenueListItem extends React.Component {
             image = <img className="circle responsive-img" src={"/img/venues/" + this.props.image} />;
         }
         return (
-            <Link to={'/venue/' + this.props.id} className="collection-item" href="#">
+            <Link to={'/venues/show/' + this.props.id} className="collection-item" href="#">
                 <Row>
-                    <Col s={2} className="collection-image center-align">
+                    <Col s={3} l={2} className="collection-image center-align">
                         {image}
                     </Col>
-                    <Col s={10}>
+                    <Col s={9} l={10}>
                         <h4>{this.props.name}</h4>
                         <p>{this.props.address}</p>
                     </Col>
