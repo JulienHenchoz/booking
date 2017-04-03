@@ -5755,10 +5755,8 @@ exports.loadingVenues = loadingVenues;
 exports.savingVenue = savingVenue;
 exports.cancelRemoveVenue = cancelRemoveVenue;
 exports.removingVenue = removingVenue;
-exports.addVenue = addVenue;
 exports.editVenue = editVenue;
 exports.removeVenue = removeVenue;
-exports.confirmRemoveVenue = confirmRemoveVenue;
 exports.receiveVenues = receiveVenues;
 exports.leaveForm = leaveForm;
 exports.receiveVenue = receiveVenue;
@@ -5766,8 +5764,10 @@ exports.saveSuccess = saveSuccess;
 exports.saveError = saveError;
 exports.removeSuccess = removeSuccess;
 exports.removeError = removeError;
-exports.updateVenue = updateVenue;
 exports.getError = getError;
+exports.addVenue = addVenue;
+exports.confirmRemoveVenue = confirmRemoveVenue;
+exports.updateVenue = updateVenue;
 exports.fetchVenues = fetchVenues;
 exports.fetchVenue = fetchVenue;
 
@@ -5805,27 +5805,6 @@ function removingVenue() {
     };
 }
 
-function addVenue(form) {
-    return function (dispatch) {
-        dispatch(savingVenue());
-        // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/new/', {
-            method: "POST",
-            body: new FormData(form)
-        }).then(function (response) {
-            return response.json();
-        }).then(function (json) {
-            if (json.success === true) {
-                dispatch(saveSuccess(json.object));
-            } else {
-                dispatch(saveError(json.errors));
-            }
-        }).catch(function () {
-            dispatch(saveError([]));
-        });
-    };
-}
-
 function editVenue(property, value) {
     return {
         type: types.EDIT_VENUE,
@@ -5838,26 +5817,6 @@ function removeVenue(id) {
     return {
         type: types.REMOVE_VENUE,
         index: id
-    };
-}
-
-function confirmRemoveVenue(id) {
-    return function (dispatch) {
-        dispatch(removingVenue());
-        // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/delete/' + id, {
-            method: "DELETE"
-        }).then(function (response) {
-            return response.json();
-        }).then(function (json) {
-            if (json.success === true) {
-                dispatch(removeSuccess(json.object));
-            } else {
-                dispatch(removeError(json.errors));
-            }
-        }).catch(function () {
-            dispatch(removeError([]));
-        });
     };
 }
 
@@ -5913,6 +5872,55 @@ function removeError(errors) {
     };
 }
 
+function getError(message) {
+    utils.toastError(message);
+    return {
+        type: types.VENUES_GET_ERROR,
+        payload: message
+    };
+}
+
+function addVenue(form) {
+    return function (dispatch) {
+        dispatch(savingVenue());
+        // TODO : Dispatch an error if the item has no id
+        fetch('/api/venues/new/', {
+            method: "POST",
+            body: new FormData(form)
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            if (json.success === true) {
+                dispatch(saveSuccess(json.object));
+            } else {
+                dispatch(saveError(json.errors));
+            }
+        }).catch(function () {
+            dispatch(saveError([]));
+        });
+    };
+}
+
+function confirmRemoveVenue(id) {
+    return function (dispatch) {
+        dispatch(removingVenue());
+        // TODO : Dispatch an error if the item has no id
+        fetch('/api/venues/delete/' + id, {
+            method: "DELETE"
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            if (json.success === true) {
+                dispatch(removeSuccess(json.object));
+            } else {
+                dispatch(removeError(json.errors));
+            }
+        }).catch(function () {
+            dispatch(removeError([]));
+        });
+    };
+}
+
 function updateVenue(id, form) {
     return function (dispatch) {
         dispatch(savingVenue());
@@ -5932,14 +5940,6 @@ function updateVenue(id, form) {
             console.error(error);
             dispatch(saveError([]));
         });
-    };
-}
-
-function getError(message) {
-    utils.toastError(message);
-    return {
-        type: types.VENUES_GET_ERROR,
-        payload: message
     };
 }
 
@@ -14559,7 +14559,8 @@ var VenueForm = function (_React$Component) {
             capacity: 0,
             address: '',
             phone: '',
-            website: ''
+            website: '',
+            image: ''
         };
         return _this;
     }
@@ -14615,7 +14616,6 @@ var VenueForm = function (_React$Component) {
         key: "onRemove",
         value: function onRemove(e) {
             e.preventDefault();
-            console.log(this.props.item.id);
             this.props.dispatch(actions.removeVenue(this.props.item.id));
         }
     }, {
@@ -14701,7 +14701,9 @@ var VenueForm = function (_React$Component) {
                         _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "phone", error: this.props.errors.phone,
                             onChange: this.onChange.bind(this), label: "Phone", value: this.state.phone }),
                         _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "website", error: this.props.errors.website,
-                            onChange: this.onChange.bind(this), label: "website", value: this.state.website })
+                            onChange: this.onChange.bind(this), label: "website", value: this.state.website }),
+                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "image", error: this.props.errors.image,
+                            onChange: this.onChange.bind(this), label: "Image URL", value: this.state.image })
                     ),
                     _react2.default.createElement(
                         _reactMaterialize.Row,
@@ -14791,7 +14793,7 @@ var VenueListItem = function (_React$Component) {
                 "business"
             );
             if (this.props.image !== undefined && this.props.image) {
-                image = _react2.default.createElement("img", { className: "circle responsive-img", src: "/img/venues/" + this.props.image });
+                image = _react2.default.createElement("img", { className: "circle responsive-img", src: this.props.image });
             }
             return _react2.default.createElement(
                 _reactRouterDom.Link,

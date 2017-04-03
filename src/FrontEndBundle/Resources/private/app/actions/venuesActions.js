@@ -26,31 +26,6 @@ export function removingVenue() {
     };
 }
 
-export function addVenue(form) {
-    return dispatch => {
-        dispatch(savingVenue());
-        // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/new/', {
-            method: "POST",
-            body: new FormData(form)
-        })
-            .then(response => {
-                return response.json();
-            })
-            .then(json => {
-                if (json.success === true) {
-                    dispatch(saveSuccess(json.object));
-                }
-                else {
-                    dispatch(saveError(json.errors));
-                }
-            })
-            .catch(function() {
-                dispatch(saveError([]));
-            });
-    }
-}
-
 export function editVenue(property, value) {
     return {
         type: types.EDIT_VENUE,
@@ -66,29 +41,6 @@ export function removeVenue(id) {
     };
 }
 
-export function confirmRemoveVenue(id) {
-    return dispatch => {
-        dispatch(removingVenue());
-        // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/delete/' + id, {
-            method: "DELETE",
-        })
-            .then(response => {
-                return response.json();
-            })
-            .then(json => {
-                if (json.success === true) {
-                    dispatch(removeSuccess(json.object));
-                }
-                else {
-                    dispatch(removeError(json.errors));
-                }
-            })
-            .catch(function() {
-                dispatch(removeError([]));
-            });
-    }
-}
 
 export function receiveVenues(items) {
     return {
@@ -142,6 +94,62 @@ export function removeError(errors) {
     };
 }
 
+export function getError(message) {
+    utils.toastError(message);
+    return {
+        type: types.VENUES_GET_ERROR,
+        payload: message
+    };
+}
+
+export function addVenue(form) {
+    return dispatch => {
+        dispatch(savingVenue());
+        // TODO : Dispatch an error if the item has no id
+        fetch('/api/venues/new/', {
+            method: "POST",
+            body: new FormData(form)
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                if (json.success === true) {
+                    dispatch(saveSuccess(json.object));
+                }
+                else {
+                    dispatch(saveError(json.errors));
+                }
+            })
+            .catch(function() {
+                dispatch(saveError([]));
+            });
+    }
+}
+
+export function confirmRemoveVenue(id) {
+    return dispatch => {
+        dispatch(removingVenue());
+        // TODO : Dispatch an error if the item has no id
+        fetch('/api/venues/delete/' + id, {
+            method: "DELETE",
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                if (json.success === true) {
+                    dispatch(removeSuccess(json.object));
+                }
+                else {
+                    dispatch(removeError(json.errors));
+                }
+            })
+            .catch(function() {
+                dispatch(removeError([]));
+            });
+    }
+}
 
 
 export function updateVenue(id, form) {
@@ -170,13 +178,6 @@ export function updateVenue(id, form) {
     }
 }
 
-export function getError(message) {
-    utils.toastError(message);
-    return {
-        type: types.VENUES_GET_ERROR,
-        payload: message
-    };
-}
 
 export function fetchVenues() {
     return dispatch => {
@@ -211,5 +212,4 @@ export function fetchVenue(id) {
 
     }
 }
-
 

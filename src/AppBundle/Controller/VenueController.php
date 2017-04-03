@@ -34,6 +34,7 @@ class VenueController extends AbstractApiController
         'latitude',
         'longitude',
         'capacity',
+        'image',
     ];
 
     /**
@@ -48,6 +49,7 @@ class VenueController extends AbstractApiController
         'latitude',
         'longitude',
         'capacity',
+        'image',
     ];
 
     /**

@@ -27,7 +27,8 @@ class VenueForm extends React.Component {
             capacity: 0,
             address: '',
             phone: '',
-            website: ''
+            website: '',
+            image: ''
         }
     }
 
@@ -75,7 +76,6 @@ class VenueForm extends React.Component {
 
     onRemove(e) {
         e.preventDefault();
-        console.log(this.props.item.id);
         this.props.dispatch(actions.removeVenue(this.props.item.id));
     }
 
@@ -143,6 +143,8 @@ class VenueForm extends React.Component {
                                onChange={this.onChange.bind(this)} label="Phone" value={this.state.phone}/>
                         <Input className="active" s={12} name="website" error={this.props.errors.website}
                                onChange={this.onChange.bind(this)} label="website" value={this.state.website}/>
+                        <Input className="active" s={12} name="image" error={this.props.errors.image}
+                               onChange={this.onChange.bind(this)} label="Image URL" value={this.state.image}/>
                     </Row>
                     <Row>
                         <input type="submit" className="hide"/>
