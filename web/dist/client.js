@@ -15472,25 +15472,36 @@ exports.default = {
         }
     },
     capacity: {
+        presence: {
+            message: _localization2.default.validation.required
+        },
         numericality: {
             onlyInteger: true,
             greaterThan: 0,
             message: _localization2.default.validation.numberGreaterThanZero
         }
     },
-    website: {
+    address: {
         presence: {
-            allowEmpty: true
-        },
+            message: _localization2.default.validation.required
+        }
+    },
+    phone: {
+        presence: {
+            message: _localization2.default.validation.required
+        }
+    },
+    website: {
+        presence: false,
         url: {
+            allowEmpty: true,
             message: _localization2.default.validation.url
         }
     },
     image: {
-        presence: {
-            allowEmpty: true
-        },
+        presence: false,
         url: {
+            allowEmpty: true,
             message: _localization2.default.validation.url
         }
     }

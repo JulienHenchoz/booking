@@ -7,25 +7,36 @@ export default {
         },
     },
     capacity: {
+        presence: {
+            message: l10n.validation.required
+        },
         numericality: {
             onlyInteger: true,
             greaterThan: 0,
             message: l10n.validation.numberGreaterThanZero
         }
     },
-    website: {
+    address: {
         presence: {
-            allowEmpty: true
+            message: l10n.validation.required
         },
+    },
+    phone: {
+        presence: {
+            message: l10n.validation.required
+        },
+    },
+    website: {
+        presence: false,
         url: {
+            allowEmpty: true,
             message: l10n.validation.url
         }
     },
     image: {
-        presence: {
-            allowEmpty: true
-        },
+        presence: false,
         url: {
+            allowEmpty: true,
             message: l10n.validation.url
         }
     }
