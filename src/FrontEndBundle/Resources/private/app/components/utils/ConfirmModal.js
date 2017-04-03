@@ -2,6 +2,7 @@ import React from "react"
 import {Button, Icon} from 'react-materialize';
 import * as actions from '../../actions/venuesActions';
 import {connect} from "react-redux"
+import l10n from '../../l10n/localization';
 
 export default class ConfirmModal extends React.Component {
     constructor(props) {
@@ -63,9 +64,9 @@ export default class ConfirmModal extends React.Component {
                 </div>
                 <div className="modal-footer">
                     <a href="#" onClick={this.onConfirm.bind(this)}
-                       className="btn modal-action modal-close waves-effect red">Confirmer</a>
+                       className="btn modal-action modal-close waves-effect red">{l10n.btn_confirm}</a>
                     <a href="#" onClick={this.onCancel.bind(this)}
-                       className="btn modal-action modal-close waves-effect btn-flat">Annuler</a>
+                       className="btn modal-action modal-close waves-effect btn-flat">{l10n.btn_cancel}</a>
                 </div>
             </div>
         );

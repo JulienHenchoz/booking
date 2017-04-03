@@ -10,6 +10,7 @@ import FixedNavBar from '../menu/FixedNavBar';
 
 import * as actions from '../../actions/venuesActions';
 import ConfirmModal from "../utils/ConfirmModal";
+import l10n from "../../l10n/localization";
 
 
 const propTypes = {
@@ -113,13 +114,13 @@ class VenueForm extends React.Component {
             );
         }
         else {
-            header = 'Nouvelle salle';
+            header = l10n.new_venue;
         }
 
         return (
             <div>
                 {loading}
-                <ConfirmModal title="Supprimer" content="Etes vous sur ?" active={this.props.removeModal}
+                <ConfirmModal title={l10n.delete_venue_title} content={l10n.formatString(l10n.delete_venue_content, this.props.item.name)} active={this.props.removeModal}
                               dispatch={this.props.dispatch} cancelAction={actions.cancelRemoveVenue}
                               confirmAction={actions.confirmRemoveVenue} itemId={this.props.item.id ? this.props.item.id : null} />
 

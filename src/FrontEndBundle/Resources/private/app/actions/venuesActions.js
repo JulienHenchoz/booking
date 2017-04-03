@@ -1,5 +1,6 @@
 import * as types from '../constants/actionTypes';
 import * as utils from '../utils/utils';
+import l10n from '../l10n/localization';
 
 export function loadingVenues() {
     return {
@@ -63,7 +64,7 @@ export function receiveVenue(item) {
 }
 
 export function saveSuccess(item) {
-    utils.toastSuccess('L\'élément a été sauvegardé avec succès !');
+    utils.toastSuccess(l10n.save_success);
     return {
         type: types.VENUE_SAVE_SUCCESS,
         payload: item
@@ -71,7 +72,7 @@ export function saveSuccess(item) {
 }
 
 export function saveError(errors) {
-    utils.toastError('Impossible de sauver l\'élément !');
+    utils.toastError(l10n.save_error);
     return {
         type: types.VENUE_SAVE_ERROR,
         payload: errors
@@ -79,7 +80,7 @@ export function saveError(errors) {
 }
 
 export function removeSuccess(item) {
-    utils.toastSuccess('L\'élément a été supprimé avec succès !');
+    utils.toastSuccess(l10n.remove_success);
     return {
         type: types.VENUE_REMOVE_SUCCESS,
         payload: item
@@ -87,7 +88,7 @@ export function removeSuccess(item) {
 }
 
 export function removeError(errors) {
-    utils.toastError('Impossible de supprimer l\'élément !');
+    utils.toastError(l10n.remove_error);
     return {
         type: types.VENUE_REMOVE_ERROR,
         payload: errors
@@ -190,7 +191,7 @@ export function fetchVenues() {
                 dispatch(receiveVenues(json));
             })
             .catch(function() {
-                dispatch(getError('Une erreur est survenue lors de la récupération de la liste des salles.'));
+                dispatch(getError(l10n.venues_fetch_error));
             });
     }
 }
@@ -207,7 +208,7 @@ export function fetchVenue(id) {
                 dispatch(receiveVenue(json));
             })
             .catch(function() {
-                dispatch(getError('Une erreur est survenue lors de la récupération de la salle.'));
+                dispatch(getError(l10n.venue_fetch_error));
             });
 
     }
