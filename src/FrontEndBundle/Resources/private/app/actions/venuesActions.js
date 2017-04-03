@@ -104,6 +104,13 @@ export function getError(message) {
     };
 }
 
+export function validationError() {
+    utils.toastError(l10n.validation_errors);
+    return {
+        type: types.VALIDATION_ERROR,
+    };
+}
+
 export function addVenue(form) {
     return dispatch => {
         dispatch(savingVenue());

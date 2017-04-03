@@ -4,7 +4,8 @@ import {Redirect} from 'react-router-dom';
 import {Row, Input, Button, Icon} from 'react-materialize';
 import * as routes from '../../constants/routes';
 import Loader from '../utils/Loader';
-
+import validate from 'validate.js';
+import venueConstraints from '../../validation/venue';
 import * as utils from '../../utils/utils';
 import FixedNavBar from '../menu/FixedNavBar';
 
@@ -21,18 +22,22 @@ const propTypes = {
 };
 
 class VenueForm extends React.Component {
+    getEmptyFields() {
+        return {
+            name: '',
+            capacity: '',
+            address: '',
+            phone: '',
+            website: '',
+            image: ''
+        };
+    }
     constructor(props) {
         super(props);
+        let emptyFields =
         this.state = {
-            fields: {
-                name: '',
-                capacity: 0,
-                address: '',
-                phone: '',
-                website: '',
-                image: ''
-            },
-            errors: {}
+            fields: this.getEmptyFields(),
+            errors: this.getEmptyFields(),
         }
     }
 
@@ -49,10 +54,10 @@ class VenueForm extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.item !== undefined && nextProps.item !== null) {
+        if (nextProps.item !== undefined && nextProps.item !== null && !utils.objectIsEmpty(nextProps.item)) {
             this.setState({
                 fields: nextProps.item,
-                errors: nextProps.formErrors
+                errors: nextProps.errors || this.getEmptyFields()
             });
         }
     }
@@ -69,15 +74,27 @@ class VenueForm extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
-        let item = this.props.item;
 
-        if (item.id !== undefined) {
-            // If submitted item already has an ID, send an edit action
-            this.props.dispatch(actions.updateVenue(item.id, document.getElementById('venue-form')));
+        let item = this.props.item;
+        let errors = validate(item, venueConstraints, {fullMessages: false});
+        if (!errors) {
+            if (item.id !== undefined) {
+                // If submitted item already has an ID, send an edit action
+                this.props.dispatch(actions.updateVenue(item.id, document.getElementById('venue-form')));
+            }
+            else {
+                // Else send an Add action
+                this.props.dispatch(actions.addVenue(document.getElementById('venue-form')));
+            }
         }
         else {
-            // Else send an Add action
-            this.props.dispatch(actions.addVenue(document.getElementById('venue-form')));
+            // If there were validation errors, copy them to the state so they can be displayed in the form
+            let newState = Object.assign({}, this.state);
+            Object.keys(errors).forEach(function(index, item) {
+                newState.errors[index] = errors[index].length ? errors[index][0] : '';
+            });
+            this.setState(newState);
+            this.props.dispatch(actions.validationError());
         }
     }
 
@@ -91,6 +108,13 @@ class VenueForm extends React.Component {
         newState.fields[e.target.name] = e.target.value;
         this.setState(newState);
         this.props.dispatch(actions.editVenue(e.target.name, e.target.value));
+    }
+
+    onBlur(e) {
+        let newState = Object.assign({}, this.state);
+        let errors = validate.single(e.target.value, venueConstraints[e.target.name]);
+        this.state.errors[e.target.name] = errors && errors.length ? errors[0] : '';
+        this.setState(newState);
     }
 
     render() {
@@ -146,43 +170,49 @@ class VenueForm extends React.Component {
                     <Row>
                         <Input className="active" s={12}
                                name="name"
-                               error={this.state.errors.name}
+                               error={this.state.errors.name ? this.state.errors.name : ''}
                                onChange={this.onChange.bind(this)}
+                               onBlur={this.onBlur.bind(this)}
                                label={l10n.fields.venues.name}
                                value={this.state.fields.name}/>
 
                         <Input className="active" s={12}
                                name="capacity"
-                               error={this.state.errors.capacity}
+                               error={this.state.errors.capacity ? this.state.errors.capacity : ''}
                                onChange={this.onChange.bind(this)}
+                               onBlur={this.onBlur.bind(this)}
                                label={l10n.fields.venues.capacity}
                                value={this.state.fields.capacity}/>
 
                         <Input className="active" s={12}
                                name="address"
-                               error={this.state.errors.address}
+                               error={this.state.errors.address ? this.state.errors.address : ''}
                                onChange={this.onChange.bind(this)}
+                               onBlur={this.onBlur.bind(this)}
                                label={l10n.fields.venues.address}
                                value={this.state.fields.address}/>
 
                         <Input className="active" s={12}
                                name="phone"
-                               error={this.state.errors.phone}
+                               error={this.state.errors.phone ? this.state.errors.phone : ''}
                                onChange={this.onChange.bind(this)}
+                               onBlur={this.onBlur.bind(this)}
                                label={l10n.fields.venues.phone}
                                value={this.state.fields.phone}/>
 
                         <Input className="active" s={12}
                                name="website"
-                               error={this.state.errors.website}
+                               error={this.state.errors.website ? this.state.errors.website : ''}
                                onChange={this.onChange.bind(this)}
+                               onBlur={this.onBlur.bind(this)}
                                label={l10n.fields.venues.website}
                                value={this.state.fields.website}/>
 
                         <Input className="active" s={12}
                                name="image"
-                               error={this.state.errors.image}
+                               error={this.state.errors.image ? this.state.errors.image : ''}
                                onChange={this.onChange.bind(this)}
+                               onBlur={this.onBlur.bind(this)}
                                label={l10n.fields.venues.image}
                                value={this.state.fields.image}/>
                     </Row>
@@ -196,6 +226,7 @@ class VenueForm extends React.Component {
 }
 
 VenueForm.propTypes = propTypes;
+
 
 export default connect((state) => {
     return Object.assign({}, {

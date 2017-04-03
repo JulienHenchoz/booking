@@ -28,6 +28,7 @@ export default {
     save_error: 'Impossible de sauver l\'élément !',
     remove_success: 'L\'élément a été supprimé avec succès !',
     remove_error: 'Impossible de supprimer l\'élément !',
+    validation_errors: 'Certains champs sont invalides, merci de vérifier les données et valider à nouveau.',
 
     venues_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des salles.',
     venue_fetch_error: 'Une erreur est survenue lors de la récupération de la salle.',
@@ -50,6 +51,13 @@ export default {
             website: 'Site web',
             image: 'Lien de l\'image',
         }
+    },
+
+    /** Validation message **/
+    validation: {
+        required: 'Ce champ est requis.',
+        url: 'Ce champ doit être une adresse internet valide.',
+        numberGreaterThanZero: 'Ce champ doit être un nombre plus grand que zéro.'
     }
 
 };

@@ -53,7 +53,7 @@ export default function venues(state = initialState, action) {
             newState.fetching = false;
             newState.saveSuccess = true;
             newState.item = {};
-            newState.formErrors = [];
+            newState.formErrors = {};
             newState.error = null;
             break;
         case types.VENUE_REMOVE_ERROR:
@@ -73,7 +73,7 @@ export default function venues(state = initialState, action) {
             newState.fetching = false;
             newState.saveSuccess = true;
             newState.item = action.payload;
-            newState.formErrors = [];
+            newState.formErrors = {};
             newState.error = null;
             break;
         case types.VENUE_SAVE_ERROR:
@@ -89,7 +89,7 @@ export default function venues(state = initialState, action) {
             newState.item = {};
             newState.saveSuccess = null;
             newState.removeModal = null;
-            newState.formErrors = [];
+            newState.formErrors = {};
             break;
     }
 
