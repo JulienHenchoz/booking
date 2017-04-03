@@ -2,7 +2,7 @@ import React, {PropTypes} from "react"
 import {connect} from "react-redux"
 import {Redirect} from 'react-router-dom';
 import {Row, Input, Button, Icon} from 'react-materialize';
-
+import * as routes from '../../constants/routes';
 import Loader from '../utils/Loader';
 
 import * as utils from '../../utils/utils';
@@ -17,19 +17,22 @@ const propTypes = {
     dispatch: PropTypes.func.isRequired,
     item: PropTypes.object,
     fetching: PropTypes.bool,
-    errors: PropTypes.array
+    errors: PropTypes.object
 };
 
 class VenueForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
-            capacity: 0,
-            address: '',
-            phone: '',
-            website: '',
-            image: ''
+            fields: {
+                name: '',
+                capacity: 0,
+                address: '',
+                phone: '',
+                website: '',
+                image: ''
+            },
+            errors: {}
         }
     }
 
@@ -47,7 +50,10 @@ class VenueForm extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.item !== undefined && nextProps.item !== null) {
-            this.setState(nextProps.item);
+            this.setState({
+                fields: nextProps.item,
+                errors: nextProps.formErrors
+            });
         }
     }
 
@@ -82,7 +88,7 @@ class VenueForm extends React.Component {
 
     onChange(e) {
         let newState = Object.assign({}, this.state);
-        newState[e.target.name] = e.target.value;
+        newState.fields[e.target.name] = e.target.value;
         this.setState(newState);
         this.props.dispatch(actions.editVenue(e.target.name, e.target.value));
     }
@@ -91,7 +97,7 @@ class VenueForm extends React.Component {
         if (this.props.saveSuccess) {
             return (
                 <Redirect to={{
-                    pathname: '/venues/'
+                    pathname: routes.VENUES_LIST
                 }}/>
             );
         }
@@ -104,7 +110,7 @@ class VenueForm extends React.Component {
         let header = '';
         let removeBtn = '';
         if (this.props.item.id !== undefined) {
-            header = 'Edition de "' + this.props.item.name + '"';
+            header = l10n.formatString(l10n.editing, this.state.fields.name);
             removeBtn = (
                 <li>
                     <a className="red waves-effect" href="#" onClick={this.onRemove.bind(this)}>
@@ -120,9 +126,12 @@ class VenueForm extends React.Component {
         return (
             <div>
                 {loading}
-                <ConfirmModal title={l10n.delete_venue_title} content={l10n.formatString(l10n.delete_venue_content, this.props.item.name)} active={this.props.removeModal}
+                <ConfirmModal title={l10n.delete_venue_title}
+                              content={l10n.formatString(l10n.delete_venue_content, this.props.item.name)}
+                              active={this.props.removeModal}
                               dispatch={this.props.dispatch} cancelAction={actions.cancelRemoveVenue}
-                              confirmAction={actions.confirmRemoveVenue} itemId={this.props.item.id ? this.props.item.id : null} />
+                              confirmAction={actions.confirmRemoveVenue}
+                              itemId={this.props.item.id ? this.props.item.id : null}/>
 
                 <FixedNavBar title={header} icon="business">
                     {removeBtn}
@@ -132,20 +141,50 @@ class VenueForm extends React.Component {
                         </a>
                     </li>
                 </FixedNavBar>
-                <form id="venue-form" style={{opacity: this.props.fetching ? 0.3 : 1}} onSubmit={this.onSubmit.bind(this)}>
+                <form id="venue-form" style={{opacity: this.props.fetching ? 0.3 : 1}}
+                      onSubmit={this.onSubmit.bind(this)}>
                     <Row>
-                        <Input className={this.state.name ? 'active' : ''} s={12} name="name" error={this.props.errors.name}
-                               onChange={this.onChange.bind(this)} label="Name" value={this.state.name}/>
-                        <Input className="active" s={12} name="capacity" error={this.props.errors.capacity}
-                               onChange={this.onChange.bind(this)} label="Capacity" value={this.state.capacity}/>
-                        <Input className="active" s={12} name="address" error={this.props.errors.address}
-                               onChange={this.onChange.bind(this)} label="Address" value={this.state.address}/>
-                        <Input className="active" s={12} name="phone" error={this.props.errors.phone}
-                               onChange={this.onChange.bind(this)} label="Phone" value={this.state.phone}/>
-                        <Input className="active" s={12} name="website" error={this.props.errors.website}
-                               onChange={this.onChange.bind(this)} label="website" value={this.state.website}/>
-                        <Input className="active" s={12} name="image" error={this.props.errors.image}
-                               onChange={this.onChange.bind(this)} label="Image URL" value={this.state.image}/>
+                        <Input className="active" s={12}
+                               name="name"
+                               error={this.state.errors.name}
+                               onChange={this.onChange.bind(this)}
+                               label={l10n.fields.venues.name}
+                               value={this.state.fields.name}/>
+
+                        <Input className="active" s={12}
+                               name="capacity"
+                               error={this.state.errors.capacity}
+                               onChange={this.onChange.bind(this)}
+                               label={l10n.fields.venues.capacity}
+                               value={this.state.fields.capacity}/>
+
+                        <Input className="active" s={12}
+                               name="address"
+                               error={this.state.errors.address}
+                               onChange={this.onChange.bind(this)}
+                               label={l10n.fields.venues.address}
+                               value={this.state.fields.address}/>
+
+                        <Input className="active" s={12}
+                               name="phone"
+                               error={this.state.errors.phone}
+                               onChange={this.onChange.bind(this)}
+                               label={l10n.fields.venues.phone}
+                               value={this.state.fields.phone}/>
+
+                        <Input className="active" s={12}
+                               name="website"
+                               error={this.state.errors.website}
+                               onChange={this.onChange.bind(this)}
+                               label={l10n.fields.venues.website}
+                               value={this.state.fields.website}/>
+
+                        <Input className="active" s={12}
+                               name="image"
+                               error={this.state.errors.image}
+                               onChange={this.onChange.bind(this)}
+                               label={l10n.fields.venues.image}
+                               value={this.state.fields.image}/>
                     </Row>
                     <Row>
                         <input type="submit" className="hide"/>

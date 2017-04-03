@@ -3,6 +3,8 @@ import { Row, Col, Button } from 'react-materialize';
 import {connect} from "react-redux"
 import {CollectionItem, Icon} from 'react-materialize';
 import {Link} from 'react-router-dom';
+import * as routes from '../../constants/routes';
+import l10n from '../../l10n/localization';
 
 import * as actions from '../../actions/venuesActions';
 
@@ -24,7 +26,7 @@ class VenueListItem extends React.Component {
             image = <img className="circle responsive-img" src={this.props.image} />;
         }
         return (
-            <Link to={'/venues/show/' + this.props.id} className="collection-item" href="#">
+            <Link to={l10n.formatString(routes.VENUES_EDIT, this.props.id)} className="collection-item" href="#">
                 <Row>
                     <Col s={3} l={2} className="collection-image center-align">
                         {image}

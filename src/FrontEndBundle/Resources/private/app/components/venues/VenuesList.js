@@ -5,6 +5,9 @@ import {CSSTransition, transit} from "react-css-transition";
 import Loader from '../utils/Loader'
 import Reload from '../utils/Reload'
 import {Link} from 'react-router-dom';
+import l10n from "../../l10n/localization";
+import * as routes from '../../constants/routes';
+
 
 import * as actions from '../../actions/venuesActions';
 
@@ -40,9 +43,9 @@ class VenuesList extends React.Component {
 
     render() {
         let header = (
-            <FixedNavBar title="Salles">
+            <FixedNavBar title={l10n.venues_title}>
                 <li>
-                    <Link className="blue waves-effect" to="/venues/add/"><Icon>add</Icon></Link>
+                    <Link className="blue waves-effect" to={routes.VENUES_ADD}><Icon>add</Icon></Link>
                 </li>
             </FixedNavBar>
         );

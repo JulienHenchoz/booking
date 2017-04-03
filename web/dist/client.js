@@ -4559,6 +4559,10 @@ var _actionTypes = __webpack_require__(91);
 
 var types = _interopRequireWildcard(_actionTypes);
 
+var _ajaxRoutes = __webpack_require__(401);
+
+var ajaxRoutes = _interopRequireWildcard(_ajaxRoutes);
+
 var _utils = __webpack_require__(92);
 
 var utils = _interopRequireWildcard(_utils);
@@ -4674,7 +4678,7 @@ function addVenue(form) {
     return function (dispatch) {
         dispatch(savingVenue());
         // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/new/', {
+        fetch(ajaxRoutes.VENUE_ADD, {
             method: "POST",
             body: new FormData(form)
         }).then(function (response) {
@@ -4695,7 +4699,7 @@ function confirmRemoveVenue(id) {
     return function (dispatch) {
         dispatch(removingVenue());
         // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/delete/' + id, {
+        fetch(_localization2.default.formatString(ajaxRoutes.VENUE_REMOVE, id), {
             method: "DELETE"
         }).then(function (response) {
             return response.json();
@@ -4715,7 +4719,7 @@ function updateVenue(id, form) {
     return function (dispatch) {
         dispatch(savingVenue());
         // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/edit/' + id, {
+        fetch(_localization2.default.formatString(ajaxRoutes.VENUE_EDIT, id), {
             method: "POST",
             body: new FormData(form)
         }).then(function (response) {
@@ -4736,7 +4740,7 @@ function updateVenue(id, form) {
 function fetchVenues() {
     return function (dispatch) {
         dispatch(loadingVenues());
-        fetch('/api/venues/get').then(function (response) {
+        fetch(ajaxRoutes.VENUES_GET).then(function (response) {
             return response.json();
         }).then(function (json) {
             dispatch(receiveVenues(json));
@@ -4750,7 +4754,7 @@ function fetchVenue(id) {
     return function (dispatch) {
         dispatch(loadingVenues());
 
-        fetch('/api/venues/get/' + id).then(function (response) {
+        fetch(_localization2.default.formatString(ajaxRoutes.VENUE_GET, id)).then(function (response) {
             return response.json();
         }).then(function (json) {
             dispatch(receiveVenue(json));
@@ -14028,6 +14032,16 @@ var _VenuesList = __webpack_require__(152);
 
 var _VenuesList2 = _interopRequireDefault(_VenuesList);
 
+var _routes = __webpack_require__(402);
+
+var routes = _interopRequireWildcard(_routes);
+
+var _localization = __webpack_require__(398);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -14059,9 +14073,9 @@ var App = function (_React$Component) {
                         "main",
                         null,
                         _react2.default.createElement(_reactRouterDom.Route, { path: "/", exact: true, component: _VenuesList2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { path: "/venues/", exact: true, component: _VenuesList2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { path: "/venues/add/", exact: true, component: _VenueForm2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { path: "/venues/show/:venueId", component: _VenueForm2.default })
+                        _react2.default.createElement(_reactRouterDom.Route, { path: routes.VENUES_LIST, exact: true, component: _VenuesList2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: routes.VENUES_ADD, exact: true, component: _VenueForm2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.VENUES_EDIT, ':venueId'), component: _VenueForm2.default })
                     )
                 )
             );
@@ -14173,6 +14187,12 @@ var _localization = __webpack_require__(398);
 
 var _localization2 = _interopRequireDefault(_localization);
 
+var _routes = __webpack_require__(402);
+
+var routes = _interopRequireWildcard(_routes);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -14213,17 +14233,17 @@ var MainMenu = function (_React$Component) {
                         } }),
                     _react2.default.createElement(
                         _NavLink2.default,
-                        { to: '/venues/', icon: 'business' },
+                        { to: routes.VENUES_LIST, icon: 'business' },
                         _localization2.default.venues_title
                     ),
                     _react2.default.createElement(
                         _NavLink2.default,
-                        { to: '/events/', icon: 'movie' },
+                        { to: routes.EVENTS_LIST, icon: 'movie' },
                         _localization2.default.events_title
                     ),
                     _react2.default.createElement(
                         _NavLink2.default,
-                        { to: '/bookings/', icon: 'email' },
+                        { to: routes.BOOKINGS_LIST, icon: 'email' },
                         _localization2.default.bookings_title
                     )
                 )
@@ -14523,6 +14543,10 @@ var _reactRouterDom = __webpack_require__(22);
 
 var _reactMaterialize = __webpack_require__(17);
 
+var _routes = __webpack_require__(402);
+
+var routes = _interopRequireWildcard(_routes);
+
 var _Loader = __webpack_require__(90);
 
 var _Loader2 = _interopRequireDefault(_Loader);
@@ -14561,7 +14585,7 @@ var propTypes = {
     dispatch: _react.PropTypes.func.isRequired,
     item: _react.PropTypes.object,
     fetching: _react.PropTypes.bool,
-    errors: _react.PropTypes.array
+    errors: _react.PropTypes.object
 };
 
 var VenueForm = function (_React$Component) {
@@ -14573,12 +14597,15 @@ var VenueForm = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (VenueForm.__proto__ || Object.getPrototypeOf(VenueForm)).call(this, props));
 
         _this.state = {
-            name: '',
-            capacity: 0,
-            address: '',
-            phone: '',
-            website: '',
-            image: ''
+            fields: {
+                name: '',
+                capacity: 0,
+                address: '',
+                phone: '',
+                website: '',
+                image: ''
+            },
+            errors: {}
         };
         return _this;
     }
@@ -14601,7 +14628,10 @@ var VenueForm = function (_React$Component) {
         key: "componentWillReceiveProps",
         value: function componentWillReceiveProps(nextProps) {
             if (nextProps.item !== undefined && nextProps.item !== null) {
-                this.setState(nextProps.item);
+                this.setState({
+                    fields: nextProps.item,
+                    errors: nextProps.formErrors
+                });
             }
         }
     }, {
@@ -14640,7 +14670,7 @@ var VenueForm = function (_React$Component) {
         key: "onChange",
         value: function onChange(e) {
             var newState = Object.assign({}, this.state);
-            newState[e.target.name] = e.target.value;
+            newState.fields[e.target.name] = e.target.value;
             this.setState(newState);
             this.props.dispatch(actions.editVenue(e.target.name, e.target.value));
         }
@@ -14649,7 +14679,7 @@ var VenueForm = function (_React$Component) {
         value: function render() {
             if (this.props.saveSuccess) {
                 return _react2.default.createElement(_reactRouterDom.Redirect, { to: {
-                        pathname: '/venues/'
+                        pathname: routes.VENUES_LIST
                     } });
             }
 
@@ -14661,7 +14691,7 @@ var VenueForm = function (_React$Component) {
             var header = '';
             var removeBtn = '';
             if (this.props.item.id !== undefined) {
-                header = 'Edition de "' + this.props.item.name + '"';
+                header = _localization2.default.formatString(_localization2.default.editing, this.state.fields.name);
                 removeBtn = _react2.default.createElement(
                     "li",
                     null,
@@ -14683,9 +14713,12 @@ var VenueForm = function (_React$Component) {
                 "div",
                 null,
                 loading,
-                _react2.default.createElement(_ConfirmModal2.default, { title: _localization2.default.delete_venue_title, content: _localization2.default.formatString(_localization2.default.delete_venue_content, this.props.item.name), active: this.props.removeModal,
+                _react2.default.createElement(_ConfirmModal2.default, { title: _localization2.default.delete_venue_title,
+                    content: _localization2.default.formatString(_localization2.default.delete_venue_content, this.props.item.name),
+                    active: this.props.removeModal,
                     dispatch: this.props.dispatch, cancelAction: actions.cancelRemoveVenue,
-                    confirmAction: actions.confirmRemoveVenue, itemId: this.props.item.id ? this.props.item.id : null }),
+                    confirmAction: actions.confirmRemoveVenue,
+                    itemId: this.props.item.id ? this.props.item.id : null }),
                 _react2.default.createElement(
                     _FixedNavBar2.default,
                     { title: header, icon: "business" },
@@ -14706,22 +14739,47 @@ var VenueForm = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                     "form",
-                    { id: "venue-form", style: { opacity: this.props.fetching ? 0.3 : 1 }, onSubmit: this.onSubmit.bind(this) },
+                    { id: "venue-form", style: { opacity: this.props.fetching ? 0.3 : 1 },
+                        onSubmit: this.onSubmit.bind(this) },
                     _react2.default.createElement(
                         _reactMaterialize.Row,
                         null,
-                        _react2.default.createElement(_reactMaterialize.Input, { className: this.state.name ? 'active' : '', s: 12, name: "name", error: this.props.errors.name,
-                            onChange: this.onChange.bind(this), label: "Name", value: this.state.name }),
-                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "capacity", error: this.props.errors.capacity,
-                            onChange: this.onChange.bind(this), label: "Capacity", value: this.state.capacity }),
-                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "address", error: this.props.errors.address,
-                            onChange: this.onChange.bind(this), label: "Address", value: this.state.address }),
-                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "phone", error: this.props.errors.phone,
-                            onChange: this.onChange.bind(this), label: "Phone", value: this.state.phone }),
-                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "website", error: this.props.errors.website,
-                            onChange: this.onChange.bind(this), label: "website", value: this.state.website }),
-                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "image", error: this.props.errors.image,
-                            onChange: this.onChange.bind(this), label: "Image URL", value: this.state.image })
+                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+                            name: "name",
+                            error: this.state.errors.name,
+                            onChange: this.onChange.bind(this),
+                            label: _localization2.default.fields.venues.name,
+                            value: this.state.fields.name }),
+                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+                            name: "capacity",
+                            error: this.state.errors.capacity,
+                            onChange: this.onChange.bind(this),
+                            label: _localization2.default.fields.venues.capacity,
+                            value: this.state.fields.capacity }),
+                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+                            name: "address",
+                            error: this.state.errors.address,
+                            onChange: this.onChange.bind(this),
+                            label: _localization2.default.fields.venues.address,
+                            value: this.state.fields.address }),
+                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+                            name: "phone",
+                            error: this.state.errors.phone,
+                            onChange: this.onChange.bind(this),
+                            label: _localization2.default.fields.venues.phone,
+                            value: this.state.fields.phone }),
+                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+                            name: "website",
+                            error: this.state.errors.website,
+                            onChange: this.onChange.bind(this),
+                            label: _localization2.default.fields.venues.website,
+                            value: this.state.fields.website }),
+                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+                            name: "image",
+                            error: this.state.errors.image,
+                            onChange: this.onChange.bind(this),
+                            label: _localization2.default.fields.venues.image,
+                            value: this.state.fields.image })
                     ),
                     _react2.default.createElement(
                         _reactMaterialize.Row,
@@ -14772,6 +14830,14 @@ var _reactRedux = __webpack_require__(28);
 
 var _reactRouterDom = __webpack_require__(22);
 
+var _routes = __webpack_require__(402);
+
+var routes = _interopRequireWildcard(_routes);
+
+var _localization = __webpack_require__(398);
+
+var _localization2 = _interopRequireDefault(_localization);
+
 var _venuesActions = __webpack_require__(44);
 
 var actions = _interopRequireWildcard(_venuesActions);
@@ -14815,7 +14881,7 @@ var VenueListItem = function (_React$Component) {
             }
             return _react2.default.createElement(
                 _reactRouterDom.Link,
-                { to: '/venues/show/' + this.props.id, className: "collection-item", href: "#" },
+                { to: _localization2.default.formatString(routes.VENUES_EDIT, this.props.id), className: "collection-item", href: "#" },
                 _react2.default.createElement(
                     _reactMaterialize.Row,
                     null,
@@ -14887,6 +14953,14 @@ var _Reload2 = _interopRequireDefault(_Reload);
 
 var _reactRouterDom = __webpack_require__(22);
 
+var _localization = __webpack_require__(398);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+var _routes = __webpack_require__(402);
+
+var routes = _interopRequireWildcard(_routes);
+
 var _venuesActions = __webpack_require__(44);
 
 var actions = _interopRequireWildcard(_venuesActions);
@@ -14947,13 +15021,13 @@ var VenuesList = function (_React$Component) {
         value: function render() {
             var header = _react2.default.createElement(
                 _FixedNavBar2.default,
-                { title: "Salles" },
+                { title: _localization2.default.venues_title },
                 _react2.default.createElement(
                     "li",
                     null,
                     _react2.default.createElement(
                         _reactRouterDom.Link,
-                        { className: "blue waves-effect", to: "/venues/add/" },
+                        { className: "blue waves-effect", to: routes.VENUES_ADD },
                         _react2.default.createElement(
                             _reactMaterialize.Icon,
                             null,
@@ -15048,7 +15122,7 @@ var initialState = {
     fetching: false,
     error: null,
     removeModal: false,
-    formErrors: []
+    formErrors: {}
 };
 
 function venues() {
@@ -37197,16 +37271,8 @@ exports.default = {
     booking: 'réservation',
     bookings: 'réservations',
 
-    /** Venue fields **/
-    name: 'Nom',
-    capacity: 'Capacité',
-    address: 'Adresse',
-    phone: 'Téléphone',
-    website: 'Site web',
-    image: 'Lien de l\'image',
-
     /** Headers **/
-    editing: 'Edition de ',
+    editing: 'Edition de "{0}"',
     new_venue: 'Nouvelle salle',
     new_event: 'Nouvel événement',
     new_booking: 'Nouvelle réservation',
@@ -37227,7 +37293,20 @@ exports.default = {
 
     /** Modals **/
     delete_venue_title: 'Supprimer la salle',
-    delete_venue_content: 'Êtes-vous sûr de vouloir supprimer la salle "{0}" ?'
+    delete_venue_content: 'Êtes-vous sûr de vouloir supprimer la salle "{0}" ?',
+
+    /** Entity Fields **/
+    fields: {
+        venues: {
+            name: 'Nom',
+            capacity: 'Capacité',
+            address: 'Adresse',
+            phone: 'Téléphone',
+            website: 'Site web',
+            image: 'Lien de l\'image'
+        }
+    }
+
 };
 
 /***/ }),
@@ -37421,6 +37500,57 @@ var LocalizedStrings = function () {
 
 exports.default = LocalizedStrings;
 
+
+/***/ }),
+/* 400 */,
+/* 401 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var VENUE_ADD = exports.VENUE_ADD = '/api/venues/new/';
+var VENUE_REMOVE = exports.VENUE_REMOVE = '/api/venues/delete/{0}';
+var VENUE_EDIT = exports.VENUE_EDIT = '/api/venues/edit/{0}';
+var VENUES_GET = exports.VENUES_GET = '/api/venues/get';
+var VENUE_GET = exports.VENUE_GET = '/api/venues/get/{0}';
+
+var EVENT_ADD = exports.EVENT_ADD = '/api/events/new/';
+var EVENT_REMOVE = exports.EVENT_REMOVE = '/api/events/delete/{0}';
+var EVENT_EDIT = exports.EVENT_EDIT = '/api/events/edit/{0}';
+var EVENTS_GET = exports.EVENTS_GET = '/api/events/get';
+var EVENT_GET = exports.EVENT_GET = '/api/events/get/{0}';
+
+var BOOKING_ADD = exports.BOOKING_ADD = '/api/bookings/new/';
+var BOOKING_REMOVE = exports.BOOKING_REMOVE = '/api/bookings/delete/{0}';
+var BOOKING_EDIT = exports.BOOKING_EDIT = '/api/bookings/edit/{0}';
+var BOOKINGS_GET = exports.BOOKINGS_GET = '/api/bookings/get';
+var BOOKING_GET = exports.BOOKING_GET = '/api/bookings/get/{0}';
+
+/***/ }),
+/* 402 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var VENUES_LIST = exports.VENUES_LIST = '/venues/';
+var VENUES_ADD = exports.VENUES_ADD = '/venues/add/';
+var VENUES_EDIT = exports.VENUES_EDIT = '/venues/show/{0}';
+
+var EVENTS_LIST = exports.EVENTS_LIST = '/events/';
+var EVENTS_ADD = exports.EVENTS_ADD = '/events/add/';
+var EVENTS_EDIT = exports.EVENTS_EDIT = '/events/show/{0}';
+
+var BOOKINGS_LIST = exports.BOOKINGS_LIST = '/bookings/';
+var BOOKINGS_ADD = exports.BOOKINGS_ADD = '/bookings/add/';
+var BOOKINGS_EDIT = exports.BOOKINGS_EDIT = '/bookings/show/{0}';
 
 /***/ })
 /******/ ]);

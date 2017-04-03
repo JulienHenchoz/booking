@@ -1,7 +1,8 @@
 import * as types from '../constants/actionTypes';
+import * as ajaxRoutes from '../constants/ajaxRoutes';
+
 import * as utils from '../utils/utils';
 import l10n from '../l10n/localization';
-
 export function loadingVenues() {
     return {
         type: types.LOADING_VENUES
@@ -107,7 +108,7 @@ export function addVenue(form) {
     return dispatch => {
         dispatch(savingVenue());
         // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/new/', {
+        fetch(ajaxRoutes.VENUE_ADD, {
             method: "POST",
             body: new FormData(form)
         })
@@ -132,7 +133,7 @@ export function confirmRemoveVenue(id) {
     return dispatch => {
         dispatch(removingVenue());
         // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/delete/' + id, {
+        fetch(l10n.formatString(ajaxRoutes.VENUE_REMOVE, id), {
             method: "DELETE",
         })
             .then(response => {
@@ -157,7 +158,7 @@ export function updateVenue(id, form) {
     return dispatch => {
         dispatch(savingVenue());
         // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/edit/' + id, {
+        fetch(l10n.formatString(ajaxRoutes.VENUE_EDIT, id), {
             method: "POST",
             body: new FormData(form)
         })
@@ -183,7 +184,7 @@ export function updateVenue(id, form) {
 export function fetchVenues() {
     return dispatch => {
         dispatch(loadingVenues());
-        fetch('/api/venues/get')
+        fetch(ajaxRoutes.VENUES_GET)
             .then(response => {
                 return response.json();
             })
@@ -200,7 +201,7 @@ export function fetchVenue(id) {
     return dispatch => {
         dispatch(loadingVenues());
 
-        fetch('/api/venues/get/' + id)
+        fetch(l10n.formatString(ajaxRoutes.VENUE_GET, id))
             .then(response => {
                 return response.json();
             })

@@ -16,16 +16,8 @@ export default {
     booking: 'réservation',
     bookings: 'réservations',
 
-    /** Venue fields **/
-    name: 'Nom',
-    capacity: 'Capacité',
-    address: 'Adresse',
-    phone: 'Téléphone',
-    website: 'Site web',
-    image: 'Lien de l\'image',
-
     /** Headers **/
-    editing: 'Edition de ',
+    editing: 'Edition de "{0}"',
     new_venue: 'Nouvelle salle',
     new_event: 'Nouvel événement',
     new_booking: 'Nouvelle réservation',
@@ -46,5 +38,18 @@ export default {
 
     /** Modals **/
     delete_venue_title: 'Supprimer la salle',
-    delete_venue_content: 'Êtes-vous sûr de vouloir supprimer la salle "{0}" ?'
+    delete_venue_content: 'Êtes-vous sûr de vouloir supprimer la salle "{0}" ?',
+
+    /** Entity Fields **/
+    fields: {
+        venues: {
+            name: 'Nom',
+            capacity: 'Capacité',
+            address: 'Adresse',
+            phone: 'Téléphone',
+            website: 'Site web',
+            image: 'Lien de l\'image',
+        }
+    }
+
 };

@@ -6,7 +6,7 @@ const initialState = {
     fetching: false,
     error: null,
     removeModal: false,
-    formErrors: []
+    formErrors: {}
 };
 
 export default function venues(state = initialState, action) {
