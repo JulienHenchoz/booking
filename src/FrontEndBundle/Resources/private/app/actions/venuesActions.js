@@ -1,6 +1,8 @@
 import * as types from '../constants/actionTypes';
-import * as utils from '../utils/utils';
+import * as ajaxRoutes from '../constants/ajaxRoutes';
 
+import * as utils from '../utils/utils';
+import l10n from '../l10n/localization';
 export function loadingVenues() {
     return {
         type: types.LOADING_VENUES
@@ -63,7 +65,7 @@ export function receiveVenue(item) {
 }
 
 export function saveSuccess(item) {
-    utils.toastSuccess('L\'élément a été sauvegardé avec succès !');
+    utils.toastSuccess(l10n.save_success);
     return {
         type: types.VENUE_SAVE_SUCCESS,
         payload: item
@@ -71,7 +73,7 @@ export function saveSuccess(item) {
 }
 
 export function saveError(errors) {
-    utils.toastError('Impossible de sauver l\'élément !');
+    utils.toastError(l10n.save_error);
     return {
         type: types.VENUE_SAVE_ERROR,
         payload: errors
@@ -79,7 +81,7 @@ export function saveError(errors) {
 }
 
 export function removeSuccess(item) {
-    utils.toastSuccess('L\'élément a été supprimé avec succès !');
+    utils.toastSuccess(l10n.remove_success);
     return {
         type: types.VENUE_REMOVE_SUCCESS,
         payload: item
@@ -87,7 +89,7 @@ export function removeSuccess(item) {
 }
 
 export function removeError(errors) {
-    utils.toastError('Impossible de supprimer l\'élément !');
+    utils.toastError(l10n.remove_error);
     return {
         type: types.VENUE_REMOVE_ERROR,
         payload: errors
@@ -102,11 +104,18 @@ export function getError(message) {
     };
 }
 
+export function validationError() {
+    utils.toastError(l10n.validation_errors);
+    return {
+        type: types.VALIDATION_ERROR,
+    };
+}
+
 export function addVenue(form) {
     return dispatch => {
         dispatch(savingVenue());
         // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/new/', {
+        fetch(ajaxRoutes.VENUE_ADD, {
             method: "POST",
             body: new FormData(form)
         })
@@ -131,7 +140,7 @@ export function confirmRemoveVenue(id) {
     return dispatch => {
         dispatch(removingVenue());
         // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/delete/' + id, {
+        fetch(l10n.formatString(ajaxRoutes.VENUE_REMOVE, id), {
             method: "DELETE",
         })
             .then(response => {
@@ -156,7 +165,7 @@ export function updateVenue(id, form) {
     return dispatch => {
         dispatch(savingVenue());
         // TODO : Dispatch an error if the item has no id
-        fetch('/api/venues/edit/' + id, {
+        fetch(l10n.formatString(ajaxRoutes.VENUE_EDIT, id), {
             method: "POST",
             body: new FormData(form)
         })
@@ -182,7 +191,7 @@ export function updateVenue(id, form) {
 export function fetchVenues() {
     return dispatch => {
         dispatch(loadingVenues());
-        fetch('/api/venues/get')
+        fetch(ajaxRoutes.VENUES_GET)
             .then(response => {
                 return response.json();
             })
@@ -190,7 +199,7 @@ export function fetchVenues() {
                 dispatch(receiveVenues(json));
             })
             .catch(function() {
-                dispatch(getError('Une erreur est survenue lors de la récupération de la liste des salles.'));
+                dispatch(getError(l10n.venues_fetch_error));
             });
     }
 }
@@ -199,7 +208,7 @@ export function fetchVenue(id) {
     return dispatch => {
         dispatch(loadingVenues());
 
-        fetch('/api/venues/get/' + id)
+        fetch(l10n.formatString(ajaxRoutes.VENUE_GET, id))
             .then(response => {
                 return response.json();
             })
@@ -207,7 +216,7 @@ export function fetchVenue(id) {
                 dispatch(receiveVenue(json));
             })
             .catch(function() {
-                dispatch(getError('Une erreur est survenue lors de la récupération de la salle.'));
+                dispatch(getError(l10n.venue_fetch_error));
             });
 
     }

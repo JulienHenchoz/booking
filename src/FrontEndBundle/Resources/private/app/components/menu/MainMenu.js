@@ -1,6 +1,8 @@
 import React from "react";
 import {Icon, SideNav, SideNavItem, Button} from 'react-materialize';
 import NavLink from './NavLink';
+import l10n from '../../l10n/localization';
+import * as routes from '../../constants/routes';
 
 export default class MainMenu extends React.Component {
 
@@ -14,9 +16,9 @@ export default class MainMenu extends React.Component {
                             background: '/img/background.png',
                         }} />
 
-                    <NavLink to="/venues/"  icon="business">Salles</NavLink>
-                    <NavLink to="/events/"  icon="movie">Evénements</NavLink>
-                    <NavLink to="/bookings/"  icon="email">Réservations</NavLink>
+                    <NavLink to={routes.VENUES_LIST} icon="business">{l10n.venues_title}</NavLink>
+                    <NavLink to={routes.EVENTS_LIST} icon="movie">{l10n.events_title}</NavLink>
+                    <NavLink to={routes.BOOKINGS_LIST} icon="email">{l10n.bookings_title}</NavLink>
                 </SideNav>
             </div>
         );

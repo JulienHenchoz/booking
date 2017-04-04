@@ -62,7 +62,7 @@
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _configureStore = __webpack_require__(387);
+	var _configureStore = __webpack_require__(395);
 
 	var _configureStore2 = _interopRequireDefault(_configureStore);
 
@@ -27087,13 +27087,23 @@
 
 	var _MainMenu2 = _interopRequireDefault(_MainMenu);
 
-	var _VenueForm = __webpack_require__(301);
+	var _VenueForm = __webpack_require__(305);
 
 	var _VenueForm2 = _interopRequireDefault(_VenueForm);
 
-	var _VenuesList = __webpack_require__(308);
+	var _VenuesList = __webpack_require__(316);
 
 	var _VenuesList2 = _interopRequireDefault(_VenuesList);
+
+	var _routes = __webpack_require__(304);
+
+	var routes = _interopRequireWildcard(_routes);
+
+	var _localization = __webpack_require__(301);
+
+	var _localization2 = _interopRequireDefault(_localization);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27126,9 +27136,9 @@
 	                        "main",
 	                        null,
 	                        _react2.default.createElement(_reactRouterDom.Route, { path: "/", exact: true, component: _VenuesList2.default }),
-	                        _react2.default.createElement(_reactRouterDom.Route, { path: "/venues/", exact: true, component: _VenuesList2.default }),
-	                        _react2.default.createElement(_reactRouterDom.Route, { path: "/venues/add/", exact: true, component: _VenueForm2.default }),
-	                        _react2.default.createElement(_reactRouterDom.Route, { path: "/venues/show/:venueId", component: _VenueForm2.default })
+	                        _react2.default.createElement(_reactRouterDom.Route, { path: routes.VENUES_LIST, exact: true, component: _VenuesList2.default }),
+	                        _react2.default.createElement(_reactRouterDom.Route, { path: routes.VENUES_ADD, exact: true, component: _VenueForm2.default }),
+	                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.VENUES_EDIT, ':venueId'), component: _VenueForm2.default })
 	                    )
 	                )
 	            );
@@ -27161,6 +27171,16 @@
 	var _NavLink = __webpack_require__(300);
 
 	var _NavLink2 = _interopRequireDefault(_NavLink);
+
+	var _localization = __webpack_require__(301);
+
+	var _localization2 = _interopRequireDefault(_localization);
+
+	var _routes = __webpack_require__(304);
+
+	var routes = _interopRequireWildcard(_routes);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27202,18 +27222,18 @@
 	                        } }),
 	                    _react2.default.createElement(
 	                        _NavLink2.default,
-	                        { to: '/venues/', icon: 'business' },
-	                        'Salles'
+	                        { to: routes.VENUES_LIST, icon: 'business' },
+	                        _localization2.default.venues_title
 	                    ),
 	                    _react2.default.createElement(
 	                        _NavLink2.default,
-	                        { to: '/events/', icon: 'movie' },
-	                        'Ev\xE9nements'
+	                        { to: routes.EVENTS_LIST, icon: 'movie' },
+	                        _localization2.default.events_title
 	                    ),
 	                    _react2.default.createElement(
 	                        _NavLink2.default,
-	                        { to: '/bookings/', icon: 'email' },
-	                        'R\xE9servations'
+	                        { to: routes.BOOKINGS_LIST, icon: 'email' },
+	                        _localization2.default.bookings_title
 	                    )
 	                )
 	            );
@@ -31722,6 +31742,290 @@
 /* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _reactLocalization = __webpack_require__(302);
+
+	var _reactLocalization2 = _interopRequireDefault(_reactLocalization);
+
+	var _fr = __webpack_require__(303);
+
+	var _fr2 = _interopRequireDefault(_fr);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = new _reactLocalization2.default({
+	    fr: _fr2.default
+	});
+
+/***/ },
+/* 302 */
+/***/ function(module, exports) {
+
+	'use strict';
+	/**
+	 * Simple module to localize the React interface using the same syntax
+	 * used in the ReactNativeLocalization module
+	 * (https://github.com/stefalda/ReactNativeLocalization)
+	 *
+	 * Originally developed by Stefano Falda (stefano.falda@gmail.com)
+	 *
+	 * It uses a call to the Navigator/Browser object to get the current interface language,
+	 * then display the correct language strings or the default language (the first
+	 * one if a match is not found).
+	 *
+	 * How to use:
+	 * Check the instructions at:
+	 * https://github.com/stefalda/react-localization
+	 */
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var LocalizedStrings = function () {
+	    _createClass(LocalizedStrings, [{
+	        key: '_getBestMatchingLanguage',
+	        value: function _getBestMatchingLanguage(language, props) {
+	            //If an object with the passed language key exists return it
+	            if (props[language]) return language;
+	            //if the string is composed try to find a match with only the first language identifiers (en-US --> en)
+	            var idx = language.indexOf("-");
+	            if (idx >= 0) {
+	                language = language.substring(0, idx);
+	                if (props[language]) return language;
+	            }
+	            //Return the default language (the first coded)
+	            return Object.keys(props)[0];
+	        }
+	    }]);
+
+	    function LocalizedStrings(props) {
+	        _classCallCheck(this, LocalizedStrings);
+
+	        this.interfaceLanguage = typeof navigator !== 'undefined' && navigator.languages && typeof navigator.languages !== 'undefined' && navigator.languages[0] && typeof navigator.languages[0] !== 'undefined' ? navigator.languages[0] : typeof navigator !== 'undefined' && navigator.language && typeof navigator.language !== 'undefined' ? navigator.language : typeof navigator !== 'undefined' && navigator.userLanguage && typeof navigator.userLanguage !== 'undefined' ? navigator.userLanguage : 'en-US';
+	        //Store locally the passed strings
+	        this.props = props;
+	        this.defaultLanguage = Object.keys(props)[0];
+	        //Set language to its default value (the interface)
+	        this.setLanguage(this.interfaceLanguage);
+	    }
+
+	    //Can be used from ouside the class to force a particular language
+	    //independently from the interface one
+
+
+	    _createClass(LocalizedStrings, [{
+	        key: 'setLanguage',
+	        value: function setLanguage(language) {
+	            //Check if a translation exists for the current language or if the default
+	            //should be used
+	            var bestLanguage = this._getBestMatchingLanguage(language, this.props);
+	            this.language = bestLanguage;
+	            //Associate the language object to the this object
+	            if (this.props[bestLanguage]) {
+	                //console.log("There are strings for the language:"+language);
+	                //Merge default 
+	                var localizedStrings = _extends({}, this.props[this.defaultLanguage], this.props[this.language]);
+	                for (var key in localizedStrings) {
+	                    //console.log("Checking property:"+key);
+	                    if (localizedStrings.hasOwnProperty(key)) {
+	                        //console.log("Associating property:"+key);
+	                        this[key] = localizedStrings[key];
+	                    }
+	                }
+	            }
+	        }
+
+	        //The current language displayed (could differ from the interface language
+	        // if it has been forced manually and a matching translation has been found)
+
+	    }, {
+	        key: 'getLanguage',
+	        value: function getLanguage() {
+	            return this.language;
+	        }
+
+	        //The current interface language (could differ from the language displayed)
+
+	    }, {
+	        key: 'getInterfaceLanguage',
+	        value: function getInterfaceLanguage() {
+	            return this.interfaceLanguage;
+	        }
+
+	        //Return an array containing the available languages passed as props in the constructor
+
+	    }, {
+	        key: 'getAvailableLanguages',
+	        value: function getAvailableLanguages() {
+	            if (!this.availableLanguages) {
+	                this.availableLanguages = [];
+	                for (var language in this.props) {
+	                    this.availableLanguages.push(language);
+	                }
+	            }
+	            return this.availableLanguages;
+	        }
+
+	        //Format the passed string replacing the numbered placeholders
+	        //i.e. I'd like some {0} and {1}, or just {0}
+	        //Use example:
+	        //  strings.formatString(strings.question, strings.bread, strings.butter)
+
+	    }, {
+	        key: 'formatString',
+	        value: function formatString(str) {
+	            var res = str;
+
+	            for (var _len = arguments.length, values = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	                values[_key - 1] = arguments[_key];
+	            }
+
+	            for (var i = 0; i < values.length; i++) {
+	                res = this._replaceAll("{" + i + "}", values[i], res);
+	            }
+	            return res;
+	        }
+
+	        //Return a string with the passed key in a different language 
+
+	    }, {
+	        key: 'getString',
+	        value: function getString(key, language) {
+	            try {
+	                return this.props[language][key];
+	            } catch (ex) {
+	                console.log("No localization found for key " + key + " and language " + language);
+	            }
+	            return null;
+	        }
+
+	        //Replace all occorrencies of a string in another using RegExp
+
+	    }, {
+	        key: '_replaceAll',
+	        value: function _replaceAll(find, replace, str) {
+	            //Escape find
+	            find = find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+	            return str.replace(new RegExp(find, 'g'), replace);
+	        }
+	    }]);
+
+	    return LocalizedStrings;
+	}();
+
+	exports.default = LocalizedStrings;
+
+
+/***/ },
+/* 303 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = {
+	    save: 'Enregistrer',
+
+	    venue_title: 'Salle',
+	    venues_title: 'Salles',
+	    venue: 'salle',
+	    venues: 'salles',
+
+	    event_title: 'Événement',
+	    events_title: 'Événements',
+	    event: 'événement',
+	    events: 'événements',
+
+	    booking_title: 'Réservation',
+	    bookings_title: 'Réservations',
+	    booking: 'réservation',
+	    bookings: 'réservations',
+
+	    /** Headers **/
+	    editing: 'Edition de "{0}"',
+	    new_venue: 'Nouvelle salle',
+	    new_event: 'Nouvel événement',
+	    new_booking: 'Nouvelle réservation',
+
+	    /** Toast messages **/
+	    could_not_save_element: 'Impossible de sauver l\'élément !',
+	    save_success: 'L\'élément a été sauvegardé avec succès !',
+	    save_error: 'Impossible de sauver l\'élément !',
+	    remove_success: 'L\'élément a été supprimé avec succès !',
+	    remove_error: 'Impossible de supprimer l\'élément !',
+	    validation_errors: 'Certains champs sont invalides, merci de vérifier les données et valider à nouveau.',
+
+	    venues_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des salles.',
+	    venue_fetch_error: 'Une erreur est survenue lors de la récupération de la salle.',
+
+	    /** Buttons **/
+	    btn_confirm: 'Confirmer',
+	    btn_cancel: 'Annuler',
+
+	    /** Modals **/
+	    delete_venue_title: 'Supprimer la salle',
+	    delete_venue_content: 'Êtes-vous sûr de vouloir supprimer la salle "{0}" ?',
+
+	    /** Entity Fields **/
+	    fields: {
+	        venues: {
+	            name: 'Nom',
+	            capacity: 'Capacité',
+	            address: 'Adresse',
+	            phone: 'Téléphone',
+	            website: 'Site web',
+	            image: 'Lien de l\'image'
+	        }
+	    },
+
+	    /** Validation message **/
+	    validation: {
+	        required: 'Ce champ est requis.',
+	        url: 'Ce champ doit être une adresse internet valide.',
+	        numberGreaterThanZero: 'Ce champ doit être un nombre plus grand que zéro.'
+	    }
+
+	};
+
+/***/ },
+/* 304 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var VENUES_LIST = exports.VENUES_LIST = '/venues/';
+	var VENUES_ADD = exports.VENUES_ADD = '/venues/add/';
+	var VENUES_EDIT = exports.VENUES_EDIT = '/venues/show/{0}';
+
+	var EVENTS_LIST = exports.EVENTS_LIST = '/events/';
+	var EVENTS_ADD = exports.EVENTS_ADD = '/events/add/';
+	var EVENTS_EDIT = exports.EVENTS_EDIT = '/events/show/{0}';
+
+	var BOOKINGS_LIST = exports.BOOKINGS_LIST = '/bookings/';
+	var BOOKINGS_ADD = exports.BOOKINGS_ADD = '/bookings/add/';
+	var BOOKINGS_EDIT = exports.BOOKINGS_EDIT = '/bookings/show/{0}';
+
+/***/ },
+/* 305 */
+/***/ function(module, exports, __webpack_require__) {
+
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
@@ -31740,25 +32044,41 @@
 
 	var _reactMaterialize = __webpack_require__(255);
 
-	var _Loader = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/Loader\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _routes = __webpack_require__(304);
+
+	var routes = _interopRequireWildcard(_routes);
+
+	var _Loader = __webpack_require__(306);
 
 	var _Loader2 = _interopRequireDefault(_Loader);
 
-	var _utils = __webpack_require__(303);
+	var _validate = __webpack_require__(307);
+
+	var _validate2 = _interopRequireDefault(_validate);
+
+	var _venue = __webpack_require__(309);
+
+	var _venue2 = _interopRequireDefault(_venue);
+
+	var _utils = __webpack_require__(310);
 
 	var utils = _interopRequireWildcard(_utils);
 
-	var _FixedNavBar = __webpack_require__(304);
+	var _FixedNavBar = __webpack_require__(311);
 
 	var _FixedNavBar2 = _interopRequireDefault(_FixedNavBar);
 
-	var _venuesActions = __webpack_require__(305);
+	var _venuesActions = __webpack_require__(312);
 
 	var actions = _interopRequireWildcard(_venuesActions);
 
-	var _ConfirmModal = __webpack_require__(307);
+	var _ConfirmModal = __webpack_require__(315);
 
 	var _ConfirmModal2 = _interopRequireDefault(_ConfirmModal);
+
+	var _localization = __webpack_require__(301);
+
+	var _localization2 = _interopRequireDefault(_localization);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -31774,24 +32094,34 @@
 	    dispatch: _react.PropTypes.func.isRequired,
 	    item: _react.PropTypes.object,
 	    fetching: _react.PropTypes.bool,
-	    errors: _react.PropTypes.array
+	    errors: _react.PropTypes.object
 	};
 
 	var VenueForm = function (_React$Component) {
 	    _inherits(VenueForm, _React$Component);
+
+	    _createClass(VenueForm, [{
+	        key: "getEmptyFields",
+	        value: function getEmptyFields() {
+	            return {
+	                name: '',
+	                capacity: '',
+	                address: '',
+	                phone: '',
+	                website: '',
+	                image: ''
+	            };
+	        }
+	    }]);
 
 	    function VenueForm(props) {
 	        _classCallCheck(this, VenueForm);
 
 	        var _this = _possibleConstructorReturn(this, (VenueForm.__proto__ || Object.getPrototypeOf(VenueForm)).call(this, props));
 
-	        _this.state = {
-	            name: '',
-	            capacity: 0,
-	            address: '',
-	            phone: '',
-	            website: '',
-	            image: ''
+	        var emptyFields = _this.state = {
+	            fields: _this.getEmptyFields(),
+	            errors: _this.getEmptyFields()
 	        };
 	        return _this;
 	    }
@@ -31813,8 +32143,11 @@
 	    }, {
 	        key: "componentWillReceiveProps",
 	        value: function componentWillReceiveProps(nextProps) {
-	            if (nextProps.item !== undefined && nextProps.item !== null) {
-	                this.setState(nextProps.item);
+	            if (nextProps.item !== undefined && nextProps.item !== null && !utils.objectIsEmpty(nextProps.item)) {
+	                this.setState({
+	                    fields: nextProps.item,
+	                    errors: nextProps.errors || this.getEmptyFields()
+	                });
 	            }
 	        }
 	    }, {
@@ -31833,14 +32166,25 @@
 	        key: "onSubmit",
 	        value: function onSubmit(e) {
 	            e.preventDefault();
-	            var item = this.props.item;
 
-	            if (item.id !== undefined) {
-	                // If submitted item already has an ID, send an edit action
-	                this.props.dispatch(actions.updateVenue(item.id, document.getElementById('venue-form')));
+	            var item = this.props.item;
+	            var errors = (0, _validate2.default)(item, _venue2.default, { fullMessages: false });
+	            if (!errors) {
+	                if (item.id !== undefined) {
+	                    // If submitted item already has an ID, send an edit action
+	                    this.props.dispatch(actions.updateVenue(item.id, document.getElementById('venue-form')));
+	                } else {
+	                    // Else send an Add action
+	                    this.props.dispatch(actions.addVenue(document.getElementById('venue-form')));
+	                }
 	            } else {
-	                // Else send an Add action
-	                this.props.dispatch(actions.addVenue(document.getElementById('venue-form')));
+	                // If there were validation errors, copy them to the state so they can be displayed in the form
+	                var newState = Object.assign({}, this.state);
+	                Object.keys(errors).forEach(function (index, item) {
+	                    newState.errors[index] = errors[index].length ? errors[index][0] : '';
+	                });
+	                this.setState(newState);
+	                this.props.dispatch(actions.validationError());
 	            }
 	        }
 	    }, {
@@ -31853,16 +32197,24 @@
 	        key: "onChange",
 	        value: function onChange(e) {
 	            var newState = Object.assign({}, this.state);
-	            newState[e.target.name] = e.target.value;
+	            newState.fields[e.target.name] = e.target.value;
 	            this.setState(newState);
 	            this.props.dispatch(actions.editVenue(e.target.name, e.target.value));
+	        }
+	    }, {
+	        key: "onBlur",
+	        value: function onBlur(e) {
+	            var newState = Object.assign({}, this.state);
+	            var errors = _validate2.default.single(e.target.value, _venue2.default[e.target.name]);
+	            this.state.errors[e.target.name] = errors && errors.length ? errors[0] : '';
+	            this.setState(newState);
 	        }
 	    }, {
 	        key: "render",
 	        value: function render() {
 	            if (this.props.saveSuccess) {
 	                return _react2.default.createElement(_reactRouterDom.Redirect, { to: {
-	                        pathname: '/venues/'
+	                        pathname: routes.VENUES_LIST
 	                    } });
 	            }
 
@@ -31874,7 +32226,7 @@
 	            var header = '';
 	            var removeBtn = '';
 	            if (this.props.item.id !== undefined) {
-	                header = 'Edition de "' + this.props.item.name + '"';
+	                header = _localization2.default.formatString(_localization2.default.editing, this.state.fields.name);
 	                removeBtn = _react2.default.createElement(
 	                    "li",
 	                    null,
@@ -31889,16 +32241,19 @@
 	                    )
 	                );
 	            } else {
-	                header = 'Nouvelle salle';
+	                header = _localization2.default.new_venue;
 	            }
 
 	            return _react2.default.createElement(
 	                "div",
 	                null,
 	                loading,
-	                _react2.default.createElement(_ConfirmModal2.default, { title: "Supprimer", content: "Etes vous sur ?", active: this.props.removeModal,
+	                _react2.default.createElement(_ConfirmModal2.default, { title: _localization2.default.delete_venue_title,
+	                    content: _localization2.default.formatString(_localization2.default.delete_venue_content, this.props.item.name),
+	                    active: this.props.removeModal,
 	                    dispatch: this.props.dispatch, cancelAction: actions.cancelRemoveVenue,
-	                    confirmAction: actions.confirmRemoveVenue, itemId: this.props.item.id ? this.props.item.id : null }),
+	                    confirmAction: actions.confirmRemoveVenue,
+	                    itemId: this.props.item.id ? this.props.item.id : null }),
 	                _react2.default.createElement(
 	                    _FixedNavBar2.default,
 	                    { title: header, icon: "business" },
@@ -31919,22 +32274,53 @@
 	                ),
 	                _react2.default.createElement(
 	                    "form",
-	                    { id: "venue-form", style: { opacity: this.props.fetching ? 0.3 : 1 }, onSubmit: this.onSubmit.bind(this) },
+	                    { id: "venue-form", style: { opacity: this.props.fetching ? 0.3 : 1 },
+	                        onSubmit: this.onSubmit.bind(this) },
 	                    _react2.default.createElement(
 	                        _reactMaterialize.Row,
 	                        null,
-	                        _react2.default.createElement(_reactMaterialize.Input, { className: this.state.name ? 'active' : '', s: 12, name: "name", error: this.props.errors.name,
-	                            onChange: this.onChange.bind(this), label: "Name", value: this.state.name }),
-	                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "capacity", error: this.props.errors.capacity,
-	                            onChange: this.onChange.bind(this), label: "Capacity", value: this.state.capacity }),
-	                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "address", error: this.props.errors.address,
-	                            onChange: this.onChange.bind(this), label: "Address", value: this.state.address }),
-	                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "phone", error: this.props.errors.phone,
-	                            onChange: this.onChange.bind(this), label: "Phone", value: this.state.phone }),
-	                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "website", error: this.props.errors.website,
-	                            onChange: this.onChange.bind(this), label: "website", value: this.state.website }),
-	                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12, name: "image", error: this.props.errors.image,
-	                            onChange: this.onChange.bind(this), label: "Image URL", value: this.state.image })
+	                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+	                            name: "name",
+	                            error: this.state.errors.name ? this.state.errors.name : '',
+	                            onChange: this.onChange.bind(this),
+	                            onBlur: this.onBlur.bind(this),
+	                            label: _localization2.default.fields.venues.name,
+	                            value: this.state.fields.name }),
+	                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+	                            name: "capacity",
+	                            error: this.state.errors.capacity ? this.state.errors.capacity : '',
+	                            onChange: this.onChange.bind(this),
+	                            onBlur: this.onBlur.bind(this),
+	                            label: _localization2.default.fields.venues.capacity,
+	                            value: this.state.fields.capacity }),
+	                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+	                            name: "address",
+	                            error: this.state.errors.address ? this.state.errors.address : '',
+	                            onChange: this.onChange.bind(this),
+	                            onBlur: this.onBlur.bind(this),
+	                            label: _localization2.default.fields.venues.address,
+	                            value: this.state.fields.address }),
+	                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+	                            name: "phone",
+	                            error: this.state.errors.phone ? this.state.errors.phone : '',
+	                            onChange: this.onChange.bind(this),
+	                            onBlur: this.onBlur.bind(this),
+	                            label: _localization2.default.fields.venues.phone,
+	                            value: this.state.fields.phone }),
+	                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+	                            name: "website",
+	                            error: this.state.errors.website ? this.state.errors.website : '',
+	                            onChange: this.onChange.bind(this),
+	                            onBlur: this.onBlur.bind(this),
+	                            label: _localization2.default.fields.venues.website,
+	                            value: this.state.fields.website }),
+	                        _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+	                            name: "image",
+	                            error: this.state.errors.image ? this.state.errors.image : '',
+	                            onChange: this.onChange.bind(this),
+	                            onBlur: this.onBlur.bind(this),
+	                            label: _localization2.default.fields.venues.image,
+	                            value: this.state.fields.image })
 	                    ),
 	                    _react2.default.createElement(
 	                        _reactMaterialize.Row,
@@ -31963,8 +32349,1300 @@
 	})(VenueForm);
 
 /***/ },
-/* 302 */,
-/* 303 */
+/* 306 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactMaterialize = __webpack_require__(255);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Loader = function (_React$Component) {
+	    _inherits(Loader, _React$Component);
+
+	    function Loader(props) {
+	        _classCallCheck(this, Loader);
+
+	        return _possibleConstructorReturn(this, (Loader.__proto__ || Object.getPrototypeOf(Loader)).call(this, props));
+	    }
+
+	    _createClass(Loader, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(_reactMaterialize.Preloader, { size: 'big' });
+	        }
+	    }]);
+
+	    return Loader;
+	}(_react2.default.Component);
+
+	exports.default = Loader;
+
+/***/ },
+/* 307 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/*!
+	 * validate.js 0.11.1
+	 *
+	 * (c) 2013-2016 Nicklas Ansman, 2013 Wrapp
+	 * Validate.js may be freely distributed under the MIT license.
+	 * For all details and documentation:
+	 * http://validatejs.org/
+	 */
+
+	(function(exports, module, define) {
+	  "use strict";
+
+	  // The main function that calls the validators specified by the constraints.
+	  // The options are the following:
+	  //   - format (string) - An option that controls how the returned value is formatted
+	  //     * flat - Returns a flat array of just the error messages
+	  //     * grouped - Returns the messages grouped by attribute (default)
+	  //     * detailed - Returns an array of the raw validation data
+	  //   - fullMessages (boolean) - If `true` (default) the attribute name is prepended to the error.
+	  //
+	  // Please note that the options are also passed to each validator.
+	  var validate = function(attributes, constraints, options) {
+	    options = v.extend({}, v.options, options);
+
+	    var results = v.runValidations(attributes, constraints, options)
+	      , attr
+	      , validator;
+
+	    for (attr in results) {
+	      for (validator in results[attr]) {
+	        if (v.isPromise(results[attr][validator])) {
+	          throw new Error("Use validate.async if you want support for promises");
+	        }
+	      }
+	    }
+	    return validate.processValidationResults(results, options);
+	  };
+
+	  var v = validate;
+
+	  // Copies over attributes from one or more sources to a single destination.
+	  // Very much similar to underscore's extend.
+	  // The first argument is the target object and the remaining arguments will be
+	  // used as sources.
+	  v.extend = function(obj) {
+	    [].slice.call(arguments, 1).forEach(function(source) {
+	      for (var attr in source) {
+	        obj[attr] = source[attr];
+	      }
+	    });
+	    return obj;
+	  };
+
+	  v.extend(validate, {
+	    // This is the version of the library as a semver.
+	    // The toString function will allow it to be coerced into a string
+	    version: {
+	      major: 0,
+	      minor: 11,
+	      patch: 1,
+	      metadata: null,
+	      toString: function() {
+	        var version = v.format("%{major}.%{minor}.%{patch}", v.version);
+	        if (!v.isEmpty(v.version.metadata)) {
+	          version += "+" + v.version.metadata;
+	        }
+	        return version;
+	      }
+	    },
+
+	    // Below is the dependencies that are used in validate.js
+
+	    // The constructor of the Promise implementation.
+	    // If you are using Q.js, RSVP or any other A+ compatible implementation
+	    // override this attribute to be the constructor of that promise.
+	    // Since jQuery promises aren't A+ compatible they won't work.
+	    Promise: typeof Promise !== "undefined" ? Promise : /* istanbul ignore next */ null,
+
+	    EMPTY_STRING_REGEXP: /^\s*$/,
+
+	    // Runs the validators specified by the constraints object.
+	    // Will return an array of the format:
+	    //     [{attribute: "<attribute name>", error: "<validation result>"}, ...]
+	    runValidations: function(attributes, constraints, options) {
+	      var results = []
+	        , attr
+	        , validatorName
+	        , value
+	        , validators
+	        , validator
+	        , validatorOptions
+	        , error;
+
+	      if (v.isDomElement(attributes) || v.isJqueryElement(attributes)) {
+	        attributes = v.collectFormValues(attributes);
+	      }
+
+	      // Loops through each constraints, finds the correct validator and run it.
+	      for (attr in constraints) {
+	        value = v.getDeepObjectValue(attributes, attr);
+	        // This allows the constraints for an attribute to be a function.
+	        // The function will be called with the value, attribute name, the complete dict of
+	        // attributes as well as the options and constraints passed in.
+	        // This is useful when you want to have different
+	        // validations depending on the attribute value.
+	        validators = v.result(constraints[attr], value, attributes, attr, options, constraints);
+
+	        for (validatorName in validators) {
+	          validator = v.validators[validatorName];
+
+	          if (!validator) {
+	            error = v.format("Unknown validator %{name}", {name: validatorName});
+	            throw new Error(error);
+	          }
+
+	          validatorOptions = validators[validatorName];
+	          // This allows the options to be a function. The function will be
+	          // called with the value, attribute name, the complete dict of
+	          // attributes as well as the options and constraints passed in.
+	          // This is useful when you want to have different
+	          // validations depending on the attribute value.
+	          validatorOptions = v.result(validatorOptions, value, attributes, attr, options, constraints);
+	          if (!validatorOptions) {
+	            continue;
+	          }
+	          results.push({
+	            attribute: attr,
+	            value: value,
+	            validator: validatorName,
+	            globalOptions: options,
+	            attributes: attributes,
+	            options: validatorOptions,
+	            error: validator.call(validator,
+	                value,
+	                validatorOptions,
+	                attr,
+	                attributes,
+	                options)
+	          });
+	        }
+	      }
+
+	      return results;
+	    },
+
+	    // Takes the output from runValidations and converts it to the correct
+	    // output format.
+	    processValidationResults: function(errors, options) {
+	      errors = v.pruneEmptyErrors(errors, options);
+	      errors = v.expandMultipleErrors(errors, options);
+	      errors = v.convertErrorMessages(errors, options);
+
+	      var format = options.format || "grouped";
+
+	      if (typeof v.formatters[format] === 'function') {
+	        errors = v.formatters[format](errors);
+	      } else {
+	        throw new Error(v.format("Unknown format %{format}", options));
+	      }
+
+	      return v.isEmpty(errors) ? undefined : errors;
+	    },
+
+	    // Runs the validations with support for promises.
+	    // This function will return a promise that is settled when all the
+	    // validation promises have been completed.
+	    // It can be called even if no validations returned a promise.
+	    async: function(attributes, constraints, options) {
+	      options = v.extend({}, v.async.options, options);
+
+	      var WrapErrors = options.wrapErrors || function(errors) {
+	        return errors;
+	      };
+
+	      // Removes unknown attributes
+	      if (options.cleanAttributes !== false) {
+	        attributes = v.cleanAttributes(attributes, constraints);
+	      }
+
+	      var results = v.runValidations(attributes, constraints, options);
+
+	      return new v.Promise(function(resolve, reject) {
+	        v.waitForResults(results).then(function() {
+	          var errors = v.processValidationResults(results, options);
+	          if (errors) {
+	            reject(new WrapErrors(errors, options, attributes, constraints));
+	          } else {
+	            resolve(attributes);
+	          }
+	        }, function(err) {
+	          reject(err);
+	        });
+	      });
+	    },
+
+	    single: function(value, constraints, options) {
+	      options = v.extend({}, v.single.options, options, {
+	        format: "flat",
+	        fullMessages: false
+	      });
+	      return v({single: value}, {single: constraints}, options);
+	    },
+
+	    // Returns a promise that is resolved when all promises in the results array
+	    // are settled. The promise returned from this function is always resolved,
+	    // never rejected.
+	    // This function modifies the input argument, it replaces the promises
+	    // with the value returned from the promise.
+	    waitForResults: function(results) {
+	      // Create a sequence of all the results starting with a resolved promise.
+	      return results.reduce(function(memo, result) {
+	        // If this result isn't a promise skip it in the sequence.
+	        if (!v.isPromise(result.error)) {
+	          return memo;
+	        }
+
+	        return memo.then(function() {
+	          return result.error.then(function(error) {
+	            result.error = error || null;
+	          });
+	        });
+	      }, new v.Promise(function(r) { r(); })); // A resolved promise
+	    },
+
+	    // If the given argument is a call: function the and: function return the value
+	    // otherwise just return the value. Additional arguments will be passed as
+	    // arguments to the function.
+	    // Example:
+	    // ```
+	    // result('foo') // 'foo'
+	    // result(Math.max, 1, 2) // 2
+	    // ```
+	    result: function(value) {
+	      var args = [].slice.call(arguments, 1);
+	      if (typeof value === 'function') {
+	        value = value.apply(null, args);
+	      }
+	      return value;
+	    },
+
+	    // Checks if the value is a number. This function does not consider NaN a
+	    // number like many other `isNumber` functions do.
+	    isNumber: function(value) {
+	      return typeof value === 'number' && !isNaN(value);
+	    },
+
+	    // Returns false if the object is not a function
+	    isFunction: function(value) {
+	      return typeof value === 'function';
+	    },
+
+	    // A simple check to verify that the value is an integer. Uses `isNumber`
+	    // and a simple modulo check.
+	    isInteger: function(value) {
+	      return v.isNumber(value) && value % 1 === 0;
+	    },
+
+	    // Checks if the value is a boolean
+	    isBoolean: function(value) {
+	      return typeof value === 'boolean';
+	    },
+
+	    // Uses the `Object` function to check if the given argument is an object.
+	    isObject: function(obj) {
+	      return obj === Object(obj);
+	    },
+
+	    // Simply checks if the object is an instance of a date
+	    isDate: function(obj) {
+	      return obj instanceof Date;
+	    },
+
+	    // Returns false if the object is `null` of `undefined`
+	    isDefined: function(obj) {
+	      return obj !== null && obj !== undefined;
+	    },
+
+	    // Checks if the given argument is a promise. Anything with a `then`
+	    // function is considered a promise.
+	    isPromise: function(p) {
+	      return !!p && v.isFunction(p.then);
+	    },
+
+	    isJqueryElement: function(o) {
+	      return o && v.isString(o.jquery);
+	    },
+
+	    isDomElement: function(o) {
+	      if (!o) {
+	        return false;
+	      }
+
+	      if (!o.querySelectorAll || !o.querySelector) {
+	        return false;
+	      }
+
+	      if (v.isObject(document) && o === document) {
+	        return true;
+	      }
+
+	      // http://stackoverflow.com/a/384380/699304
+	      /* istanbul ignore else */
+	      if (typeof HTMLElement === "object") {
+	        return o instanceof HTMLElement;
+	      } else {
+	        return o &&
+	          typeof o === "object" &&
+	          o !== null &&
+	          o.nodeType === 1 &&
+	          typeof o.nodeName === "string";
+	      }
+	    },
+
+	    isEmpty: function(value) {
+	      var attr;
+
+	      // Null and undefined are empty
+	      if (!v.isDefined(value)) {
+	        return true;
+	      }
+
+	      // functions are non empty
+	      if (v.isFunction(value)) {
+	        return false;
+	      }
+
+	      // Whitespace only strings are empty
+	      if (v.isString(value)) {
+	        return v.EMPTY_STRING_REGEXP.test(value);
+	      }
+
+	      // For arrays we use the length property
+	      if (v.isArray(value)) {
+	        return value.length === 0;
+	      }
+
+	      // Dates have no attributes but aren't empty
+	      if (v.isDate(value)) {
+	        return false;
+	      }
+
+	      // If we find at least one property we consider it non empty
+	      if (v.isObject(value)) {
+	        for (attr in value) {
+	          return false;
+	        }
+	        return true;
+	      }
+
+	      return false;
+	    },
+
+	    // Formats the specified strings with the given values like so:
+	    // ```
+	    // format("Foo: %{foo}", {foo: "bar"}) // "Foo bar"
+	    // ```
+	    // If you want to write %{...} without having it replaced simply
+	    // prefix it with % like this `Foo: %%{foo}` and it will be returned
+	    // as `"Foo: %{foo}"`
+	    format: v.extend(function(str, vals) {
+	      if (!v.isString(str)) {
+	        return str;
+	      }
+	      return str.replace(v.format.FORMAT_REGEXP, function(m0, m1, m2) {
+	        if (m1 === '%') {
+	          return "%{" + m2 + "}";
+	        } else {
+	          return String(vals[m2]);
+	        }
+	      });
+	    }, {
+	      // Finds %{key} style patterns in the given string
+	      FORMAT_REGEXP: /(%?)%\{([^\}]+)\}/g
+	    }),
+
+	    // "Prettifies" the given string.
+	    // Prettifying means replacing [.\_-] with spaces as well as splitting
+	    // camel case words.
+	    prettify: function(str) {
+	      if (v.isNumber(str)) {
+	        // If there are more than 2 decimals round it to two
+	        if ((str * 100) % 1 === 0) {
+	          return "" + str;
+	        } else {
+	          return parseFloat(Math.round(str * 100) / 100).toFixed(2);
+	        }
+	      }
+
+	      if (v.isArray(str)) {
+	        return str.map(function(s) { return v.prettify(s); }).join(", ");
+	      }
+
+	      if (v.isObject(str)) {
+	        return str.toString();
+	      }
+
+	      // Ensure the string is actually a string
+	      str = "" + str;
+
+	      return str
+	        // Splits keys separated by periods
+	        .replace(/([^\s])\.([^\s])/g, '$1 $2')
+	        // Removes backslashes
+	        .replace(/\\+/g, '')
+	        // Replaces - and - with space
+	        .replace(/[_-]/g, ' ')
+	        // Splits camel cased words
+	        .replace(/([a-z])([A-Z])/g, function(m0, m1, m2) {
+	          return "" + m1 + " " + m2.toLowerCase();
+	        })
+	        .toLowerCase();
+	    },
+
+	    stringifyValue: function(value) {
+	      return v.prettify(value);
+	    },
+
+	    isString: function(value) {
+	      return typeof value === 'string';
+	    },
+
+	    isArray: function(value) {
+	      return {}.toString.call(value) === '[object Array]';
+	    },
+
+	    // Checks if the object is a hash, which is equivalent to an object that
+	    // is neither an array nor a function.
+	    isHash: function(value) {
+	      return v.isObject(value) && !v.isArray(value) && !v.isFunction(value);
+	    },
+
+	    contains: function(obj, value) {
+	      if (!v.isDefined(obj)) {
+	        return false;
+	      }
+	      if (v.isArray(obj)) {
+	        return obj.indexOf(value) !== -1;
+	      }
+	      return value in obj;
+	    },
+
+	    unique: function(array) {
+	      if (!v.isArray(array)) {
+	        return array;
+	      }
+	      return array.filter(function(el, index, array) {
+	        return array.indexOf(el) == index;
+	      });
+	    },
+
+	    forEachKeyInKeypath: function(object, keypath, callback) {
+	      if (!v.isString(keypath)) {
+	        return undefined;
+	      }
+
+	      var key = ""
+	        , i
+	        , escape = false;
+
+	      for (i = 0; i < keypath.length; ++i) {
+	        switch (keypath[i]) {
+	          case '.':
+	            if (escape) {
+	              escape = false;
+	              key += '.';
+	            } else {
+	              object = callback(object, key, false);
+	              key = "";
+	            }
+	            break;
+
+	          case '\\':
+	            if (escape) {
+	              escape = false;
+	              key += '\\';
+	            } else {
+	              escape = true;
+	            }
+	            break;
+
+	          default:
+	            escape = false;
+	            key += keypath[i];
+	            break;
+	        }
+	      }
+
+	      return callback(object, key, true);
+	    },
+
+	    getDeepObjectValue: function(obj, keypath) {
+	      if (!v.isObject(obj)) {
+	        return undefined;
+	      }
+
+	      return v.forEachKeyInKeypath(obj, keypath, function(obj, key) {
+	        if (v.isObject(obj)) {
+	          return obj[key];
+	        }
+	      });
+	    },
+
+	    // This returns an object with all the values of the form.
+	    // It uses the input name as key and the value as value
+	    // So for example this:
+	    // <input type="text" name="email" value="foo@bar.com" />
+	    // would return:
+	    // {email: "foo@bar.com"}
+	    collectFormValues: function(form, options) {
+	      var values = {}
+	        , i
+	        , j
+	        , input
+	        , inputs
+	        , option
+	        , value;
+
+	      if (v.isJqueryElement(form)) {
+	        form = form[0];
+	      }
+
+	      if (!form) {
+	        return values;
+	      }
+
+	      options = options || {};
+
+	      inputs = form.querySelectorAll("input[name], textarea[name]");
+	      for (i = 0; i < inputs.length; ++i) {
+	        input = inputs.item(i);
+
+	        if (v.isDefined(input.getAttribute("data-ignored"))) {
+	          continue;
+	        }
+
+	        value = v.sanitizeFormValue(input.value, options);
+	        if (input.type === "number") {
+	          value = value ? +value : null;
+	        } else if (input.type === "checkbox") {
+	          if (input.attributes.value) {
+	            if (!input.checked) {
+	              value = values[input.name] || null;
+	            }
+	          } else {
+	            value = input.checked;
+	          }
+	        } else if (input.type === "radio") {
+	          if (!input.checked) {
+	            value = values[input.name] || null;
+	          }
+	        }
+	        values[input.name] = value;
+	      }
+
+	      inputs = form.querySelectorAll("select[name]");
+	      for (i = 0; i < inputs.length; ++i) {
+	        input = inputs.item(i);
+	        if (input.multiple) {
+	          value = [];
+	          for (j in input.options) {
+	            option = input.options[j];
+	            if (option.selected) {
+	              value.push(v.sanitizeFormValue(option.value, options));
+	            }
+	          }
+	        } else {
+	          value = v.sanitizeFormValue(input.options[input.selectedIndex].value, options);
+	        }
+	        values[input.name] = value;
+	      }
+
+	      return values;
+	    },
+
+	    sanitizeFormValue: function(value, options) {
+	      if (options.trim && v.isString(value)) {
+	        value = value.trim();
+	      }
+
+	      if (options.nullify !== false && value === "") {
+	        return null;
+	      }
+	      return value;
+	    },
+
+	    capitalize: function(str) {
+	      if (!v.isString(str)) {
+	        return str;
+	      }
+	      return str[0].toUpperCase() + str.slice(1);
+	    },
+
+	    // Remove all errors who's error attribute is empty (null or undefined)
+	    pruneEmptyErrors: function(errors) {
+	      return errors.filter(function(error) {
+	        return !v.isEmpty(error.error);
+	      });
+	    },
+
+	    // In
+	    // [{error: ["err1", "err2"], ...}]
+	    // Out
+	    // [{error: "err1", ...}, {error: "err2", ...}]
+	    //
+	    // All attributes in an error with multiple messages are duplicated
+	    // when expanding the errors.
+	    expandMultipleErrors: function(errors) {
+	      var ret = [];
+	      errors.forEach(function(error) {
+	        // Removes errors without a message
+	        if (v.isArray(error.error)) {
+	          error.error.forEach(function(msg) {
+	            ret.push(v.extend({}, error, {error: msg}));
+	          });
+	        } else {
+	          ret.push(error);
+	        }
+	      });
+	      return ret;
+	    },
+
+	    // Converts the error mesages by prepending the attribute name unless the
+	    // message is prefixed by ^
+	    convertErrorMessages: function(errors, options) {
+	      options = options || {};
+
+	      var ret = [];
+	      errors.forEach(function(errorInfo) {
+	        var error = v.result(errorInfo.error,
+	            errorInfo.value,
+	            errorInfo.attribute,
+	            errorInfo.options,
+	            errorInfo.attributes,
+	            errorInfo.globalOptions);
+
+	        if (!v.isString(error)) {
+	          ret.push(errorInfo);
+	          return;
+	        }
+
+	        if (error[0] === '^') {
+	          error = error.slice(1);
+	        } else if (options.fullMessages !== false) {
+	          error = v.capitalize(v.prettify(errorInfo.attribute)) + " " + error;
+	        }
+	        error = error.replace(/\\\^/g, "^");
+	        error = v.format(error, {value: v.stringifyValue(errorInfo.value)});
+	        ret.push(v.extend({}, errorInfo, {error: error}));
+	      });
+	      return ret;
+	    },
+
+	    // In:
+	    // [{attribute: "<attributeName>", ...}]
+	    // Out:
+	    // {"<attributeName>": [{attribute: "<attributeName>", ...}]}
+	    groupErrorsByAttribute: function(errors) {
+	      var ret = {};
+	      errors.forEach(function(error) {
+	        var list = ret[error.attribute];
+	        if (list) {
+	          list.push(error);
+	        } else {
+	          ret[error.attribute] = [error];
+	        }
+	      });
+	      return ret;
+	    },
+
+	    // In:
+	    // [{error: "<message 1>", ...}, {error: "<message 2>", ...}]
+	    // Out:
+	    // ["<message 1>", "<message 2>"]
+	    flattenErrorsToArray: function(errors) {
+	      return errors
+	        .map(function(error) { return error.error; })
+	        .filter(function(value, index, self) {
+	          return self.indexOf(value) === index;
+	        });
+	    },
+
+	    cleanAttributes: function(attributes, whitelist) {
+	      function whitelistCreator(obj, key, last) {
+	        if (v.isObject(obj[key])) {
+	          return obj[key];
+	        }
+	        return (obj[key] = last ? true : {});
+	      }
+
+	      function buildObjectWhitelist(whitelist) {
+	        var ow = {}
+	          , lastObject
+	          , attr;
+	        for (attr in whitelist) {
+	          if (!whitelist[attr]) {
+	            continue;
+	          }
+	          v.forEachKeyInKeypath(ow, attr, whitelistCreator);
+	        }
+	        return ow;
+	      }
+
+	      function cleanRecursive(attributes, whitelist) {
+	        if (!v.isObject(attributes)) {
+	          return attributes;
+	        }
+
+	        var ret = v.extend({}, attributes)
+	          , w
+	          , attribute;
+
+	        for (attribute in attributes) {
+	          w = whitelist[attribute];
+
+	          if (v.isObject(w)) {
+	            ret[attribute] = cleanRecursive(ret[attribute], w);
+	          } else if (!w) {
+	            delete ret[attribute];
+	          }
+	        }
+	        return ret;
+	      }
+
+	      if (!v.isObject(whitelist) || !v.isObject(attributes)) {
+	        return {};
+	      }
+
+	      whitelist = buildObjectWhitelist(whitelist);
+	      return cleanRecursive(attributes, whitelist);
+	    },
+
+	    exposeModule: function(validate, root, exports, module, define) {
+	      if (exports) {
+	        if (module && module.exports) {
+	          exports = module.exports = validate;
+	        }
+	        exports.validate = validate;
+	      } else {
+	        root.validate = validate;
+	        if (validate.isFunction(define) && define.amd) {
+	          define([], function () { return validate; });
+	        }
+	      }
+	    },
+
+	    warn: function(msg) {
+	      if (typeof console !== "undefined" && console.warn) {
+	        console.warn("[validate.js] " + msg);
+	      }
+	    },
+
+	    error: function(msg) {
+	      if (typeof console !== "undefined" && console.error) {
+	        console.error("[validate.js] " + msg);
+	      }
+	    }
+	  });
+
+	  validate.validators = {
+	    // Presence validates that the value isn't empty
+	    presence: function(value, options) {
+	      options = v.extend({}, this.options, options);
+	      if (options.allowEmpty ? !v.isDefined(value) : v.isEmpty(value)) {
+	        return options.message || this.message || "can't be blank";
+	      }
+	    },
+	    length: function(value, options, attribute) {
+	      // Empty values are allowed
+	      if (!v.isDefined(value)) {
+	        return;
+	      }
+
+	      options = v.extend({}, this.options, options);
+
+	      var is = options.is
+	        , maximum = options.maximum
+	        , minimum = options.minimum
+	        , tokenizer = options.tokenizer || function(val) { return val; }
+	        , err
+	        , errors = [];
+
+	      value = tokenizer(value);
+	      var length = value.length;
+	      if(!v.isNumber(length)) {
+	        v.error(v.format("Attribute %{attr} has a non numeric value for `length`", {attr: attribute}));
+	        return options.message || this.notValid || "has an incorrect length";
+	      }
+
+	      // Is checks
+	      if (v.isNumber(is) && length !== is) {
+	        err = options.wrongLength ||
+	          this.wrongLength ||
+	          "is the wrong length (should be %{count} characters)";
+	        errors.push(v.format(err, {count: is}));
+	      }
+
+	      if (v.isNumber(minimum) && length < minimum) {
+	        err = options.tooShort ||
+	          this.tooShort ||
+	          "is too short (minimum is %{count} characters)";
+	        errors.push(v.format(err, {count: minimum}));
+	      }
+
+	      if (v.isNumber(maximum) && length > maximum) {
+	        err = options.tooLong ||
+	          this.tooLong ||
+	          "is too long (maximum is %{count} characters)";
+	        errors.push(v.format(err, {count: maximum}));
+	      }
+
+	      if (errors.length > 0) {
+	        return options.message || errors;
+	      }
+	    },
+	    numericality: function(value, options) {
+	      // Empty values are fine
+	      if (!v.isDefined(value)) {
+	        return;
+	      }
+
+	      options = v.extend({}, this.options, options);
+
+	      var errors = []
+	        , name
+	        , count
+	        , checks = {
+	            greaterThan:          function(v, c) { return v > c; },
+	            greaterThanOrEqualTo: function(v, c) { return v >= c; },
+	            equalTo:              function(v, c) { return v === c; },
+	            lessThan:             function(v, c) { return v < c; },
+	            lessThanOrEqualTo:    function(v, c) { return v <= c; },
+	            divisibleBy:          function(v, c) { return v % c === 0; }
+	          };
+
+	      // Strict will check that it is a valid looking number
+	      if (v.isString(value) && options.strict) {
+	        var pattern = "^(0|[1-9]\\d*)";
+	        if (!options.onlyInteger) {
+	          pattern += "(\\.\\d+)?";
+	        }
+	        pattern += "$";
+
+	        if (!(new RegExp(pattern).test(value))) {
+	          return options.message ||
+	            options.notValid ||
+	            this.notValid ||
+	            this.message ||
+	            "must be a valid number";
+	        }
+	      }
+
+	      // Coerce the value to a number unless we're being strict.
+	      if (options.noStrings !== true && v.isString(value) && !v.isEmpty(value)) {
+	        value = +value;
+	      }
+
+	      // If it's not a number we shouldn't continue since it will compare it.
+	      if (!v.isNumber(value)) {
+	        return options.message ||
+	          options.notValid ||
+	          this.notValid ||
+	          this.message ||
+	          "is not a number";
+	      }
+
+	      // Same logic as above, sort of. Don't bother with comparisons if this
+	      // doesn't pass.
+	      if (options.onlyInteger && !v.isInteger(value)) {
+	        return options.message ||
+	          options.notInteger ||
+	          this.notInteger ||
+	          this.message ||
+	          "must be an integer";
+	      }
+
+	      for (name in checks) {
+	        count = options[name];
+	        if (v.isNumber(count) && !checks[name](value, count)) {
+	          // This picks the default message if specified
+	          // For example the greaterThan check uses the message from
+	          // this.notGreaterThan so we capitalize the name and prepend "not"
+	          var key = "not" + v.capitalize(name);
+	          var msg = options[key] ||
+	            this[key] ||
+	            this.message ||
+	            "must be %{type} %{count}";
+
+	          errors.push(v.format(msg, {
+	            count: count,
+	            type: v.prettify(name)
+	          }));
+	        }
+	      }
+
+	      if (options.odd && value % 2 !== 1) {
+	        errors.push(options.notOdd ||
+	            this.notOdd ||
+	            this.message ||
+	            "must be odd");
+	      }
+	      if (options.even && value % 2 !== 0) {
+	        errors.push(options.notEven ||
+	            this.notEven ||
+	            this.message ||
+	            "must be even");
+	      }
+
+	      if (errors.length) {
+	        return options.message || errors;
+	      }
+	    },
+	    datetime: v.extend(function(value, options) {
+	      if (!v.isFunction(this.parse) || !v.isFunction(this.format)) {
+	        throw new Error("Both the parse and format functions needs to be set to use the datetime/date validator");
+	      }
+
+	      // Empty values are fine
+	      if (!v.isDefined(value)) {
+	        return;
+	      }
+
+	      options = v.extend({}, this.options, options);
+
+	      var err
+	        , errors = []
+	        , earliest = options.earliest ? this.parse(options.earliest, options) : NaN
+	        , latest = options.latest ? this.parse(options.latest, options) : NaN;
+
+	      value = this.parse(value, options);
+
+	      // 86400000 is the number of seconds in a day, this is used to remove
+	      // the time from the date
+	      if (isNaN(value) || options.dateOnly && value % 86400000 !== 0) {
+	        err = options.notValid ||
+	          options.message ||
+	          this.notValid ||
+	          "must be a valid date";
+	        return v.format(err, {value: arguments[0]});
+	      }
+
+	      if (!isNaN(earliest) && value < earliest) {
+	        err = options.tooEarly ||
+	          options.message ||
+	          this.tooEarly ||
+	          "must be no earlier than %{date}";
+	        err = v.format(err, {
+	          value: this.format(value, options),
+	          date: this.format(earliest, options)
+	        });
+	        errors.push(err);
+	      }
+
+	      if (!isNaN(latest) && value > latest) {
+	        err = options.tooLate ||
+	          options.message ||
+	          this.tooLate ||
+	          "must be no later than %{date}";
+	        err = v.format(err, {
+	          date: this.format(latest, options),
+	          value: this.format(value, options)
+	        });
+	        errors.push(err);
+	      }
+
+	      if (errors.length) {
+	        return v.unique(errors);
+	      }
+	    }, {
+	      parse: null,
+	      format: null
+	    }),
+	    date: function(value, options) {
+	      options = v.extend({}, options, {dateOnly: true});
+	      return v.validators.datetime.call(v.validators.datetime, value, options);
+	    },
+	    format: function(value, options) {
+	      if (v.isString(options) || (options instanceof RegExp)) {
+	        options = {pattern: options};
+	      }
+
+	      options = v.extend({}, this.options, options);
+
+	      var message = options.message || this.message || "is invalid"
+	        , pattern = options.pattern
+	        , match;
+
+	      // Empty values are allowed
+	      if (!v.isDefined(value)) {
+	        return;
+	      }
+	      if (!v.isString(value)) {
+	        return message;
+	      }
+
+	      if (v.isString(pattern)) {
+	        pattern = new RegExp(options.pattern, options.flags);
+	      }
+	      match = pattern.exec(value);
+	      if (!match || match[0].length != value.length) {
+	        return message;
+	      }
+	    },
+	    inclusion: function(value, options) {
+	      // Empty values are fine
+	      if (!v.isDefined(value)) {
+	        return;
+	      }
+	      if (v.isArray(options)) {
+	        options = {within: options};
+	      }
+	      options = v.extend({}, this.options, options);
+	      if (v.contains(options.within, value)) {
+	        return;
+	      }
+	      var message = options.message ||
+	        this.message ||
+	        "^%{value} is not included in the list";
+	      return v.format(message, {value: value});
+	    },
+	    exclusion: function(value, options) {
+	      // Empty values are fine
+	      if (!v.isDefined(value)) {
+	        return;
+	      }
+	      if (v.isArray(options)) {
+	        options = {within: options};
+	      }
+	      options = v.extend({}, this.options, options);
+	      if (!v.contains(options.within, value)) {
+	        return;
+	      }
+	      var message = options.message || this.message || "^%{value} is restricted";
+	      return v.format(message, {value: value});
+	    },
+	    email: v.extend(function(value, options) {
+	      options = v.extend({}, this.options, options);
+	      var message = options.message || this.message || "is not a valid email";
+	      // Empty values are fine
+	      if (!v.isDefined(value)) {
+	        return;
+	      }
+	      if (!v.isString(value)) {
+	        return message;
+	      }
+	      if (!this.PATTERN.exec(value)) {
+	        return message;
+	      }
+	    }, {
+	      PATTERN: /^[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i
+	    }),
+	    equality: function(value, options, attribute, attributes) {
+	      if (!v.isDefined(value)) {
+	        return;
+	      }
+
+	      if (v.isString(options)) {
+	        options = {attribute: options};
+	      }
+	      options = v.extend({}, this.options, options);
+	      var message = options.message ||
+	        this.message ||
+	        "is not equal to %{attribute}";
+
+	      if (v.isEmpty(options.attribute) || !v.isString(options.attribute)) {
+	        throw new Error("The attribute must be a non empty string");
+	      }
+
+	      var otherValue = v.getDeepObjectValue(attributes, options.attribute)
+	        , comparator = options.comparator || function(v1, v2) {
+	          return v1 === v2;
+	        };
+
+	      if (!comparator(value, otherValue, options, attribute, attributes)) {
+	        return v.format(message, {attribute: v.prettify(options.attribute)});
+	      }
+	    },
+
+	    // A URL validator that is used to validate URLs with the ability to
+	    // restrict schemes and some domains.
+	    url: function(value, options) {
+	      if (!v.isDefined(value)) {
+	        return;
+	      }
+
+	      options = v.extend({}, this.options, options);
+
+	      var message = options.message || this.message || "is not a valid url"
+	        , schemes = options.schemes || this.schemes || ['http', 'https']
+	        , allowLocal = options.allowLocal || this.allowLocal || false;
+
+	      if (!v.isString(value)) {
+	        return message;
+	      }
+
+	      // https://gist.github.com/dperini/729294
+	      var regex =
+	        "^" +
+	        // protocol identifier
+	        "(?:(?:" + schemes.join("|") + ")://)" +
+	        // user:pass authentication
+	        "(?:\\S+(?::\\S*)?@)?" +
+	        "(?:";
+
+	      var tld = "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))";
+
+	      if (allowLocal) {
+	        tld += "?";
+	      } else {
+	        regex +=
+	          // IP address exclusion
+	          // private & local networks
+	          "(?!(?:10|127)(?:\\.\\d{1,3}){3})" +
+	          "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +
+	          "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})";
+	      }
+
+	      regex +=
+	          // IP address dotted notation octets
+	          // excludes loopback network 0.0.0.0
+	          // excludes reserved space >= 224.0.0.0
+	          // excludes network & broacast addresses
+	          // (first & last IP address of each class)
+	          "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
+	          "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
+	          "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
+	        "|" +
+	          // host name
+	          "(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" +
+	          // domain name
+	          "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" +
+	          tld +
+	        ")" +
+	        // port number
+	        "(?::\\d{2,5})?" +
+	        // resource path
+	        "(?:[/?#]\\S*)?" +
+	      "$";
+
+	      var PATTERN = new RegExp(regex, 'i');
+	      if (!PATTERN.exec(value)) {
+	        return message;
+	      }
+	    }
+	  };
+
+	  validate.formatters = {
+	    detailed: function(errors) {return errors;},
+	    flat: v.flattenErrorsToArray,
+	    grouped: function(errors) {
+	      var attr;
+
+	      errors = v.groupErrorsByAttribute(errors);
+	      for (attr in errors) {
+	        errors[attr] = v.flattenErrorsToArray(errors[attr]);
+	      }
+	      return errors;
+	    },
+	    constraint: function(errors) {
+	      var attr;
+	      errors = v.groupErrorsByAttribute(errors);
+	      for (attr in errors) {
+	        errors[attr] = errors[attr].map(function(result) {
+	          return result.validator;
+	        }).sort();
+	      }
+	      return errors;
+	    }
+	  };
+
+	  validate.exposeModule(validate, this, exports, module, __webpack_require__(308));
+	}).call(this,
+	         true ? /* istanbul ignore next */ exports : null,
+	         true ? /* istanbul ignore next */ module : null,
+	        __webpack_require__(308));
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(204)(module)))
+
+/***/ },
+/* 308 */
+/***/ function(module, exports) {
+
+	module.exports = function() { throw new Error("define cannot be used indirect"); };
+
+
+/***/ },
+/* 309 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _localization = __webpack_require__(301);
+
+	var _localization2 = _interopRequireDefault(_localization);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = {
+	    name: {
+	        presence: {
+	            message: _localization2.default.validation.required
+	        }
+	    },
+	    capacity: {
+	        presence: {
+	            message: _localization2.default.validation.required
+	        },
+	        numericality: {
+	            onlyInteger: true,
+	            greaterThan: 0,
+	            message: _localization2.default.validation.numberGreaterThanZero
+	        }
+	    },
+	    address: {
+	        presence: {
+	            message: _localization2.default.validation.required
+	        }
+	    },
+	    phone: {
+	        presence: {
+	            message: _localization2.default.validation.required
+	        }
+	    },
+	    website: {
+	        presence: false,
+	        url: {
+	            allowEmpty: true,
+	            message: _localization2.default.validation.url
+	        }
+	    },
+	    image: {
+	        presence: false,
+	        url: {
+	            allowEmpty: true,
+	            message: _localization2.default.validation.url
+	        }
+	    }
+	};
+
+/***/ },
+/* 310 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31988,7 +33666,7 @@
 	}
 
 /***/ },
-/* 304 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32058,7 +33736,7 @@
 	exports.default = FixedNavBar;
 
 /***/ },
-/* 305 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32080,19 +33758,30 @@
 	exports.removeSuccess = removeSuccess;
 	exports.removeError = removeError;
 	exports.getError = getError;
+	exports.validationError = validationError;
 	exports.addVenue = addVenue;
 	exports.confirmRemoveVenue = confirmRemoveVenue;
 	exports.updateVenue = updateVenue;
 	exports.fetchVenues = fetchVenues;
 	exports.fetchVenue = fetchVenue;
 
-	var _actionTypes = __webpack_require__(306);
+	var _actionTypes = __webpack_require__(313);
 
 	var types = _interopRequireWildcard(_actionTypes);
 
-	var _utils = __webpack_require__(303);
+	var _ajaxRoutes = __webpack_require__(314);
+
+	var ajaxRoutes = _interopRequireWildcard(_ajaxRoutes);
+
+	var _utils = __webpack_require__(310);
 
 	var utils = _interopRequireWildcard(_utils);
+
+	var _localization = __webpack_require__(301);
+
+	var _localization2 = _interopRequireDefault(_localization);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -32156,7 +33845,7 @@
 	}
 
 	function saveSuccess(item) {
-	    utils.toastSuccess('L\'élément a été sauvegardé avec succès !');
+	    utils.toastSuccess(_localization2.default.save_success);
 	    return {
 	        type: types.VENUE_SAVE_SUCCESS,
 	        payload: item
@@ -32164,7 +33853,7 @@
 	}
 
 	function saveError(errors) {
-	    utils.toastError('Impossible de sauver l\'élément !');
+	    utils.toastError(_localization2.default.save_error);
 	    return {
 	        type: types.VENUE_SAVE_ERROR,
 	        payload: errors
@@ -32172,7 +33861,7 @@
 	}
 
 	function removeSuccess(item) {
-	    utils.toastSuccess('L\'élément a été supprimé avec succès !');
+	    utils.toastSuccess(_localization2.default.remove_success);
 	    return {
 	        type: types.VENUE_REMOVE_SUCCESS,
 	        payload: item
@@ -32180,7 +33869,7 @@
 	}
 
 	function removeError(errors) {
-	    utils.toastError('Impossible de supprimer l\'élément !');
+	    utils.toastError(_localization2.default.remove_error);
 	    return {
 	        type: types.VENUE_REMOVE_ERROR,
 	        payload: errors
@@ -32195,11 +33884,18 @@
 	    };
 	}
 
+	function validationError() {
+	    utils.toastError(_localization2.default.validation_errors);
+	    return {
+	        type: types.VALIDATION_ERROR
+	    };
+	}
+
 	function addVenue(form) {
 	    return function (dispatch) {
 	        dispatch(savingVenue());
 	        // TODO : Dispatch an error if the item has no id
-	        fetch('/api/venues/new/', {
+	        fetch(ajaxRoutes.VENUE_ADD, {
 	            method: "POST",
 	            body: new FormData(form)
 	        }).then(function (response) {
@@ -32220,7 +33916,7 @@
 	    return function (dispatch) {
 	        dispatch(removingVenue());
 	        // TODO : Dispatch an error if the item has no id
-	        fetch('/api/venues/delete/' + id, {
+	        fetch(_localization2.default.formatString(ajaxRoutes.VENUE_REMOVE, id), {
 	            method: "DELETE"
 	        }).then(function (response) {
 	            return response.json();
@@ -32240,7 +33936,7 @@
 	    return function (dispatch) {
 	        dispatch(savingVenue());
 	        // TODO : Dispatch an error if the item has no id
-	        fetch('/api/venues/edit/' + id, {
+	        fetch(_localization2.default.formatString(ajaxRoutes.VENUE_EDIT, id), {
 	            method: "POST",
 	            body: new FormData(form)
 	        }).then(function (response) {
@@ -32261,12 +33957,12 @@
 	function fetchVenues() {
 	    return function (dispatch) {
 	        dispatch(loadingVenues());
-	        fetch('/api/venues/get').then(function (response) {
+	        fetch(ajaxRoutes.VENUES_GET).then(function (response) {
 	            return response.json();
 	        }).then(function (json) {
 	            dispatch(receiveVenues(json));
 	        }).catch(function () {
-	            dispatch(getError('Une erreur est survenue lors de la récupération de la liste des salles.'));
+	            dispatch(getError(_localization2.default.venues_fetch_error));
 	        });
 	    };
 	}
@@ -32275,18 +33971,18 @@
 	    return function (dispatch) {
 	        dispatch(loadingVenues());
 
-	        fetch('/api/venues/get/' + id).then(function (response) {
+	        fetch(_localization2.default.formatString(ajaxRoutes.VENUE_GET, id)).then(function (response) {
 	            return response.json();
 	        }).then(function (json) {
 	            dispatch(receiveVenue(json));
 	        }).catch(function () {
-	            dispatch(getError('Une erreur est survenue lors de la récupération de la salle.'));
+	            dispatch(getError(_localization2.default.venue_fetch_error));
 	        });
 	    };
 	}
 
 /***/ },
-/* 306 */
+/* 313 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -32314,9 +34010,37 @@
 	var LEAVE_FORM = exports.LEAVE_FORM = 'LEAVE_FORM';
 	var VENUES_GET_ERROR = exports.VENUES_GET_ERROR = 'VENUES_GET_ERROR';
 	var VENUE_GET_ERROR = exports.VENUE_GET_ERROR = 'VENUE_GET_ERROR';
+	var VALIDATION_ERROR = exports.VALIDATION_ERROR = 'VALIDATION_ERROR';
 
 /***/ },
-/* 307 */
+/* 314 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var VENUE_ADD = exports.VENUE_ADD = '/api/venues/new/';
+	var VENUE_REMOVE = exports.VENUE_REMOVE = '/api/venues/delete/{0}';
+	var VENUE_EDIT = exports.VENUE_EDIT = '/api/venues/edit/{0}';
+	var VENUES_GET = exports.VENUES_GET = '/api/venues/get';
+	var VENUE_GET = exports.VENUE_GET = '/api/venues/get/{0}';
+
+	var EVENT_ADD = exports.EVENT_ADD = '/api/events/new/';
+	var EVENT_REMOVE = exports.EVENT_REMOVE = '/api/events/delete/{0}';
+	var EVENT_EDIT = exports.EVENT_EDIT = '/api/events/edit/{0}';
+	var EVENTS_GET = exports.EVENTS_GET = '/api/events/get';
+	var EVENT_GET = exports.EVENT_GET = '/api/events/get/{0}';
+
+	var BOOKING_ADD = exports.BOOKING_ADD = '/api/bookings/new/';
+	var BOOKING_REMOVE = exports.BOOKING_REMOVE = '/api/bookings/delete/{0}';
+	var BOOKING_EDIT = exports.BOOKING_EDIT = '/api/bookings/edit/{0}';
+	var BOOKINGS_GET = exports.BOOKINGS_GET = '/api/bookings/get';
+	var BOOKING_GET = exports.BOOKING_GET = '/api/bookings/get/{0}';
+
+/***/ },
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32333,11 +34057,15 @@
 
 	var _reactMaterialize = __webpack_require__(255);
 
-	var _venuesActions = __webpack_require__(305);
+	var _venuesActions = __webpack_require__(312);
 
 	var actions = _interopRequireWildcard(_venuesActions);
 
 	var _reactRedux = __webpack_require__(179);
+
+	var _localization = __webpack_require__(301);
+
+	var _localization2 = _interopRequireDefault(_localization);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -32437,13 +34165,13 @@
 	                        'a',
 	                        { href: '#', onClick: this.onConfirm.bind(this),
 	                            className: 'btn modal-action modal-close waves-effect red' },
-	                        'Confirmer'
+	                        _localization2.default.btn_confirm
 	                    ),
 	                    _react2.default.createElement(
 	                        'a',
 	                        { href: '#', onClick: this.onCancel.bind(this),
 	                            className: 'btn modal-action modal-close waves-effect btn-flat' },
-	                        'Annuler'
+	                        _localization2.default.btn_cancel
 	                    )
 	                )
 	            );
@@ -32456,7 +34184,7 @@
 	exports.default = ConfirmModal;
 
 /***/ },
-/* 308 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32477,27 +34205,35 @@
 
 	var _reactMaterialize = __webpack_require__(255);
 
-	var _reactCssTransition = __webpack_require__(309);
+	var _reactCssTransition = __webpack_require__(317);
 
-	var _Loader = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/Loader\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _Loader = __webpack_require__(306);
 
 	var _Loader2 = _interopRequireDefault(_Loader);
 
-	var _Reload = __webpack_require__(385);
+	var _Reload = __webpack_require__(393);
 
 	var _Reload2 = _interopRequireDefault(_Reload);
 
 	var _reactRouterDom = __webpack_require__(217);
 
-	var _venuesActions = __webpack_require__(305);
+	var _localization = __webpack_require__(301);
+
+	var _localization2 = _interopRequireDefault(_localization);
+
+	var _routes = __webpack_require__(304);
+
+	var routes = _interopRequireWildcard(_routes);
+
+	var _venuesActions = __webpack_require__(312);
 
 	var actions = _interopRequireWildcard(_venuesActions);
 
-	var _VenueListItem = __webpack_require__(386);
+	var _VenueListItem = __webpack_require__(394);
 
 	var _VenueListItem2 = _interopRequireDefault(_VenueListItem);
 
-	var _FixedNavBar = __webpack_require__(304);
+	var _FixedNavBar = __webpack_require__(311);
 
 	var _FixedNavBar2 = _interopRequireDefault(_FixedNavBar);
 
@@ -32549,13 +34285,13 @@
 	        value: function render() {
 	            var header = _react2.default.createElement(
 	                _FixedNavBar2.default,
-	                { title: "Salles" },
+	                { title: _localization2.default.venues_title },
 	                _react2.default.createElement(
 	                    "li",
 	                    null,
 	                    _react2.default.createElement(
 	                        _reactRouterDom.Link,
-	                        { className: "blue waves-effect", to: "/venues/add/" },
+	                        { className: "blue waves-effect", to: routes.VENUES_ADD },
 	                        _react2.default.createElement(
 	                            _reactMaterialize.Icon,
 	                            null,
@@ -32602,22 +34338,22 @@
 	})(VenuesList);
 
 /***/ },
-/* 309 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var csstransition_1 = __webpack_require__(310);
+	var csstransition_1 = __webpack_require__(318);
 	exports.CSSTransition = csstransition_1.CSSTransition;
-	var csstransitiongroup_1 = __webpack_require__(381);
+	var csstransitiongroup_1 = __webpack_require__(389);
 	exports.CSSTransitionGroup = csstransitiongroup_1.CSSTransitionGroup;
-	var transit_1 = __webpack_require__(363);
+	var transit_1 = __webpack_require__(371);
 	exports.transit = transit_1.transit;
 
 	//# sourceMappingURL=index.js.map
 
 
 /***/ },
-/* 310 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32639,16 +34375,16 @@
 	    return t;
 	};
 	var React = __webpack_require__(1);
-	var reassemble_1 = __webpack_require__(311);
-	var reducer_1 = __webpack_require__(362);
-	var withTransitionState_1 = __webpack_require__(365);
-	var mergeWithBaseStyle_1 = __webpack_require__(368);
-	var withTransitionInfo_1 = __webpack_require__(369);
-	var withTimeout_1 = __webpack_require__(374);
-	var withTransitionObserver_1 = __webpack_require__(375);
-	var withWorkaround_1 = __webpack_require__(378);
-	var withDOMNodeCallback_1 = __webpack_require__(379);
-	var preventPhantomEvents_1 = __webpack_require__(380);
+	var reassemble_1 = __webpack_require__(319);
+	var reducer_1 = __webpack_require__(370);
+	var withTransitionState_1 = __webpack_require__(373);
+	var mergeWithBaseStyle_1 = __webpack_require__(376);
+	var withTransitionInfo_1 = __webpack_require__(377);
+	var withTimeout_1 = __webpack_require__(382);
+	var withTransitionObserver_1 = __webpack_require__(383);
+	var withWorkaround_1 = __webpack_require__(386);
+	var withDOMNodeCallback_1 = __webpack_require__(387);
+	var preventPhantomEvents_1 = __webpack_require__(388);
 	var withDefaultProps = reassemble_1.defaultProps({
 	    component: "div",
 	});
@@ -32664,57 +34400,57 @@
 
 
 /***/ },
-/* 311 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(312));
-	__export(__webpack_require__(313));
-	__export(__webpack_require__(314));
 	__export(__webpack_require__(320));
 	__export(__webpack_require__(321));
 	__export(__webpack_require__(322));
-	__export(__webpack_require__(325));
-	__export(__webpack_require__(326));
-	__export(__webpack_require__(327));
 	__export(__webpack_require__(328));
 	__export(__webpack_require__(329));
-	__export(__webpack_require__(323));
 	__export(__webpack_require__(330));
-	__export(__webpack_require__(332));
+	__export(__webpack_require__(333));
 	__export(__webpack_require__(334));
+	__export(__webpack_require__(335));
 	__export(__webpack_require__(336));
 	__export(__webpack_require__(337));
+	__export(__webpack_require__(331));
 	__export(__webpack_require__(338));
-	__export(__webpack_require__(339));
 	__export(__webpack_require__(340));
 	__export(__webpack_require__(342));
-	__export(__webpack_require__(343));
 	__export(__webpack_require__(344));
 	__export(__webpack_require__(345));
+	__export(__webpack_require__(346));
 	__export(__webpack_require__(347));
 	__export(__webpack_require__(348));
-	__export(__webpack_require__(349));
+	__export(__webpack_require__(350));
 	__export(__webpack_require__(351));
 	__export(__webpack_require__(352));
 	__export(__webpack_require__(353));
-	__export(__webpack_require__(354));
 	__export(__webpack_require__(355));
 	__export(__webpack_require__(356));
 	__export(__webpack_require__(357));
-	__export(__webpack_require__(358));
 	__export(__webpack_require__(359));
 	__export(__webpack_require__(360));
 	__export(__webpack_require__(361));
+	__export(__webpack_require__(362));
+	__export(__webpack_require__(363));
+	__export(__webpack_require__(364));
+	__export(__webpack_require__(365));
+	__export(__webpack_require__(366));
+	__export(__webpack_require__(367));
+	__export(__webpack_require__(368));
+	__export(__webpack_require__(369));
 
 	//# sourceMappingURL=index.js.map
 
 
 /***/ },
-/* 312 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32733,10 +34469,10 @@
 	};
 	var React = __webpack_require__(1);
 	var react_1 = __webpack_require__(1);
-	var blueprint_1 = __webpack_require__(313);
-	var getDisplayName_1 = __webpack_require__(316);
-	var getUniqueKey_1 = __webpack_require__(317);
-	var isReferentiallyTransparentFunctionComponent_1 = __webpack_require__(318);
+	var blueprint_1 = __webpack_require__(321);
+	var getDisplayName_1 = __webpack_require__(324);
+	var getUniqueKey_1 = __webpack_require__(325);
+	var isReferentiallyTransparentFunctionComponent_1 = __webpack_require__(326);
 	var hasWillReceivePropsCallback = function (e) { return e.kind === "componentWillReceivePropsCallback"; };
 	var AssemblyBase = (function (_super) {
 	    __extends(AssemblyBase, _super);
@@ -33004,12 +34740,12 @@
 
 
 /***/ },
-/* 313 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var combine_1 = __webpack_require__(314);
-	var resolveValue_1 = __webpack_require__(315);
+	var combine_1 = __webpack_require__(322);
+	var resolveValue_1 = __webpack_require__(323);
 	exports.lazyLoadCallback = function (callback) { return ({ kind: "lazyLoadCallback", callback: callback }); };
 	exports.propsCallback = function (callback) { return ({ kind: "propsCallback", callback: callback }); };
 	exports.stateCallback = function (callback) { return ({ kind: "stateCallback", callback: callback }); };
@@ -33053,7 +34789,7 @@
 
 
 /***/ },
-/* 314 */
+/* 322 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -33081,7 +34817,7 @@
 
 
 /***/ },
-/* 315 */
+/* 323 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -33102,7 +34838,7 @@
 
 
 /***/ },
-/* 316 */
+/* 324 */
 /***/ function(module, exports) {
 
 	/**
@@ -33128,7 +34864,7 @@
 
 
 /***/ },
-/* 317 */
+/* 325 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -33149,7 +34885,7 @@
 
 
 /***/ },
-/* 318 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -33159,7 +34895,7 @@
 	 * Copyright (c) 2015-2016 Andrew Clark
 	 */
 	"use strict";
-	var isClassComponent_1 = __webpack_require__(319);
+	var isClassComponent_1 = __webpack_require__(327);
 	exports.isReferentiallyTransparentFunctionComponent = function (Component) { return Boolean(typeof Component === "function" &&
 	    !isClassComponent_1.default(Component) &&
 	    !Component.defaultProps &&
@@ -33173,7 +34909,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 319 */
+/* 327 */
 /***/ function(module, exports) {
 
 	/**
@@ -33193,11 +34929,11 @@
 
 
 /***/ },
-/* 320 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var assemble_1 = __webpack_require__(312);
+	var assemble_1 = __webpack_require__(320);
 	exports.default = assemble_1.assemble;
 	exports.compose = assemble_1.assemble;
 
@@ -33205,11 +34941,11 @@
 
 
 /***/ },
-/* 321 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var blueprint_1 = __webpack_require__(313);
+	var blueprint_1 = __webpack_require__(321);
 	function debug(callback) {
 	    if (callback === void 0) { callback = console.log; }
 	    return {
@@ -33229,7 +34965,7 @@
 
 
 /***/ },
-/* 322 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33241,8 +34977,8 @@
 	    }
 	    return t;
 	};
-	var mapProps_1 = __webpack_require__(323);
-	var getKeysAndSymbols_1 = __webpack_require__(324);
+	var mapProps_1 = __webpack_require__(331);
+	var getKeysAndSymbols_1 = __webpack_require__(332);
 	function defaultProps(defaults) {
 	    return mapProps_1.default(function (props) { return (__assign({}, getKeysAndSymbols_1.default(defaults).reduce(function (nextProps, key) {
 	        if (nextProps[key] === undefined) {
@@ -33259,11 +34995,11 @@
 
 
 /***/ },
-/* 323 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var blueprint_1 = __webpack_require__(313);
+	var blueprint_1 = __webpack_require__(321);
 	function mapProps(propsMapper) {
 	    return {
 	        instanceCallbacks: [
@@ -33279,7 +35015,7 @@
 
 
 /***/ },
-/* 324 */
+/* 332 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -33298,7 +35034,7 @@
 
 
 /***/ },
-/* 325 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33310,7 +35046,7 @@
 	    }
 	    return t;
 	};
-	var mapProps_1 = __webpack_require__(323);
+	var mapProps_1 = __webpack_require__(331);
 	function flattenProp(propName) {
 	    return mapProps_1.default(function (props) { return (__assign({}, props, props[propName])); });
 	}
@@ -33322,7 +35058,7 @@
 
 
 /***/ },
-/* 326 */
+/* 334 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -33341,11 +35077,11 @@
 
 
 /***/ },
-/* 327 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var setStatic_1 = __webpack_require__(326);
+	var setStatic_1 = __webpack_require__(334);
 	exports.setDisplayName = function (name) { return setStatic_1.default("displayName", name); };
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = exports.setDisplayName;
@@ -33354,11 +35090,11 @@
 
 
 /***/ },
-/* 328 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var setStatic_1 = __webpack_require__(326);
+	var setStatic_1 = __webpack_require__(334);
 	function setPropTypes(propTypes) {
 	    return setStatic_1.default("propTypes", propTypes);
 	}
@@ -33370,11 +35106,11 @@
 
 
 /***/ },
-/* 329 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var getDisplayName_1 = __webpack_require__(316);
+	var getDisplayName_1 = __webpack_require__(324);
 	function wrapDisplayName(name) {
 	    return {
 	        staticCallback: function (componentClass, target) {
@@ -33390,12 +35126,12 @@
 
 
 /***/ },
-/* 330 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var mapProps_1 = __webpack_require__(323);
-	var omit_1 = __webpack_require__(331);
+	var mapProps_1 = __webpack_require__(331);
+	var omit_1 = __webpack_require__(339);
 	function omitProps() {
 	    var propNames = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -33411,7 +35147,7 @@
 
 
 /***/ },
-/* 331 */
+/* 339 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -33446,7 +35182,7 @@
 
 
 /***/ },
-/* 332 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33458,8 +35194,8 @@
 	    }
 	    return t;
 	};
-	var blueprint_1 = __webpack_require__(313);
-	var pick_1 = __webpack_require__(333);
+	var blueprint_1 = __webpack_require__(321);
+	var pick_1 = __webpack_require__(341);
 	function getContext(contextTypes) {
 	    return {
 	        staticCallback: function (componentClass) {
@@ -33478,7 +35214,7 @@
 
 
 /***/ },
-/* 333 */
+/* 341 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -33505,14 +35241,14 @@
 
 
 /***/ },
-/* 334 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* tslint:disable: no-bitwise */
 	"use strict";
-	var blueprint_1 = __webpack_require__(313);
-	var resolveValue_1 = __webpack_require__(315);
-	var toArray_1 = __webpack_require__(335);
+	var blueprint_1 = __webpack_require__(321);
+	var resolveValue_1 = __webpack_require__(323);
+	var toArray_1 = __webpack_require__(343);
 	var resolveCallbacks = function (list) { return list.reduce(function (result, c) {
 	    result.push.apply(result, resolveValue_1.default(c.instanceCallbacks));
 	    return result;
@@ -33556,7 +35292,7 @@
 
 
 /***/ },
-/* 335 */
+/* 343 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -33569,7 +35305,7 @@
 
 
 /***/ },
-/* 336 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33581,8 +35317,8 @@
 	    }
 	    return t;
 	};
-	var blueprint_1 = __webpack_require__(313);
-	var combine_1 = __webpack_require__(314);
+	var blueprint_1 = __webpack_require__(321);
+	var combine_1 = __webpack_require__(322);
 	function isolate() {
 	    var composables = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -33611,7 +35347,7 @@
 
 
 /***/ },
-/* 337 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33623,8 +35359,8 @@
 	    }
 	    return t;
 	};
-	var blueprint_1 = __webpack_require__(313);
-	var pick_1 = __webpack_require__(333);
+	var blueprint_1 = __webpack_require__(321);
+	var pick_1 = __webpack_require__(341);
 	function integrate() {
 	    var propNames = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -33648,7 +35384,7 @@
 
 
 /***/ },
-/* 338 */
+/* 346 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -33660,7 +35396,7 @@
 
 
 /***/ },
-/* 339 */
+/* 347 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33672,8 +35408,8 @@
 	    }
 	    return t;
 	};
-	var mapProps_1 = __webpack_require__(323);
-	var omit_1 = __webpack_require__(331);
+	var mapProps_1 = __webpack_require__(331);
+	var omit_1 = __webpack_require__(339);
 	function renameProp(oldName, newName) {
 	    return mapProps_1.default(function (props) {
 	        return (__assign({}, omit_1.default(props, oldName), (_a = {}, _a[newName] = props[oldName], _a)));
@@ -33688,7 +35424,7 @@
 
 
 /***/ },
-/* 340 */
+/* 348 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33700,11 +35436,11 @@
 	    }
 	    return t;
 	};
-	var mapProps_1 = __webpack_require__(323);
-	var omit_1 = __webpack_require__(331);
-	var pick_1 = __webpack_require__(333);
-	var mapKeys_1 = __webpack_require__(341);
-	var getKeysAndSymbols_1 = __webpack_require__(324);
+	var mapProps_1 = __webpack_require__(331);
+	var omit_1 = __webpack_require__(339);
+	var pick_1 = __webpack_require__(341);
+	var mapKeys_1 = __webpack_require__(349);
+	var getKeysAndSymbols_1 = __webpack_require__(332);
 	function renameProps(nameMap) {
 	    var keysAndSymbols = getKeysAndSymbols_1.default(nameMap);
 	    return mapProps_1.default(function (props) { return (__assign({}, omit_1.default.apply(void 0, [props].concat(keysAndSymbols)), mapKeys_1.default(pick_1.default.apply(void 0, [props].concat(keysAndSymbols)), function (oldName) { return nameMap[oldName]; }))); });
@@ -33717,7 +35453,7 @@
 
 
 /***/ },
-/* 341 */
+/* 349 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -33736,7 +35472,7 @@
 
 
 /***/ },
-/* 342 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33748,7 +35484,7 @@
 	    }
 	    return t;
 	};
-	var blueprint_1 = __webpack_require__(313);
+	var blueprint_1 = __webpack_require__(321);
 	function withContext(childContextTypes, getChildContext) {
 	    return {
 	        staticCallback: function (componentClass) {
@@ -33767,7 +35503,7 @@
 
 
 /***/ },
-/* 343 */
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33779,9 +35515,9 @@
 	    }
 	    return t;
 	};
-	var blueprint_1 = __webpack_require__(313);
-	var resolveValue_1 = __webpack_require__(315);
-	var getKeysAndSymbols_1 = __webpack_require__(324);
+	var blueprint_1 = __webpack_require__(321);
+	var resolveValue_1 = __webpack_require__(323);
+	var getKeysAndSymbols_1 = __webpack_require__(332);
 	function withHandlers(handlerCreators) {
 	    return {
 	        instanceCallbacks: function () {
@@ -33815,7 +35551,7 @@
 
 
 /***/ },
-/* 344 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33827,8 +35563,8 @@
 	    }
 	    return t;
 	};
-	var mapProps_1 = __webpack_require__(323);
-	var resolveValue_1 = __webpack_require__(315);
+	var mapProps_1 = __webpack_require__(331);
+	var resolveValue_1 = __webpack_require__(323);
 	function withProps(createProps) {
 	    return mapProps_1.default(function (props) { return (__assign({}, props, resolveValue_1.default(createProps, props))); });
 	}
@@ -33840,7 +35576,7 @@
 
 
 /***/ },
-/* 345 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33852,9 +35588,9 @@
 	    }
 	    return t;
 	};
-	var blueprint_1 = __webpack_require__(313);
-	var pick_1 = __webpack_require__(333);
-	var shallowEqual_1 = __webpack_require__(346);
+	var blueprint_1 = __webpack_require__(321);
+	var pick_1 = __webpack_require__(341);
+	var shallowEqual_1 = __webpack_require__(354);
 	function withPropsOnChange(shouldMapOrKeys, propsMapper) {
 	    var shouldMap = typeof shouldMapOrKeys === "function"
 	        ? shouldMapOrKeys
@@ -33883,7 +35619,7 @@
 
 
 /***/ },
-/* 346 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33896,7 +35632,7 @@
 
 
 /***/ },
-/* 347 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33908,8 +35644,8 @@
 	    }
 	    return t;
 	};
-	var blueprint_1 = __webpack_require__(313);
-	var resolveValue_1 = __webpack_require__(315);
+	var blueprint_1 = __webpack_require__(321);
+	var resolveValue_1 = __webpack_require__(323);
 	function withState(stateName, updaterName, initialValue) {
 	    return {
 	        instanceCallbacks: function () {
@@ -33937,7 +35673,7 @@
 
 
 /***/ },
-/* 348 */
+/* 356 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33949,8 +35685,8 @@
 	    }
 	    return t;
 	};
-	var blueprint_1 = __webpack_require__(313);
-	var resolveValue_1 = __webpack_require__(315);
+	var blueprint_1 = __webpack_require__(321);
+	var resolveValue_1 = __webpack_require__(323);
 	function withReducer(stateName, dispatcherName, reducer, initialValue) {
 	    return {
 	        instanceCallbacks: function () {
@@ -33982,11 +35718,11 @@
 
 
 /***/ },
-/* 349 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var lifecycle_1 = __webpack_require__(350);
+	var lifecycle_1 = __webpack_require__(358);
 	function onWillMount(callback) {
 	    return lifecycle_1.createSimpleLifecycle("componentWillMountCallback", callback);
 	}
@@ -33998,11 +35734,11 @@
 
 
 /***/ },
-/* 350 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var blueprint_1 = __webpack_require__(313);
+	var blueprint_1 = __webpack_require__(321);
 	exports.createSimpleLifecycle = function (kind, callback) {
 	    return ({ instanceCallbacks: [{ kind: kind, callback: function (props) { return function () { return callback(props); }; } }] });
 	};
@@ -34034,11 +35770,11 @@
 
 
 /***/ },
-/* 351 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var lifecycle_1 = __webpack_require__(350);
+	var lifecycle_1 = __webpack_require__(358);
 	function onDidMount(callback) {
 	    return lifecycle_1.createSimpleLifecycle("componentDidMountCallback", callback);
 	}
@@ -34050,11 +35786,11 @@
 
 
 /***/ },
-/* 352 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var lifecycle_1 = __webpack_require__(350);
+	var lifecycle_1 = __webpack_require__(358);
 	function onWillUnmount(callback) {
 	    return lifecycle_1.createSimpleLifecycle("componentWillUnmountCallback", callback);
 	}
@@ -34066,11 +35802,11 @@
 
 
 /***/ },
-/* 353 */
+/* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var lifecycle_1 = __webpack_require__(350);
+	var lifecycle_1 = __webpack_require__(358);
 	function onWillReceiveProps(callback) {
 	    return lifecycle_1.createComparingLifecycle("componentWillReceivePropsCallback", callback);
 	}
@@ -34082,11 +35818,11 @@
 
 
 /***/ },
-/* 354 */
+/* 362 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var lifecycle_1 = __webpack_require__(350);
+	var lifecycle_1 = __webpack_require__(358);
 	function onWillUpdate(callback) {
 	    return lifecycle_1.createComparingLifecycle("componentWillUpdateCallback", callback);
 	}
@@ -34098,11 +35834,11 @@
 
 
 /***/ },
-/* 355 */
+/* 363 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var lifecycle_1 = __webpack_require__(350);
+	var lifecycle_1 = __webpack_require__(358);
 	function onDidUpdate(callback) {
 	    return lifecycle_1.createComparingLifecycle("componentDidUpdateCallback", callback);
 	}
@@ -34114,11 +35850,11 @@
 
 
 /***/ },
-/* 356 */
+/* 364 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var lifecycle_1 = __webpack_require__(350);
+	var lifecycle_1 = __webpack_require__(358);
 	function shouldUpdate(callback) {
 	    return lifecycle_1.createComparingLifecycle("shouldComponentUpdateCallback", callback);
 	}
@@ -34130,11 +35866,11 @@
 
 
 /***/ },
-/* 357 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var noOp_1 = __webpack_require__(338);
+	var noOp_1 = __webpack_require__(346);
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = noOp_1.default;
 	exports.toClass = noOp_1.default;
@@ -34143,12 +35879,12 @@
 
 
 /***/ },
-/* 358 */
+/* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var shouldUpdate_1 = __webpack_require__(356);
-	var shallowEqual_1 = __webpack_require__(346);
+	var shouldUpdate_1 = __webpack_require__(364);
+	var shallowEqual_1 = __webpack_require__(354);
 	exports.pure = shouldUpdate_1.default(function (prev, next) { return !shallowEqual_1.default(prev, next); });
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = exports.pure;
@@ -34157,13 +35893,13 @@
 
 
 /***/ },
-/* 359 */
+/* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var shouldUpdate_1 = __webpack_require__(356);
-	var shallowEqual_1 = __webpack_require__(346);
-	var pick_1 = __webpack_require__(333);
+	var shouldUpdate_1 = __webpack_require__(364);
+	var shallowEqual_1 = __webpack_require__(354);
+	var pick_1 = __webpack_require__(341);
 	function onlyUpdateForKeys(propKeys) {
 	    return shouldUpdate_1.default(function (prev, next) { return !shallowEqual_1.default(pick_1.default.apply(void 0, [prev].concat(propKeys)), pick_1.default.apply(void 0, [next].concat(propKeys))); });
 	}
@@ -34175,11 +35911,11 @@
 
 
 /***/ },
-/* 360 */
+/* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var blueprint_1 = __webpack_require__(313);
+	var blueprint_1 = __webpack_require__(321);
 	function renderComponent(component) {
 	    return {
 	        instanceCallbacks: [
@@ -34195,11 +35931,11 @@
 
 
 /***/ },
-/* 361 */
+/* 369 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var renderComponent_1 = __webpack_require__(360);
+	var renderComponent_1 = __webpack_require__(368);
 	exports.renderNothing = renderComponent_1.renderComponent(null);
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = exports.renderNothing;
@@ -34208,7 +35944,7 @@
 
 
 /***/ },
-/* 362 */
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* tslint:disable: variable-name no-switch-case-fall-through */
@@ -34221,7 +35957,7 @@
 	    }
 	    return t;
 	};
-	var transit_1 = __webpack_require__(363);
+	var transit_1 = __webpack_require__(371);
 	var StateID;
 	(function (StateID) {
 	    StateID[StateID["EntryPoint"] = 0] = "EntryPoint";
@@ -34541,7 +36277,7 @@
 
 
 /***/ },
-/* 363 */
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34553,7 +36289,7 @@
 	    }
 	    return t;
 	};
-	var convertToCSSPrefix_1 = __webpack_require__(364);
+	var convertToCSSPrefix_1 = __webpack_require__(372);
 	;
 	function transit(value, duration, timing, delay) {
 	    var ret = [value];
@@ -34599,7 +36335,7 @@
 
 
 /***/ },
-/* 364 */
+/* 372 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -34619,14 +36355,14 @@
 
 
 /***/ },
-/* 365 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var reassemble_1 = __webpack_require__(311);
-	var runInFrame_1 = __webpack_require__(366);
-	var pick_1 = __webpack_require__(367);
-	var reducer_1 = __webpack_require__(362);
+	var reassemble_1 = __webpack_require__(319);
+	var runInFrame_1 = __webpack_require__(374);
+	var pick_1 = __webpack_require__(375);
+	var reducer_1 = __webpack_require__(370);
 	var pickTransitionState = function (state) { return pick_1.default(state, "style", "className", "inTransition", "id"); };
 	exports.withTransitionState = function (reduce) { return reassemble_1.combine(reassemble_1.isolate(reassemble_1.withProps(function (props) { return ({ actionProps: pick_1.default.apply(void 0, [props].concat(reducer_1.actionPropKeys)) }); }), reassemble_1.withState("transitionState", "setTransitionState", function (_a) {
 	    var actionProps = _a.actionProps;
@@ -34708,7 +36444,7 @@
 
 
 /***/ },
-/* 366 */
+/* 374 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -34739,11 +36475,11 @@
 
 
 /***/ },
-/* 367 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var pick_1 = __webpack_require__(333);
+	var pick_1 = __webpack_require__(341);
 	exports.pick = pick_1.default;
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = pick_1.default;
@@ -34752,7 +36488,7 @@
 
 
 /***/ },
-/* 368 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34764,7 +36500,7 @@
 	    }
 	    return t;
 	};
-	var reassemble_1 = __webpack_require__(311);
+	var reassemble_1 = __webpack_require__(319);
 	var mergeClasses = function () {
 	    var classes = [];
 	    for (var _i = 0; _i < arguments.length; _i++) {
@@ -34784,14 +36520,14 @@
 
 
 /***/ },
-/* 369 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var reassemble_1 = __webpack_require__(311);
-	var parseTransition_1 = __webpack_require__(370);
-	var parseComputedTransition_1 = __webpack_require__(372);
-	var memoize_1 = __webpack_require__(373);
+	var reassemble_1 = __webpack_require__(319);
+	var parseTransition_1 = __webpack_require__(378);
+	var parseComputedTransition_1 = __webpack_require__(380);
+	var memoize_1 = __webpack_require__(381);
 	exports.withTransitionInfo = reassemble_1.isolate(reassemble_1.withHandlers(function () {
 	    var memoized = memoize_1.memoize(function (node) { return parseComputedTransition_1.parseComputedTransition(getComputedStyle(node)); }, function (node) { return node.className; });
 	    return {
@@ -34826,11 +36562,11 @@
 
 
 /***/ },
-/* 370 */
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var parseDuration_1 = __webpack_require__(371);
+	var parseDuration_1 = __webpack_require__(379);
 	function parseTransition(transition) {
 	    var lastProperty = null;
 	    var firstProperty = null;
@@ -34860,7 +36596,7 @@
 
 
 /***/ },
-/* 371 */
+/* 379 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -34879,11 +36615,11 @@
 
 
 /***/ },
-/* 372 */
+/* 380 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var parseDuration_1 = __webpack_require__(371);
+	var parseDuration_1 = __webpack_require__(379);
 	function parseComputedTransition(computed) {
 	    var lastProperty = null;
 	    var firstProperty = null;
@@ -34915,7 +36651,7 @@
 
 
 /***/ },
-/* 373 */
+/* 381 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -34944,11 +36680,11 @@
 
 
 /***/ },
-/* 374 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var reassemble_1 = __webpack_require__(311);
+	var reassemble_1 = __webpack_require__(319);
 	exports.timeoutMultiplier = 3;
 	exports.withTimeout = reassemble_1.isolate(reassemble_1.withHandlers(function () {
 	    var timeoutID;
@@ -34986,12 +36722,12 @@
 
 
 /***/ },
-/* 375 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var reassemble_1 = __webpack_require__(311);
-	var matchTransitionProperty_1 = __webpack_require__(376);
+	var reassemble_1 = __webpack_require__(319);
+	var matchTransitionProperty_1 = __webpack_require__(384);
 	exports.withTransitionObserver = reassemble_1.withHandlers({
 	    onTransitionStart: function (_a) {
 	        var firstProperty = _a.transitionInfo.firstProperty, inTransition = _a.transitionState.inTransition, onTransitionStart = _a.onTransitionStart, onTransitionBegin = _a.onTransitionBegin;
@@ -35025,11 +36761,11 @@
 
 
 /***/ },
-/* 376 */
+/* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var removeVendorPrefix_1 = __webpack_require__(377);
+	var removeVendorPrefix_1 = __webpack_require__(385);
 	function matchTransitionProperty(subject, property) {
 	    if (property === "all") {
 	        return true;
@@ -35052,7 +36788,7 @@
 
 
 /***/ },
-/* 377 */
+/* 385 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -35067,7 +36803,7 @@
 
 
 /***/ },
-/* 378 */
+/* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -35081,7 +36817,7 @@
 	};
 	var React = __webpack_require__(1);
 	var react_1 = __webpack_require__(1);
-	var reassemble_1 = __webpack_require__(311);
+	var reassemble_1 = __webpack_require__(319);
 	exports.withWorkaround = reassemble_1.combine(reassemble_1.withHandlers({
 	    workaroundHandler: function (_a) {
 	        var firstProperty = _a.transitionInfo.firstProperty, onTransitionStart = _a.onTransitionStart;
@@ -35109,11 +36845,11 @@
 
 
 /***/ },
-/* 379 */
+/* 387 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var reassemble_1 = __webpack_require__(311);
+	var reassemble_1 = __webpack_require__(319);
 	exports.withDOMNodeCallback = reassemble_1.withHandlers(function () {
 	    var ref;
 	    return {
@@ -35128,11 +36864,11 @@
 
 
 /***/ },
-/* 380 */
+/* 388 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var reassemble_1 = __webpack_require__(311);
+	var reassemble_1 = __webpack_require__(319);
 	exports.preventPhantomEvents = reassemble_1.isolate(reassemble_1.withHandlers(function () {
 	    var lastTriggerTime;
 	    var lastTriggerTimePerformance;
@@ -35189,7 +36925,7 @@
 
 
 /***/ },
-/* 381 */
+/* 389 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -35217,7 +36953,7 @@
 	};
 	var React = __webpack_require__(1);
 	var react_1 = __webpack_require__(1);
-	var TransitionGroup = __webpack_require__(382);
+	var TransitionGroup = __webpack_require__(390);
 	var CSSTransitionGroup = (function (_super) {
 	    __extends(CSSTransitionGroup, _super);
 	    function CSSTransitionGroup() {
@@ -35288,14 +37024,14 @@
 
 
 /***/ },
-/* 382 */
+/* 390 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 	exports.__esModule = true;
 
-	var _chainFunction = __webpack_require__(383);
+	var _chainFunction = __webpack_require__(391);
 
 	var _chainFunction2 = _interopRequireDefault(_chainFunction);
 
@@ -35307,7 +37043,7 @@
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _ChildMapping = __webpack_require__(384);
+	var _ChildMapping = __webpack_require__(392);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35549,7 +37285,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 383 */
+/* 391 */
 /***/ function(module, exports) {
 
 	
@@ -35575,7 +37311,7 @@
 
 
 /***/ },
-/* 384 */
+/* 392 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35671,7 +37407,7 @@
 	}
 
 /***/ },
-/* 385 */
+/* 393 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35743,7 +37479,7 @@
 	exports.default = Reload;
 
 /***/ },
-/* 386 */
+/* 394 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -35764,7 +37500,15 @@
 
 	var _reactRouterDom = __webpack_require__(217);
 
-	var _venuesActions = __webpack_require__(305);
+	var _routes = __webpack_require__(304);
+
+	var routes = _interopRequireWildcard(_routes);
+
+	var _localization = __webpack_require__(301);
+
+	var _localization2 = _interopRequireDefault(_localization);
+
+	var _venuesActions = __webpack_require__(312);
 
 	var actions = _interopRequireWildcard(_venuesActions);
 
@@ -35807,7 +37551,7 @@
 	            }
 	            return _react2.default.createElement(
 	                _reactRouterDom.Link,
-	                { to: '/venues/show/' + this.props.id, className: "collection-item", href: "#" },
+	                { to: _localization2.default.formatString(routes.VENUES_EDIT, this.props.id), className: "collection-item", href: "#" },
 	                _react2.default.createElement(
 	                    _reactMaterialize.Row,
 	                    null,
@@ -35845,7 +37589,7 @@
 	})(VenueListItem);
 
 /***/ },
-/* 387 */
+/* 395 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35857,15 +37601,15 @@
 
 	var _redux = __webpack_require__(190);
 
-	var _reduxThunk = __webpack_require__(388);
+	var _reduxThunk = __webpack_require__(396);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-	var _reduxLogger = __webpack_require__(389);
+	var _reduxLogger = __webpack_require__(397);
 
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 
-	var _index = __webpack_require__(395);
+	var _index = __webpack_require__(403);
 
 	var _index2 = _interopRequireDefault(_index);
 
@@ -35880,7 +37624,7 @@
 	}
 
 /***/ },
-/* 388 */
+/* 396 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -35908,7 +37652,7 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 389 */
+/* 397 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35920,11 +37664,11 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _core = __webpack_require__(390);
+	var _core = __webpack_require__(398);
 
-	var _helpers = __webpack_require__(391);
+	var _helpers = __webpack_require__(399);
 
-	var _defaults = __webpack_require__(394);
+	var _defaults = __webpack_require__(402);
 
 	var _defaults2 = _interopRequireDefault(_defaults);
 
@@ -36052,7 +37796,7 @@
 	exports.default = defaultLogger;
 
 /***/ },
-/* 390 */
+/* 398 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36065,9 +37809,9 @@
 
 	exports.printBuffer = printBuffer;
 
-	var _helpers = __webpack_require__(391);
+	var _helpers = __webpack_require__(399);
 
-	var _diff = __webpack_require__(392);
+	var _diff = __webpack_require__(400);
 
 	var _diff2 = _interopRequireDefault(_diff);
 
@@ -36200,7 +37944,7 @@
 	}
 
 /***/ },
-/* 391 */
+/* 399 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -36224,7 +37968,7 @@
 	var timer = exports.timer = typeof performance !== "undefined" && performance !== null && typeof performance.now === "function" ? performance : Date;
 
 /***/ },
-/* 392 */
+/* 400 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36234,7 +37978,7 @@
 	});
 	exports.default = diffLogger;
 
-	var _deepDiff = __webpack_require__(393);
+	var _deepDiff = __webpack_require__(401);
 
 	var _deepDiff2 = _interopRequireDefault(_deepDiff);
 
@@ -36323,7 +38067,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 393 */
+/* 401 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -36752,7 +38496,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 394 */
+/* 402 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -36803,7 +38547,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 395 */
+/* 403 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36814,7 +38558,7 @@
 
 	var _redux = __webpack_require__(190);
 
-	var _venues = __webpack_require__(396);
+	var _venues = __webpack_require__(404);
 
 	var _venues2 = _interopRequireDefault(_venues);
 
@@ -36827,7 +38571,7 @@
 	exports.default = rootReducer;
 
 /***/ },
-/* 396 */
+/* 404 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36837,7 +38581,7 @@
 	});
 	exports.default = venues;
 
-	var _actionTypes = __webpack_require__(306);
+	var _actionTypes = __webpack_require__(313);
 
 	var types = _interopRequireWildcard(_actionTypes);
 
@@ -36849,7 +38593,7 @@
 	    fetching: false,
 	    error: null,
 	    removeModal: false,
-	    formErrors: []
+	    formErrors: {}
 	};
 
 	function venues() {
@@ -36898,7 +38642,7 @@
 	            newState.fetching = false;
 	            newState.saveSuccess = true;
 	            newState.item = {};
-	            newState.formErrors = [];
+	            newState.formErrors = {};
 	            newState.error = null;
 	            break;
 	        case types.VENUE_REMOVE_ERROR:
@@ -36918,7 +38662,7 @@
 	            newState.fetching = false;
 	            newState.saveSuccess = true;
 	            newState.item = action.payload;
-	            newState.formErrors = [];
+	            newState.formErrors = {};
 	            newState.error = null;
 	            break;
 	        case types.VENUE_SAVE_ERROR:
@@ -36933,7 +38677,7 @@
 	            newState.item = {};
 	            newState.saveSuccess = null;
 	            newState.removeModal = null;
-	            newState.formErrors = [];
+	            newState.formErrors = {};
 	            break;
 	    }
 
