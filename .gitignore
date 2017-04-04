@@ -16,3 +16,4 @@
 /web/bundles/
 .idea
 *.log
+/node_modules/*
