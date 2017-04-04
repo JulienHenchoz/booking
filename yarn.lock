@@ -2901,6 +2901,10 @@ react-dom@^15.4.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
 
+react-localization@0.0.13:
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/react-localization/-/react-localization-0.0.13.tgz#edfbf6919a1f94563b71a0b28c5e6dee5f1e5425"
+
 react-materialize@^0.18.1:
   version "0.18.1"
   resolved "https://registry.yarnpkg.com/react-materialize/-/react-materialize-0.18.1.tgz#6a9607d61708cfd593a38f6a120fc6c87f9cf51c"
@@ -3580,6 +3584,10 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
+
+validate.js@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/validate.js/-/validate.js-0.11.1.tgz#f51c3c6c4a56e6380a20a7eb104245037f2a540d"
 
 value-equal@^0.2.0:
   version "0.2.0"
