@@ -14,6 +14,10 @@ import ConfirmModal from "../utils/ConfirmModal";
 import l10n from "../../l10n/localization";
 
 
+/**
+ * Validation rules for received props
+ * @type {{dispatch: *, item: *, fetching: *, errors: *}}
+ */
 const propTypes = {
     dispatch: PropTypes.func.isRequired,
     item: PropTypes.object,
@@ -22,6 +26,10 @@ const propTypes = {
 };
 
 class VenueForm extends React.Component {
+    /**
+     * Initial state for the form fields and errors
+     * @returns {{name: string, capacity: string, address: string, phone: string, website: string, image: string}}
+     */
     getEmptyFields() {
         return {
             name: '',
@@ -32,6 +40,11 @@ class VenueForm extends React.Component {
             image: ''
         };
     }
+
+    /**
+     * Initialize the state of form fields and errors
+     * @param props
+     */
     constructor(props) {
         super(props);
         let emptyFields =
@@ -41,19 +54,51 @@ class VenueForm extends React.Component {
         }
     }
 
+    /**
+     * Force Materialize lib to update the text fields, so the labels and fields do not overlap
+     */
+    updateMaterializeFields() {
+        if (Materialize.updateTextFields !== undefined) {
+            Materialize.updateTextFields();
+        }
+    }
+
+    /**
+     * After component has been mounted, make sure the Materialize fields are up to date.
+     */
+    componentDidMount() {
+        this.updateMaterializeFields();
+    }
+
+    /**
+     * After component has been updated, make sure the Materialize fields are up to date.
+     */
+    componentDidUpdate() {
+        this.updateMaterializeFields();
+    }
+
+    /**
+     * When the component is loading, fetch the venueId we're supposed to display in the route
+     */
     componentWillMount() {
         if (this.props.match.params.venueId !== undefined) {
             this.props.dispatch(actions.fetchVenue(this.props.match.params.venueId));
         }
     }
 
-    componentDidMount() {
-        if (Materialize.updateTextFields !== undefined) {
-            Materialize.updateTextFields();
-        }
+    /**
+     * Dispatch an even whenever the component is destroyed
+     */
+    componentWillUnmount() {
+        this.props.dispatch(actions.leaveForm());
     }
 
+    /**
+     * When receiving new props, update current state to get new field values and errors
+     * @param nextProps
+     */
     componentWillReceiveProps(nextProps) {
+        // Update only if nextProps comes with a valid item, so the form never displays any "null" value
         if (nextProps.item !== undefined && nextProps.item !== null && !utils.objectIsEmpty(nextProps.item)) {
             this.setState({
                 fields: nextProps.item,
@@ -62,22 +107,19 @@ class VenueForm extends React.Component {
         }
     }
 
-    componentDidUpdate() {
-        if (Materialize.updateTextFields !== undefined) {
-            Materialize.updateTextFields();
-        }
-    }
-
-    componentWillUnmount() {
-        this.props.dispatch(actions.leaveForm());
-    }
-
+    /**
+     * Called when the form is being submitted
+     * @param e
+     */
     onSubmit(e) {
         e.preventDefault();
-
         let item = this.props.item;
-        let errors = validate(item, venueConstraints, {fullMessages: false});
-        if (!errors) {
+
+        // Get any validations errors using validate.js
+        let validationErrors = validate(item, venueConstraints, {fullMessages: false});
+
+        if (!validationErrors) {
+            // If validation is OK, decide whether to update or add the current item
             if (item.id !== undefined) {
                 // If submitted item already has an ID, send an edit action
                 this.props.dispatch(actions.updateVenue(item.id, document.getElementById('venue-form')));
@@ -90,14 +132,16 @@ class VenueForm extends React.Component {
         else {
             // If there were validation errors, copy them to the state so they can be displayed in the form
             let newState = Object.assign({}, this.state);
-            Object.keys(errors).forEach(function(index, item) {
-                newState.errors[index] = errors[index].length ? errors[index][0] : '';
-            });
+            newState.errors = utils.getErrors(validationErrors);
             this.setState(newState);
             this.props.dispatch(actions.validationError());
         }
     }
 
+    /**
+     * Dispatch an action to open the "remove" modal box
+     * @param e
+     */
     onRemove(e) {
         e.preventDefault();
         this.props.dispatch(actions.removeVenue(this.props.item.id));
