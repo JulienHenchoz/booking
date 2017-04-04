@@ -17,3 +17,11 @@ export function getErrors(validationErrors) {
     });
     return errors;
 }
+
+export function replaceEmptyWithNull(object) {
+    var newObject = {};
+    Object.keys(object).forEach(function(index) {
+        newObject[index] = object[index] ? object[index] : null;
+    });
+    return newObject;
+}

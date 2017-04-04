@@ -27,14 +27,12 @@ export default {
         },
     },
     website: {
-        presence: false,
         url: {
             allowEmpty: true,
             message: l10n.validation.url
         }
     },
     image: {
-        presence: false,
         url: {
             allowEmpty: true,
             message: l10n.validation.url

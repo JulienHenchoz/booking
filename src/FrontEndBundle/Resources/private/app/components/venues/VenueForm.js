@@ -116,7 +116,13 @@ class VenueForm extends React.Component {
         let item = this.props.item;
 
         // Get any validations errors using validate.js
-        let validationErrors = validate(item, venueConstraints, {fullMessages: false});
+        // Use replaceEmptyWithNull because validate.js requires an element with a constraint to be null
+        // to be accepted as "empty". Empty string will trigger validation error.
+        let validationErrors = validate(
+            utils.replaceEmptyWithNull(item),
+            venueConstraints,
+            { fullMessages: false }
+        );
 
         if (!validationErrors) {
             // If validation is OK, decide whether to update or add the current item
@@ -155,8 +161,11 @@ class VenueForm extends React.Component {
     }
 
     onBlur(e) {
+        // Empty string will be seen as validation error, so empty values must be null for validation
+        let value = e.target.value ? e.target.value : null;
+        console.log(value);
         let newState = Object.assign({}, this.state);
-        let errors = validate.single(e.target.value, venueConstraints[e.target.name]);
+        let errors = validate.single(value, venueConstraints[e.target.name]);
         this.state.errors[e.target.name] = errors && errors.length ? errors[0] : '';
         this.setState(newState);
     }
