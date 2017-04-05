@@ -9,6 +9,7 @@ import eventConstraints from '../../validation/event';
 import * as utils from '../../utils/utils';
 import FixedNavBar from '../menu/FixedNavBar';
 
+import DateTime from 'react-datetime';
 import * as actions from '../../actions/eventsActions';
 import ConfirmModal from "../utils/ConfirmModal";
 import l10n from "../../l10n/localization";
@@ -260,6 +261,18 @@ class EventForm extends React.Component {
         )
     }
 
+    getTextAreaInput(fieldName) {
+        return (
+            <Input type="textarea" className="active" s={12}
+                   name={fieldName}
+                   error={this.state.errors[fieldName] ? this.state.errors[fieldName] : ''}
+                   onChange={this.onChange.bind(this)}
+                   onBlur={this.onBlur.bind(this)}
+                   label={l10n.fields.events[fieldName]}
+                   value={this.state.fields[fieldName]}/>
+        )
+    }
+
     /**
      * Returns the form navbar
      * @returns {XML}
@@ -299,8 +312,9 @@ class EventForm extends React.Component {
                       onSubmit={this.onSubmit.bind(this)}>
                     <Row>
                         {this.getTextInput('name')}
+                        <DateTime />
                         {this.getTextInput('startDate')}
-                        {this.getTextInput('description')}
+                        {this.getTextAreaInput('description')}
                         {this.getTextInput('venue')}
                         {this.getTextInput('image')}
                     </Row>
