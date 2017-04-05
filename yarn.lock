@@ -2901,7 +2901,7 @@ react-dom@^15.4.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
 
-react-localization@0.0.13:
+react-localization:
   version "0.0.13"
   resolved "https://registry.yarnpkg.com/react-localization/-/react-localization-0.0.13.tgz#edfbf6919a1f94563b71a0b28c5e6dee5f1e5425"
 
