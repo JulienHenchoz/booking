@@ -209,7 +209,7 @@ class VenueForm extends React.Component {
      * @returns {boolean}
      */
     isNew() {
-        return this.props.item.id !== undefined;
+        return this.props.item.id === undefined;
     }
 
     /**
@@ -219,7 +219,7 @@ class VenueForm extends React.Component {
      */
     getTitle() {
         let header = '';
-        if (this.isNew()) {
+        if (!this.isNew()) {
             header = l10n.formatString(l10n.editing, this.state.fields.name);
         }
         else if (!this.props.fetching) {

@@ -15033,7 +15033,7 @@ var VenueForm = function (_React$Component) {
     }, {
         key: "isNew",
         value: function isNew() {
-            return this.props.item.id !== undefined;
+            return this.props.item.id === undefined;
         }
 
         /**
@@ -15046,7 +15046,7 @@ var VenueForm = function (_React$Component) {
         key: "getTitle",
         value: function getTitle() {
             var header = '';
-            if (this.isNew()) {
+            if (!this.isNew()) {
                 header = _localization2.default.formatString(_localization2.default.editing, this.state.fields.name);
             } else if (!this.props.fetching) {
                 header = _localization2.default.new_venue;
