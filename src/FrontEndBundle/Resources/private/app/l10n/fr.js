@@ -33,6 +33,12 @@ export default {
     venues_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des salles.',
     venue_fetch_error: 'Une erreur est survenue lors de la récupération de la salle.',
 
+    events_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des événements.',
+    event_fetch_error: 'Une erreur est survenue lors de la récupération de l\'événement.',
+
+
+    no_events: 'Aucun événement à afficher pour le moment.',
+
     /** Buttons **/
     btn_confirm: 'Confirmer',
     btn_cancel: 'Annuler',
@@ -40,6 +46,9 @@ export default {
     /** Modals **/
     delete_venue_title: 'Supprimer la salle',
     delete_venue_content: 'Êtes-vous sûr de vouloir supprimer la salle "{0}" ?',
+
+    delete_event_title: 'Supprimer l\'événement',
+    delete_event_content: 'Êtes-vous sûr de vouloir supprimer l\'événement "{0}" ?',
 
     /** Entity Fields **/
     fields: {
@@ -49,6 +58,13 @@ export default {
             address: 'Adresse',
             phone: 'Téléphone',
             website: 'Site web',
+            image: 'Lien de l\'image',
+        },
+        events: {
+            name: 'Nom',
+            startDate: 'Date/heure',
+            venue: 'Salle',
+            description: 'Description',
             image: 'Lien de l\'image',
         }
     },

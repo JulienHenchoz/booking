@@ -31,7 +31,9 @@ class EventController extends AbstractApiController
     protected $createFields = [
         'name',
         'venue',
-        'startDate'
+        'startDate',
+        'description',
+        'image',
     ];
 
     /**
@@ -41,7 +43,9 @@ class EventController extends AbstractApiController
     protected $updateFields = [
         'name',
         'venue',
-        'startDate'
+        'startDate',
+        'description',
+        'image',
     ];
 
     /**

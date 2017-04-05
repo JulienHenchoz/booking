@@ -9215,6 +9215,10 @@ exports.default = Loader;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var LEAVE_FORM = exports.LEAVE_FORM = 'LEAVE_FORM';
+var VALIDATION_ERROR = exports.VALIDATION_ERROR = 'VALIDATION_ERROR';
+
+/** Venues **/
 var ADD_VENUE = exports.ADD_VENUE = 'ADD_VENUE';
 var EDIT_VENUE = exports.EDIT_VENUE = 'EDIT_VENUE';
 var REMOVE_VENUE = exports.REMOVE_VENUE = 'REMOVE_VENUE';
@@ -9232,10 +9236,29 @@ var VENUE_SAVE_SUCCESS = exports.VENUE_SAVE_SUCCESS = 'VENUE_SAVE_SUCCESS';
 var VENUE_SAVE_ERROR = exports.VENUE_SAVE_ERROR = 'VENUE_SAVE_ERROR';
 var VENUE_REMOVE_SUCCESS = exports.VENUE_REMOVE_SUCCESS = 'VENUE_REMOVE_SUCCESS';
 var VENUE_REMOVE_ERROR = exports.VENUE_REMOVE_ERROR = 'VENUE_REMOVE_ERROR';
-var LEAVE_FORM = exports.LEAVE_FORM = 'LEAVE_FORM';
 var VENUES_GET_ERROR = exports.VENUES_GET_ERROR = 'VENUES_GET_ERROR';
 var VENUE_GET_ERROR = exports.VENUE_GET_ERROR = 'VENUE_GET_ERROR';
-var VALIDATION_ERROR = exports.VALIDATION_ERROR = 'VALIDATION_ERROR';
+
+/** Events **/
+var ADD_EVENT = exports.ADD_EVENT = 'ADD_EVENT';
+var EDIT_EVENT = exports.EDIT_EVENT = 'EDIT_EVENT';
+var REMOVE_EVENT = exports.REMOVE_EVENT = 'REMOVE_EVENT';
+var CONFIRM_REMOVE_EVENT = exports.CONFIRM_REMOVE_EVENT = 'CONFIRM_REMOVE_EVENT';
+var CANCEL_REMOVE_EVENT = exports.CANCEL_REMOVE_EVENT = 'CANCEL_REMOVE_EVENT';
+var REMOVING_EVENT = exports.REMOVING_EVENT = 'REMOVING_EVENT';
+var FETCH_EVENTS = exports.FETCH_EVENTS = 'FETCH_EVENTS';
+var FETCH_EVENT = exports.FETCH_EVENT = 'FETCH_EVENT';
+var RECEIVE_EVENTS = exports.RECEIVE_EVENTS = 'RECEIVE_EVENTS';
+var RECEIVE_EVENT = exports.RECEIVE_EVENT = 'RECEIVE_EVENT';
+var LOADING_EVENTS = exports.LOADING_EVENTS = 'LOADING_EVENTS';
+var UPDATE_EVENT = exports.UPDATE_EVENT = 'UPDATE_EVENT';
+var SAVING_EVENT = exports.SAVING_EVENT = 'SAVING_EVENT';
+var EVENT_SAVE_SUCCESS = exports.EVENT_SAVE_SUCCESS = 'EVENT_SAVE_SUCCESS';
+var EVENT_SAVE_ERROR = exports.EVENT_SAVE_ERROR = 'EVENT_SAVE_ERROR';
+var EVENT_REMOVE_SUCCESS = exports.EVENT_REMOVE_SUCCESS = 'EVENT_REMOVE_SUCCESS';
+var EVENT_REMOVE_ERROR = exports.EVENT_REMOVE_ERROR = 'EVENT_REMOVE_ERROR';
+var EVENTS_GET_ERROR = exports.EVENTS_GET_ERROR = 'EVENTS_GET_ERROR';
+var EVENT_GET_ERROR = exports.EVENT_GET_ERROR = 'EVENT_GET_ERROR';
 
 /***/ }),
 /* 95 */
@@ -14240,6 +14263,14 @@ var _VenuesList = __webpack_require__(157);
 
 var _VenuesList2 = _interopRequireDefault(_VenuesList);
 
+var _EventsForm = __webpack_require__(409);
+
+var _EventsForm2 = _interopRequireDefault(_EventsForm);
+
+var _EventsList = __webpack_require__(410);
+
+var _EventsList2 = _interopRequireDefault(_EventsList);
+
 var _routes = __webpack_require__(36);
 
 var routes = _interopRequireWildcard(_routes);
@@ -14283,7 +14314,10 @@ var App = function (_React$Component) {
                         _react2.default.createElement(_reactRouterDom.Route, { path: "/", exact: true, component: _VenuesList2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: routes.VENUES_LIST, exact: true, component: _VenuesList2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: routes.VENUES_ADD, exact: true, component: _VenueForm2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.VENUES_EDIT, ':venueId'), component: _VenueForm2.default })
+                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.VENUES_EDIT, ':venueId'), component: _VenueForm2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: routes.EVENTS_LIST, exact: true, component: _EventsList2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: routes.EVENTS_ADD, exact: true, component: _EventsForm2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.EVENTS_EDIT, ':eventId'), component: _EventsForm2.default })
                     )
                 )
             );
@@ -15524,6 +15558,11 @@ exports.default = {
     venues_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des salles.',
     venue_fetch_error: 'Une erreur est survenue lors de la récupération de la salle.',
 
+    events_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des événements.',
+    event_fetch_error: 'Une erreur est survenue lors de la récupération de l\'événement.',
+
+    no_events: 'Aucun événement à afficher pour le moment.',
+
     /** Buttons **/
     btn_confirm: 'Confirmer',
     btn_cancel: 'Annuler',
@@ -15531,6 +15570,9 @@ exports.default = {
     /** Modals **/
     delete_venue_title: 'Supprimer la salle',
     delete_venue_content: 'Êtes-vous sûr de vouloir supprimer la salle "{0}" ?',
+
+    delete_event_title: 'Supprimer l\'événement',
+    delete_event_content: 'Êtes-vous sûr de vouloir supprimer l\'événement "{0}" ?',
 
     /** Entity Fields **/
     fields: {
@@ -15540,6 +15582,13 @@ exports.default = {
             address: 'Adresse',
             phone: 'Téléphone',
             website: 'Site web',
+            image: 'Lien de l\'image'
+        },
+        events: {
+            name: 'Nom',
+            startDate: 'Date/heure',
+            venue: 'Salle',
+            description: 'Description',
             image: 'Lien de l\'image'
         }
     },
@@ -15570,10 +15619,15 @@ var _venues = __webpack_require__(161);
 
 var _venues2 = _interopRequireDefault(_venues);
 
+var _events = __webpack_require__(406);
+
+var _events2 = _interopRequireDefault(_events);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var rootReducer = (0, _redux.combineReducers)({
-    venues: _venues2.default
+    venues: _venues2.default,
+    events: _events2.default
 });
 
 exports.default = rootReducer;
@@ -39099,6 +39153,1205 @@ var valueEqual = function valueEqual(a, b) {
 };
 
 exports.default = valueEqual;
+
+/***/ }),
+/* 406 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = events;
+
+var _actionTypes = __webpack_require__(94);
+
+var types = _interopRequireWildcard(_actionTypes);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var initialState = {
+    items: [],
+    item: {},
+    fetching: false,
+    error: null,
+    removeModal: false,
+    formErrors: {}
+};
+
+function events() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+    var action = arguments[1];
+
+    var newState = Object.assign({}, state);
+
+    switch (action.type) {
+        /**
+         * Get actions
+         */
+        case types.EVENT_GET_ERROR:
+        case types.EVENTS_GET_ERROR:
+            newState.fetching = false;
+            newState.error = action.payload;
+            break;
+        case types.RECEIVE_EVENT:
+            newState.item = action.payload;
+            newState.fetching = false;
+            newState.error = null;
+            break;
+        case types.RECEIVE_EVENTS:
+            newState.items = action.payload;
+            newState.fetching = false;
+            newState.error = null;
+            break;
+        case types.LOADING_EVENTS:
+            newState.fetching = true;
+            break;
+
+        /**
+         * Remove actions
+         */
+        case types.REMOVE_EVENT:
+            newState.removeModal = true;
+            break;
+        case types.CANCEL_REMOVE_EVENT:
+            newState.removeModal = false;
+            break;
+        case types.REMOVING_EVENT:
+            newState.removeModal = false;
+            newState.fetching = true;
+            break;
+        case types.EVENT_REMOVE_SUCCESS:
+            newState.fetching = false;
+            newState.saveSuccess = true;
+            newState.item = {};
+            newState.formErrors = {};
+            newState.error = null;
+            break;
+        case types.EVENT_REMOVE_ERROR:
+            newState.fetching = false;
+            break;
+
+        /**
+         * Add/Edit actions
+         */
+        case types.EDIT_EVENT:
+            newState.item[action.property] = action.payload;
+            break;
+        case types.SAVING_EVENT:
+            newState.fetching = true;
+            break;
+        case types.EVENT_SAVE_SUCCESS:
+            newState.fetching = false;
+            newState.saveSuccess = true;
+            newState.item = action.payload;
+            newState.formErrors = {};
+            newState.error = null;
+            break;
+        case types.EVENT_SAVE_ERROR:
+            newState.fetching = false;
+            newState.formErrors = action.payload;
+            break;
+
+        /**
+         * Misc actions
+         */
+        case types.LEAVE_FORM:
+            newState.item = {};
+            newState.saveSuccess = null;
+            newState.removeModal = null;
+            newState.formErrors = {};
+            break;
+    }
+
+    return newState;
+}
+
+/***/ }),
+/* 407 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.loadingEvents = loadingEvents;
+exports.savingEvent = savingEvent;
+exports.cancelRemoveEvent = cancelRemoveEvent;
+exports.removingEvent = removingEvent;
+exports.editEvent = editEvent;
+exports.removeEvent = removeEvent;
+exports.receiveEvents = receiveEvents;
+exports.leaveForm = leaveForm;
+exports.receiveEvent = receiveEvent;
+exports.saveSuccess = saveSuccess;
+exports.saveError = saveError;
+exports.removeSuccess = removeSuccess;
+exports.removeError = removeError;
+exports.getError = getError;
+exports.validationError = validationError;
+exports.addEvent = addEvent;
+exports.confirmRemoveEvent = confirmRemoveEvent;
+exports.updateEvent = updateEvent;
+exports.fetchEvents = fetchEvents;
+exports.fetchEvent = fetchEvent;
+
+var _actionTypes = __webpack_require__(94);
+
+var types = _interopRequireWildcard(_actionTypes);
+
+var _ajaxRoutes = __webpack_require__(158);
+
+var ajaxRoutes = _interopRequireWildcard(_ajaxRoutes);
+
+var _utils = __webpack_require__(95);
+
+var utils = _interopRequireWildcard(_utils);
+
+var _localization = __webpack_require__(19);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function loadingEvents() {
+    return {
+        type: types.LOADING_EVENTS
+    };
+}
+
+function savingEvent() {
+    return {
+        type: types.SAVING_EVENT
+    };
+}
+
+function cancelRemoveEvent() {
+    return {
+        type: types.CANCEL_REMOVE_EVENT
+    };
+}
+
+function removingEvent() {
+    return {
+        type: types.REMOVING_EVENT
+    };
+}
+
+function editEvent(property, value) {
+    return {
+        type: types.EDIT_EVENT,
+        property: property,
+        payload: value
+    };
+}
+
+function removeEvent(id) {
+    return {
+        type: types.REMOVE_EVENT,
+        index: id
+    };
+}
+
+function receiveEvents(items) {
+    return {
+        type: types.RECEIVE_EVENTS,
+        payload: items
+    };
+}
+
+function leaveForm() {
+    return {
+        type: types.LEAVE_FORM
+    };
+}
+
+function receiveEvent(item) {
+    return {
+        type: types.RECEIVE_EVENT,
+        payload: item
+    };
+}
+
+function saveSuccess(item) {
+    utils.toastSuccess(_localization2.default.save_success);
+    return {
+        type: types.EVENT_SAVE_SUCCESS,
+        payload: item
+    };
+}
+
+function saveError(errors) {
+    utils.toastError(_localization2.default.save_error);
+    return {
+        type: types.EVENT_SAVE_ERROR,
+        payload: errors
+    };
+}
+
+function removeSuccess(item) {
+    utils.toastSuccess(_localization2.default.remove_success);
+    return {
+        type: types.EVENT_REMOVE_SUCCESS,
+        payload: item
+    };
+}
+
+function removeError(errors) {
+    utils.toastError(_localization2.default.remove_error);
+    return {
+        type: types.EVENT_REMOVE_ERROR,
+        payload: errors
+    };
+}
+
+function getError(message) {
+    utils.toastError(message);
+    return {
+        type: types.EVENTS_GET_ERROR,
+        payload: message
+    };
+}
+
+function validationError() {
+    utils.toastError(_localization2.default.validation_errors);
+    return {
+        type: types.VALIDATION_ERROR
+    };
+}
+
+function addEvent(form) {
+    return function (dispatch) {
+        dispatch(savingEvent());
+        // TODO : Dispatch an error if the item has no id
+        fetch(ajaxRoutes.EVENT_ADD, {
+            method: "POST",
+            body: new FormData(form)
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            if (json.success === true) {
+                dispatch(saveSuccess(json.object));
+            } else {
+                dispatch(saveError(json.errors));
+            }
+        }).catch(function () {
+            dispatch(saveError([]));
+        });
+    };
+}
+
+function confirmRemoveEvent(id) {
+    return function (dispatch) {
+        dispatch(removingEvent());
+        // TODO : Dispatch an error if the item has no id
+        fetch(_localization2.default.formatString(ajaxRoutes.EVENT_REMOVE, id), {
+            method: "DELETE"
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            if (json.success === true) {
+                dispatch(removeSuccess(json.object));
+            } else {
+                dispatch(removeError(json.errors));
+            }
+        }).catch(function () {
+            dispatch(removeError([]));
+        });
+    };
+}
+
+function updateEvent(id, form) {
+    return function (dispatch) {
+        dispatch(savingEvent());
+        // TODO : Dispatch an error if the item has no id
+        fetch(_localization2.default.formatString(ajaxRoutes.EVENT_EDIT, id), {
+            method: "POST",
+            body: new FormData(form)
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            if (json.success === true) {
+                dispatch(saveSuccess(json.object));
+            } else {
+                dispatch(saveError(json.errors));
+            }
+        }).catch(function (error) {
+            console.error(error);
+            dispatch(saveError([]));
+        });
+    };
+}
+
+function fetchEvents() {
+    return function (dispatch) {
+        dispatch(loadingEvents());
+        fetch(ajaxRoutes.EVENTS_GET).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            dispatch(receiveEvents(json));
+        }).catch(function () {
+            dispatch(getError(_localization2.default.events_fetch_error));
+        });
+    };
+}
+
+function fetchEvent(id) {
+    return function (dispatch) {
+        dispatch(loadingEvents());
+
+        fetch(_localization2.default.formatString(ajaxRoutes.EVENT_GET, id)).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            dispatch(receiveEvent(json));
+        }).catch(function () {
+            dispatch(getError(_localization2.default.event_fetch_error));
+        });
+    };
+}
+
+/***/ }),
+/* 408 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactMaterialize = __webpack_require__(17);
+
+var _reactRedux = __webpack_require__(29);
+
+var _reactRouterDom = __webpack_require__(23);
+
+var _routes = __webpack_require__(36);
+
+var routes = _interopRequireWildcard(_routes);
+
+var _localization = __webpack_require__(19);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+var _eventsActions = __webpack_require__(407);
+
+var actions = _interopRequireWildcard(_eventsActions);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var propTypes = {
+    dispatch: _react.PropTypes.func.isRequired,
+    name: _react.PropTypes.string.isRequired,
+    address: _react.PropTypes.string,
+    website: _react.PropTypes.string
+};
+
+var EventListItem = function (_React$Component) {
+    _inherits(EventListItem, _React$Component);
+
+    function EventListItem(props) {
+        _classCallCheck(this, EventListItem);
+
+        return _possibleConstructorReturn(this, (EventListItem.__proto__ || Object.getPrototypeOf(EventListItem)).call(this, props));
+    }
+
+    _createClass(EventListItem, [{
+        key: "render",
+        value: function render() {
+            var image = _react2.default.createElement(
+                _reactMaterialize.Icon,
+                { className: "large grey-text" },
+                "movie"
+            );
+            if (this.props.image !== undefined && this.props.image) {
+                image = _react2.default.createElement("img", { className: "circle responsive-img", src: this.props.image });
+            }
+            return _react2.default.createElement(
+                _reactRouterDom.Link,
+                { to: _localization2.default.formatString(routes.EVENTS_EDIT, this.props.id), className: "collection-item", href: "#" },
+                _react2.default.createElement(
+                    _reactMaterialize.Row,
+                    null,
+                    _react2.default.createElement(
+                        _reactMaterialize.Col,
+                        { s: 3, l: 2, className: "collection-image center-align" },
+                        image
+                    ),
+                    _react2.default.createElement(
+                        _reactMaterialize.Col,
+                        { s: 9, l: 10 },
+                        _react2.default.createElement(
+                            "h4",
+                            null,
+                            this.props.name
+                        ),
+                        _react2.default.createElement(
+                            "p",
+                            null,
+                            this.props.address
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return EventListItem;
+}(_react2.default.Component);
+
+EventListItem.propTypes = propTypes;
+
+exports.default = (0, _reactRedux.connect)(function (store) {
+    return Object.assign({}, store.events);
+})(EventListItem);
+
+/***/ }),
+/* 409 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(29);
+
+var _reactRouterDom = __webpack_require__(23);
+
+var _reactMaterialize = __webpack_require__(17);
+
+var _routes = __webpack_require__(36);
+
+var routes = _interopRequireWildcard(_routes);
+
+var _Loader = __webpack_require__(93);
+
+var _Loader2 = _interopRequireDefault(_Loader);
+
+var _validate = __webpack_require__(404);
+
+var _validate2 = _interopRequireDefault(_validate);
+
+var _event = __webpack_require__(411);
+
+var _event2 = _interopRequireDefault(_event);
+
+var _utils = __webpack_require__(95);
+
+var utils = _interopRequireWildcard(_utils);
+
+var _FixedNavBar = __webpack_require__(92);
+
+var _FixedNavBar2 = _interopRequireDefault(_FixedNavBar);
+
+var _eventsActions = __webpack_require__(407);
+
+var actions = _interopRequireWildcard(_eventsActions);
+
+var _ConfirmModal = __webpack_require__(153);
+
+var _ConfirmModal2 = _interopRequireDefault(_ConfirmModal);
+
+var _localization = __webpack_require__(19);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Validation rules for received props
+ * @type {{dispatch: *, item: *, fetching: *, errors: *}}
+ */
+var propTypes = {
+    dispatch: _react.PropTypes.func.isRequired,
+    item: _react.PropTypes.object,
+    fetching: _react.PropTypes.bool,
+    errors: _react.PropTypes.object
+};
+
+var EventForm = function (_React$Component) {
+    _inherits(EventForm, _React$Component);
+
+    _createClass(EventForm, [{
+        key: "getEmptyFields",
+
+        /**
+         * Initial state for the form fields and errors
+         * @returns {{name: string, capacity: string, address: string, phone: string, website: string, image: string}}
+         */
+        value: function getEmptyFields() {
+            return {
+                name: '',
+                startDate: '',
+                description: '',
+                image: '',
+                venue: ''
+            };
+        }
+
+        /**
+         * Initialize the state of form fields and errors
+         * @param props
+         */
+
+    }]);
+
+    function EventForm(props) {
+        _classCallCheck(this, EventForm);
+
+        var _this = _possibleConstructorReturn(this, (EventForm.__proto__ || Object.getPrototypeOf(EventForm)).call(this, props));
+
+        var emptyFields = _this.state = {
+            fields: _this.getEmptyFields(),
+            errors: _this.getEmptyFields()
+        };
+        return _this;
+    }
+
+    /**
+     * Force Materialize lib to update the text fields, so the labels and fields do not overlap
+     */
+
+
+    _createClass(EventForm, [{
+        key: "updateMaterializeFields",
+        value: function updateMaterializeFields() {
+            if (Materialize.updateTextFields !== undefined) {
+                Materialize.updateTextFields();
+            }
+        }
+
+        /**
+         * After component has been mounted, make sure the Materialize fields are up to date.
+         */
+
+    }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            this.updateMaterializeFields();
+        }
+
+        /**
+         * After component has been updated, make sure the Materialize fields are up to date.
+         */
+
+    }, {
+        key: "componentDidUpdate",
+        value: function componentDidUpdate() {
+            this.updateMaterializeFields();
+        }
+
+        /**
+         * When the component is loading, fetch the eventId we're supposed to display in the route
+         */
+
+    }, {
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            if (this.props.match.params.eventId !== undefined) {
+                this.props.dispatch(actions.fetchEvent(this.props.match.params.eventId));
+            }
+        }
+
+        /**
+         * Dispatch an even whenever the component is destroyed
+         */
+
+    }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+            this.props.dispatch(actions.leaveForm());
+        }
+
+        /**
+         * When receiving new props, update current state to get new field values and errors
+         * @param nextProps
+         */
+
+    }, {
+        key: "componentWillReceiveProps",
+        value: function componentWillReceiveProps(nextProps) {
+            // Update only if nextProps comes with a valid item, so the form never displays any "null" value
+            if (nextProps.item !== undefined && nextProps.item !== null && !utils.objectIsEmpty(nextProps.item)) {
+                this.setState({
+                    fields: nextProps.item,
+                    errors: nextProps.errors || this.getEmptyFields()
+                });
+            }
+        }
+
+        /**
+         * Called when the form is being submitted
+         * @param e
+         */
+
+    }, {
+        key: "onSubmit",
+        value: function onSubmit(e) {
+            e.preventDefault();
+            var item = this.props.item;
+
+            // Get any validations errors using validate.js
+            // Use replaceEmptyWithNull because validate.js requires an element with a constraint to be null
+            // to be accepted as "empty". Empty string will trigger validation error.
+            var validationErrors = (0, _validate2.default)(utils.replaceEmptyWithNull(item), _event2.default, { fullMessages: false });
+
+            if (!validationErrors) {
+                // If validation is OK, decide whether to update or add the current item
+                if (item.id !== undefined) {
+                    // If submitted item already has an ID, send an edit action
+                    this.props.dispatch(actions.updateEvent(item.id, document.getElementById('event-form')));
+                } else {
+                    // Else send an Add action
+                    this.props.dispatch(actions.addEvent(document.getElementById('event-form')));
+                }
+            } else {
+                // If there were validation errors, copy them to the state so they can be displayed in the form
+                var newState = Object.assign({}, this.state);
+                newState.errors = utils.getErrors(validationErrors);
+                this.setState(newState);
+                this.props.dispatch(actions.validationError());
+            }
+        }
+
+        /**
+         * Dispatch an action to open the "remove" modal box
+         * @param e
+         */
+
+    }, {
+        key: "onRemove",
+        value: function onRemove(e) {
+            e.preventDefault();
+            this.props.dispatch(actions.removeEvent(this.props.item.id));
+        }
+
+        /**
+         * Dispatch an action when a field is changed, to update the global state
+         * @param e
+         */
+
+    }, {
+        key: "onChange",
+        value: function onChange(e) {
+            var newState = Object.assign({}, this.state);
+            newState.fields[e.target.name] = e.target.value;
+            this.setState(newState);
+            this.props.dispatch(actions.editEvent(e.target.name, e.target.value));
+        }
+
+        /**
+         * Validate single fields every time we focus out of them
+         * @param e
+         */
+
+    }, {
+        key: "onBlur",
+        value: function onBlur(e) {
+            // Empty string will be seen as validation error, so empty values must be null for validation
+            var value = e.target.value ? e.target.value : null;
+            var newState = Object.assign({}, this.state);
+            var errors = _validate2.default.single(value, _event2.default[e.target.name]);
+            this.state.errors[e.target.name] = errors && errors.length ? errors[0] : '';
+            this.setState(newState);
+        }
+
+        /**
+         * Decides
+         * @returns {string}
+         */
+
+    }, {
+        key: "getSuccessRedirection",
+        value: function getSuccessRedirection() {
+            var output = '';
+            if (this.props.saveSuccess) {
+                return _react2.default.createElement(_reactRouterDom.Redirect, { to: {
+                        pathname: routes.EVENTS_LIST
+                    } });
+            }
+        }
+
+        /**
+         * If form is loading, display the loading spinner
+         * @returns {XML}
+         */
+
+    }, {
+        key: "getLoader",
+        value: function getLoader() {
+            if (this.props.fetching) {
+                return _react2.default.createElement(_Loader2.default, null);
+            }
+        }
+
+        /**
+         * Returns true if the current form is creating a new record, false if we're editing
+         * @returns {boolean}
+         */
+
+    }, {
+        key: "isNew",
+        value: function isNew() {
+            return this.props.item.id === undefined;
+        }
+
+        /**
+         * Returns the title that should be used in the navbar.
+         * If we're currently fetching something, title should be empty.
+         * @returns {string}
+         */
+
+    }, {
+        key: "getTitle",
+        value: function getTitle() {
+            var header = '';
+            if (!this.isNew()) {
+                header = _localization2.default.formatString(_localization2.default.editing, this.state.fields.name);
+            } else if (!this.props.fetching) {
+                header = _localization2.default.new_event;
+            }
+            return header;
+        }
+
+        /**
+         * Returns the markup for the remove button, only if we're editing a record
+         * @returns {XML}
+         */
+
+    }, {
+        key: "getNavBarRemoveBtn",
+        value: function getNavBarRemoveBtn() {
+            if (!this.isNew()) {
+                return _react2.default.createElement(
+                    "li",
+                    null,
+                    _react2.default.createElement(
+                        "a",
+                        { className: "red waves-effect", href: "#", onClick: this.onRemove.bind(this) },
+                        _react2.default.createElement(
+                            _reactMaterialize.Icon,
+                            null,
+                            "delete"
+                        )
+                    )
+                );
+            }
+        }
+
+        /**
+         * Returns a text input for the given form field
+         * @param fieldName
+         * @returns {XML}
+         */
+
+    }, {
+        key: "getTextInput",
+        value: function getTextInput(fieldName) {
+            return _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
+                name: fieldName,
+                error: this.state.errors[fieldName] ? this.state.errors[fieldName] : '',
+                onChange: this.onChange.bind(this),
+                onBlur: this.onBlur.bind(this),
+                label: _localization2.default.fields.events[fieldName],
+                value: this.state.fields[fieldName] });
+        }
+
+        /**
+         * Returns the form navbar
+         * @returns {XML}
+         */
+
+    }, {
+        key: "getNavBar",
+        value: function getNavBar() {
+            return _react2.default.createElement(
+                _FixedNavBar2.default,
+                { title: this.getTitle(), icon: "movie" },
+                this.getNavBarRemoveBtn(),
+                _react2.default.createElement(
+                    "li",
+                    null,
+                    _react2.default.createElement(
+                        "a",
+                        { className: "blue waves-effect", href: "#", onClick: this.onSubmit.bind(this) },
+                        _react2.default.createElement(
+                            _reactMaterialize.Icon,
+                            null,
+                            "done"
+                        )
+                    )
+                )
+            );
+        }
+
+        /**
+         * General render function
+         * @returns {XML}
+         */
+
+    }, {
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                null,
+                this.getSuccessRedirection(),
+                this.getLoader(),
+                _react2.default.createElement(_ConfirmModal2.default, { title: _localization2.default.delete_event_title,
+                    content: _localization2.default.formatString(_localization2.default.delete_event_content, this.props.item.name),
+                    active: this.props.removeModal,
+                    dispatch: this.props.dispatch, cancelAction: actions.cancelRemoveEvent,
+                    confirmAction: actions.confirmRemoveEvent,
+                    itemId: this.props.item.id ? this.props.item.id : null }),
+                this.getNavBar(),
+                _react2.default.createElement(
+                    "form",
+                    { id: "event-form", style: { opacity: this.props.fetching ? 0.3 : 1 },
+                        onSubmit: this.onSubmit.bind(this) },
+                    _react2.default.createElement(
+                        _reactMaterialize.Row,
+                        null,
+                        this.getTextInput('name'),
+                        this.getTextInput('startDate'),
+                        this.getTextInput('description'),
+                        this.getTextInput('venue'),
+                        this.getTextInput('image')
+                    ),
+                    _react2.default.createElement(
+                        _reactMaterialize.Row,
+                        null,
+                        _react2.default.createElement("input", { type: "submit", className: "hide" })
+                    )
+                )
+            );
+        }
+    }]);
+
+    return EventForm;
+}(_react2.default.Component);
+
+EventForm.propTypes = propTypes;
+
+exports.default = (0, _reactRedux.connect)(function (state) {
+    return Object.assign({}, {
+        item: state.events.item,
+        dispatch: state.events.dispatch,
+        fetching: state.events.fetching,
+        errors: state.events.formErrors,
+        saveSuccess: state.events.saveSuccess,
+        removeModal: state.events.removeModal
+    });
+})(EventForm);
+
+/***/ }),
+/* 410 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(29);
+
+var _reactMaterialize = __webpack_require__(17);
+
+var _reactCssTransition = __webpack_require__(203);
+
+var _Loader = __webpack_require__(93);
+
+var _Loader2 = _interopRequireDefault(_Loader);
+
+var _Reload = __webpack_require__(154);
+
+var _Reload2 = _interopRequireDefault(_Reload);
+
+var _reactRouterDom = __webpack_require__(23);
+
+var _localization = __webpack_require__(19);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+var _routes = __webpack_require__(36);
+
+var routes = _interopRequireWildcard(_routes);
+
+var _eventsActions = __webpack_require__(407);
+
+var actions = _interopRequireWildcard(_eventsActions);
+
+var _EventListItem = __webpack_require__(408);
+
+var _EventListItem2 = _interopRequireDefault(_EventListItem);
+
+var _FixedNavBar = __webpack_require__(92);
+
+var _FixedNavBar2 = _interopRequireDefault(_FixedNavBar);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var propTypes = {
+    dispatch: _react.PropTypes.func.isRequired,
+    items: _react.PropTypes.array,
+    fetching: _react.PropTypes.bool,
+    error: _react.PropTypes.string,
+    active: _react.PropTypes.bool
+};
+
+var EventsList = function (_React$Component) {
+    _inherits(EventsList, _React$Component);
+
+    function EventsList(props) {
+        _classCallCheck(this, EventsList);
+
+        return _possibleConstructorReturn(this, (EventsList.__proto__ || Object.getPrototypeOf(EventsList)).call(this, props));
+    }
+
+    /**
+     * When the component is loaded, automatically fetch events via AJAX
+     */
+
+
+    _createClass(EventsList, [{
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            this.fetchEvents();
+        }
+
+        /**
+         * Force reload of the current list
+         * @param e
+         */
+
+    }, {
+        key: "onReload",
+        value: function onReload(e) {
+            e.preventDefault();
+            this.fetchEvents();
+        }
+
+        /**
+         * Fetch events list via ajax
+         */
+
+    }, {
+        key: "fetchEvents",
+        value: function fetchEvents() {
+            this.props.dispatch(actions.fetchEvents());
+        }
+
+        /**
+         * If AJAX returned no data, display a message + a reload button
+         * @returns {XML}
+         */
+
+    }, {
+        key: "getEmptyMessage",
+        value: function getEmptyMessage() {
+            if (this.isListEmpty() && !this.props.fetching) {
+                return _react2.default.createElement(_Reload2.default, { onClick: this.onReload.bind(this), error: _localization2.default.no_events });
+            }
+        }
+
+        /**
+         * Returns true if the items list is empty or undefined, else false
+         * @returns {boolean}
+         */
+
+    }, {
+        key: "isListEmpty",
+        value: function isListEmpty() {
+            return this.props.items === undefined || this.props.items === null || this.props.items.length === 0;
+        }
+
+        /**
+         * Display the loading spinner if we're currently loading the list
+         * @returns {XML}
+         */
+
+    }, {
+        key: "getLoader",
+        value: function getLoader() {
+            if (this.props.fetching) {
+                return _react2.default.createElement(_Loader2.default, null);
+            }
+        }
+
+        /**
+         * If we're done loading and there has been an error, display it along with a reload button
+         * @returns {XML}
+         */
+
+    }, {
+        key: "getError",
+        value: function getError() {
+            if (!this.props.fetching && this.props.error) {
+                return _react2.default.createElement(_Reload2.default, { onClick: this.fetchEvents.bind(this), error: this.props.error });
+            }
+        }
+
+        /**
+         * Returns the list's navbar
+         * @returns {XML}
+         */
+
+    }, {
+        key: "getNavBar",
+        value: function getNavBar() {
+            return _react2.default.createElement(
+                _FixedNavBar2.default,
+                { title: _localization2.default.events_title },
+                _react2.default.createElement(
+                    "li",
+                    null,
+                    _react2.default.createElement(
+                        _reactRouterDom.Link,
+                        { className: "blue waves-effect", to: routes.EVENTS_ADD },
+                        _react2.default.createElement(
+                            _reactMaterialize.Icon,
+                            null,
+                            "add"
+                        )
+                    )
+                )
+            );
+        }
+
+        /**
+         * General render method. Builds the list of events to display
+         * @returns {XML}
+         */
+
+    }, {
+        key: "render",
+        value: function render() {
+            // Display the list
+            var itemList = this.props.items.map(function (event) {
+                return _react2.default.createElement(_EventListItem2.default, _extends({ key: event.id }, event));
+            });
+
+            return _react2.default.createElement(
+                "div",
+                null,
+                this.getNavBar(),
+                this.getEmptyMessage(),
+                this.getLoader(),
+                this.getError(),
+                _react2.default.createElement(
+                    _reactMaterialize.Collection,
+                    null,
+                    itemList
+                )
+            );
+        }
+    }]);
+
+    return EventsList;
+}(_react2.default.Component);
+
+EventsList.propTypes = propTypes;
+
+exports.default = (0, _reactRedux.connect)(function (state) {
+    return Object.assign({}, state.events);
+})(EventsList);
+
+/***/ }),
+/* 411 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _localization = __webpack_require__(19);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    name: {
+        presence: {
+            message: _localization2.default.validation.required
+        }
+    },
+    image: {
+        url: {
+            allowEmpty: true,
+            message: _localization2.default.validation.url
+        }
+    },
+    venue: {
+        presence: {
+            message: _localization2.default.validation.required
+        },
+        numericality: {
+            onlyInteger: true,
+            greaterThan: 0,
+            message: _localization2.default.validation.numberGreaterThanZero
+        }
+    }
+};
 
 /***/ })
 /******/ ]);

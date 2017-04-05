@@ -38,7 +38,6 @@ class Event
      */
     private $startDate;
 
-
     /**
      * @var string
      *
@@ -47,6 +46,22 @@ class Event
      * @Assert\NotBlank()
      */
     private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", nullable=true)
+     * @Groups({"public", "authenticated"})
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string", nullable=true)
+     * @Groups({"public", "authenticated"})
+     */
+    private $image;
 
     /**
      *
@@ -182,4 +197,38 @@ class Event
         }
         return $bookingsCount;
     }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImage(): string
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param string $image
+     */
+    public function setImage(string $image)
+    {
+        $this->image = $image;
+    }
+
+
 }
