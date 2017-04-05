@@ -48,10 +48,10 @@ class VenueForm extends React.Component {
     constructor(props) {
         super(props);
         let emptyFields =
-        this.state = {
-            fields: this.getEmptyFields(),
-            errors: this.getEmptyFields(),
-        }
+            this.state = {
+                fields: this.getEmptyFields(),
+                errors: this.getEmptyFields(),
+            }
     }
 
     /**
@@ -121,7 +121,7 @@ class VenueForm extends React.Component {
         let validationErrors = validate(
             utils.replaceEmptyWithNull(item),
             venueConstraints,
-            { fullMessages: false }
+            {fullMessages: false}
         );
 
         if (!validationErrors) {
@@ -153,6 +153,10 @@ class VenueForm extends React.Component {
         this.props.dispatch(actions.removeVenue(this.props.item.id));
     }
 
+    /**
+     * Dispatch an action when a field is changed, to update the global state
+     * @param e
+     */
     onChange(e) {
         let newState = Object.assign({}, this.state);
         newState.fields[e.target.name] = e.target.value;
@@ -160,17 +164,25 @@ class VenueForm extends React.Component {
         this.props.dispatch(actions.editVenue(e.target.name, e.target.value));
     }
 
+    /**
+     * Validate single fields every time we focus out of them
+     * @param e
+     */
     onBlur(e) {
         // Empty string will be seen as validation error, so empty values must be null for validation
         let value = e.target.value ? e.target.value : null;
-        console.log(value);
         let newState = Object.assign({}, this.state);
         let errors = validate.single(value, venueConstraints[e.target.name]);
         this.state.errors[e.target.name] = errors && errors.length ? errors[0] : '';
         this.setState(newState);
     }
 
-    render() {
+    /**
+     * Decides
+     * @returns {string}
+     */
+    getSuccessRedirection() {
+        let output = '';
         if (this.props.saveSuccess) {
             return (
                 <Redirect to={{
@@ -178,31 +190,103 @@ class VenueForm extends React.Component {
                 }}/>
             );
         }
+    }
 
-        let loading = '';
+    /**
+     * If form is loading, display the loading spinner
+     * @returns {XML}
+     */
+    getLoader() {
         if (this.props.fetching) {
-            loading = <Loader />;
+            return (
+                <Loader />
+            )
         }
+    }
 
+    /**
+     * Returns true if the current form is creating a new record, false if we're editing
+     * @returns {boolean}
+     */
+    isNew() {
+        return this.props.item.id !== undefined;
+    }
+
+    /**
+     * Returns the title that should be used in the navbar.
+     * If we're currently fetching something, title should be empty.
+     * @returns {string}
+     */
+    getTitle() {
         let header = '';
-        let removeBtn = '';
-        if (this.props.item.id !== undefined) {
+        if (this.isNew()) {
             header = l10n.formatString(l10n.editing, this.state.fields.name);
-            removeBtn = (
+        }
+        else if (!this.props.fetching) {
+            header = l10n.new_venue;
+        }
+        return header;
+    }
+
+    /**
+     * Returns the markup for the remove button, only if we're editing a record
+     * @returns {XML}
+     */
+    getNavBarRemoveBtn() {
+        if (!this.isNew()) {
+            return (
                 <li>
                     <a className="red waves-effect" href="#" onClick={this.onRemove.bind(this)}>
                         <Icon>delete</Icon>
                     </a>
                 </li>
-            );
+            )
         }
-        else {
-            header = l10n.new_venue;
-        }
+    }
 
+    /**
+     * Returns a text input for the given form field
+     * @param fieldName
+     * @returns {XML}
+     */
+    getTextInput(fieldName) {
+        return (
+            <Input className="active" s={12}
+                   name={fieldName}
+                   error={this.state.errors[fieldName] ? this.state.errors[fieldName] : ''}
+                   onChange={this.onChange.bind(this)}
+                   onBlur={this.onBlur.bind(this)}
+                   label={l10n.fields.venues[fieldName]}
+                   value={this.state.fields[fieldName]}/>
+        )
+    }
+
+    /**
+     * Returns the form navbar
+     * @returns {XML}
+     */
+    getNavBar() {
+        return (
+            <FixedNavBar title={this.getTitle()} icon="business">
+                {this.getNavBarRemoveBtn()}
+                <li>
+                    <a className="blue waves-effect" href="#" onClick={this.onSubmit.bind(this)}>
+                        <Icon>done</Icon>
+                    </a>
+                </li>
+            </FixedNavBar>
+        )
+    }
+
+    /**
+     * General render function
+     * @returns {XML}
+     */
+    render() {
         return (
             <div>
-                {loading}
+                {this.getSuccessRedirection()}
+                {this.getLoader()}
                 <ConfirmModal title={l10n.delete_venue_title}
                               content={l10n.formatString(l10n.delete_venue_content, this.props.item.name)}
                               active={this.props.removeModal}
@@ -210,64 +294,17 @@ class VenueForm extends React.Component {
                               confirmAction={actions.confirmRemoveVenue}
                               itemId={this.props.item.id ? this.props.item.id : null}/>
 
-                <FixedNavBar title={header} icon="business">
-                    {removeBtn}
-                    <li>
-                        <a className="blue waves-effect" href="#" onClick={this.onSubmit.bind(this)}>
-                            <Icon>done</Icon>
-                        </a>
-                    </li>
-                </FixedNavBar>
+                {this.getNavBar()}
+
                 <form id="venue-form" style={{opacity: this.props.fetching ? 0.3 : 1}}
                       onSubmit={this.onSubmit.bind(this)}>
                     <Row>
-                        <Input className="active" s={12}
-                               name="name"
-                               error={this.state.errors.name ? this.state.errors.name : ''}
-                               onChange={this.onChange.bind(this)}
-                               onBlur={this.onBlur.bind(this)}
-                               label={l10n.fields.venues.name}
-                               value={this.state.fields.name}/>
-
-                        <Input className="active" s={12}
-                               name="capacity"
-                               error={this.state.errors.capacity ? this.state.errors.capacity : ''}
-                               onChange={this.onChange.bind(this)}
-                               onBlur={this.onBlur.bind(this)}
-                               label={l10n.fields.venues.capacity}
-                               value={this.state.fields.capacity}/>
-
-                        <Input className="active" s={12}
-                               name="address"
-                               error={this.state.errors.address ? this.state.errors.address : ''}
-                               onChange={this.onChange.bind(this)}
-                               onBlur={this.onBlur.bind(this)}
-                               label={l10n.fields.venues.address}
-                               value={this.state.fields.address}/>
-
-                        <Input className="active" s={12}
-                               name="phone"
-                               error={this.state.errors.phone ? this.state.errors.phone : ''}
-                               onChange={this.onChange.bind(this)}
-                               onBlur={this.onBlur.bind(this)}
-                               label={l10n.fields.venues.phone}
-                               value={this.state.fields.phone}/>
-
-                        <Input className="active" s={12}
-                               name="website"
-                               error={this.state.errors.website ? this.state.errors.website : ''}
-                               onChange={this.onChange.bind(this)}
-                               onBlur={this.onBlur.bind(this)}
-                               label={l10n.fields.venues.website}
-                               value={this.state.fields.website}/>
-
-                        <Input className="active" s={12}
-                               name="image"
-                               error={this.state.errors.image ? this.state.errors.image : ''}
-                               onChange={this.onChange.bind(this)}
-                               onBlur={this.onBlur.bind(this)}
-                               label={l10n.fields.venues.image}
-                               value={this.state.fields.image}/>
+                        {this.getTextInput('name')}
+                        {this.getTextInput('capacity')}
+                        {this.getTextInput('phone')}
+                        {this.getTextInput('website')}
+                        {this.getTextInput('address')}
+                        {this.getTextInput('image')}
                     </Row>
                     <Row>
                         <input type="submit" className="hide"/>
