@@ -32067,6 +32067,10 @@ var _FixedNavBar = __webpack_require__(49);
 
 var _FixedNavBar2 = _interopRequireDefault(_FixedNavBar);
 
+var _moment = __webpack_require__(0);
+
+var _moment2 = _interopRequireDefault(_moment);
+
 var _reactDatetime = __webpack_require__(337);
 
 var _reactDatetime2 = _interopRequireDefault(_reactDatetime);
@@ -32117,7 +32121,7 @@ var EventForm = function (_React$Component) {
         value: function getEmptyFields() {
             return {
                 name: '',
-                startDate: '',
+                startDate: (0, _moment2.default)({ hour: 20 }),
                 description: '',
                 image: '',
                 venue: ''
@@ -32136,10 +32140,13 @@ var EventForm = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (EventForm.__proto__ || Object.getPrototypeOf(EventForm)).call(this, props));
 
-        var emptyFields = _this.state = {
+        _this.state = {
+            dateTimeFormat: 'DD.MM.YYYY HH:mm'
+        };
+        _this.state = Object.assign(_this.state, {
             fields: _this.getEmptyFields(),
             errors: _this.getEmptyFields()
-        };
+        });
         return _this;
     }
 
@@ -32272,7 +32279,22 @@ var EventForm = function (_React$Component) {
             var newState = Object.assign({}, this.state);
             newState.fields[e.target.name] = e.target.value;
             this.setState(newState);
-            this.props.dispatch(actions.editEvent(e.target.name, e.target.value));
+            this.props.dispatch(actions.editEvent(fieldName, value));
+        }
+
+        /**
+         * Update the start date
+         * @param newDate
+         */
+
+    }, {
+        key: "onStartDateChange",
+        value: function onStartDateChange(newDate) {
+            var fieldName = 'startDate';
+            var newState = Object.assign({}, this.state);
+            newState.fields[fieldName] = newDate;
+            this.setState(newState);
+            this.props.dispatch(actions.editEvent(fieldName, newDate));
         }
 
         /**
@@ -32439,7 +32461,6 @@ var EventForm = function (_React$Component) {
     }, {
         key: "render",
         value: function render() {
-            console.log(this.state.fields.startDate);
             return _react2.default.createElement(
                 "div",
                 null,
@@ -32466,7 +32487,10 @@ var EventForm = function (_React$Component) {
                             _react2.default.createElement(_reactDatetime2.default, {
                                 inputProps: { name: 'startDate', id: 'input_startDate' },
                                 dateFormat: "DD.MM.YYYY",
-                                value: this.state.errors.startDate
+                                timeFormat: _localization2.default.time_at + " HH:mm",
+                                closeOnSelect: true,
+                                value: this.state.fields.startDate ? this.state.fields.startDate : (0, _moment2.default)(),
+                                onChange: this.onStartDateChange.bind(this)
                             }),
                             _react2.default.createElement(
                                 "label",
@@ -32475,7 +32499,6 @@ var EventForm = function (_React$Component) {
                                 _localization2.default.fields.events.startDate
                             )
                         ),
-                        this.getTextInput('startDate'),
                         this.getTextAreaInput('description'),
                         this.getTextInput('venue'),
                         this.getTextInput('image')
@@ -32496,8 +32519,11 @@ var EventForm = function (_React$Component) {
 EventForm.propTypes = propTypes;
 
 exports.default = (0, _reactRedux.connect)(function (state) {
+    var item = state.events.item;
+    item.startDate = (0, _moment2.default)(item.startDate);
+
     return Object.assign({}, {
-        item: state.events.item,
+        item: item,
         dispatch: state.events.dispatch,
         fetching: state.events.fetching,
         errors: state.events.formErrors,
@@ -33686,7 +33712,9 @@ exports.default = {
         required: 'Ce champ est requis.',
         url: 'Ce champ doit être une adresse internet valide.',
         numberGreaterThanZero: 'Ce champ doit être un nombre plus grand que zéro.'
-    }
+    },
+
+    time_at: 'à'
 
 };
 

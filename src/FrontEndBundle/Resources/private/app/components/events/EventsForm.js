@@ -9,6 +9,7 @@ import eventConstraints from '../../validation/event';
 import * as utils from '../../utils/utils';
 import FixedNavBar from '../menu/FixedNavBar';
 
+import moment from 'moment';
 import DateTime from 'react-datetime';
 import * as actions from '../../actions/eventsActions';
 import ConfirmModal from "../utils/ConfirmModal";
@@ -34,7 +35,7 @@ class EventForm extends React.Component {
     getEmptyFields() {
         return {
             name: '',
-            startDate: '',
+            startDate: moment({hour: 20}),
             description: '',
             image: '',
             venue: ''
@@ -47,11 +48,13 @@ class EventForm extends React.Component {
      */
     constructor(props) {
         super(props);
-        let emptyFields =
-            this.state = {
-                fields: this.getEmptyFields(),
-                errors: this.getEmptyFields(),
-            }
+        this.state = {
+            dateTimeFormat: 'DD.MM.YYYY HH:mm'
+        };
+        this.state = Object.assign(this.state, {
+            fields: this.getEmptyFields(),
+            errors: this.getEmptyFields(),
+        });
     }
 
     /**
@@ -161,7 +164,19 @@ class EventForm extends React.Component {
         let newState = Object.assign({}, this.state);
         newState.fields[e.target.name] = e.target.value;
         this.setState(newState);
-        this.props.dispatch(actions.editEvent(e.target.name, e.target.value));
+        this.props.dispatch(actions.editEvent(fieldName, value));
+    }
+
+    /**
+     * Update the start date
+     * @param newDate
+     */
+    onStartDateChange(newDate) {
+        let fieldName = 'startDate';
+        let newState = Object.assign({}, this.state);
+        newState.fields[fieldName] = newDate;
+        this.setState(newState);
+        this.props.dispatch(actions.editEvent(fieldName, newDate));
     }
 
     /**
@@ -295,7 +310,6 @@ class EventForm extends React.Component {
      * @returns {XML}
      */
     render() {
-        console.log(this.state.fields.startDate);
         return (
             <div>
                 {this.getSuccessRedirection()}
@@ -317,14 +331,16 @@ class EventForm extends React.Component {
                             <DateTime
                                 inputProps={{name: 'startDate', id: 'input_startDate'}}
                                 dateFormat="DD.MM.YYYY"
-                                value={this.state.errors.startDate}
+                                timeFormat={l10n.time_at + " HH:mm"}
+                                closeOnSelect={true}
+                                value={this.state.fields.startDate ? this.state.fields.startDate : moment()}
+                                onChange={this.onStartDateChange.bind(this)}
                             />
                             <label className={this.state.fields.startDate ? 'active' : ''} htmlFor="input_startDate"
                                    data-error={this.state.errors.startDate ? this.state.errors.startDate : ''}>
                                 {l10n.fields.events.startDate}
-                                </label>
+                            </label>
                         </div>
-                        {this.getTextInput('startDate')}
                         {this.getTextAreaInput('description')}
                         {this.getTextInput('venue')}
                         {this.getTextInput('image')}
@@ -342,8 +358,11 @@ EventForm.propTypes = propTypes;
 
 
 export default connect((state) => {
+    let item = state.events.item;
+    item.startDate = moment(item.startDate);
+
     return Object.assign({}, {
-        item: state.events.item,
+        item: item,
         dispatch: state.events.dispatch,
         fetching: state.events.fetching,
         errors: state.events.formErrors,

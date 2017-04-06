@@ -74,6 +74,8 @@ export default {
         required: 'Ce champ est requis.',
         url: 'Ce champ doit être une adresse internet valide.',
         numberGreaterThanZero: 'Ce champ doit être un nombre plus grand que zéro.'
-    }
+    },
+
+    time_at: 'à',
 
 };
