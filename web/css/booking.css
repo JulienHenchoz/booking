@@ -6840,3 +6840,6 @@ nav {
   .reload-block p.error {
     max-width: 65%;
     margin: auto; }
+
+.rdtPicker td {
+  padding: 5px; }

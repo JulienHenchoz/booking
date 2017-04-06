@@ -295,6 +295,7 @@ class EventForm extends React.Component {
      * @returns {XML}
      */
     render() {
+        console.log(this.state.fields.startDate);
         return (
             <div>
                 {this.getSuccessRedirection()}
@@ -312,7 +313,17 @@ class EventForm extends React.Component {
                       onSubmit={this.onSubmit.bind(this)}>
                     <Row>
                         {this.getTextInput('name')}
-                        <DateTime />
+                        <div className="col input-field s12">
+                            <DateTime
+                                inputProps={{name: 'startDate', id: 'input_startDate'}}
+                                dateFormat="DD.MM.YYYY"
+                                value={this.state.errors.startDate}
+                            />
+                            <label className={this.state.fields.startDate ? 'active' : ''} htmlFor="input_startDate"
+                                   data-error={this.state.errors.startDate ? this.state.errors.startDate : ''}>
+                                {l10n.fields.events.startDate}
+                                </label>
+                        </div>
                         {this.getTextInput('startDate')}
                         {this.getTextAreaInput('description')}
                         {this.getTextInput('venue')}

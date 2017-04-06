@@ -198,7 +198,8 @@ export function fetchVenues() {
             .then(json => {
                 dispatch(receiveVenues(json));
             })
-            .catch(function() {
+            .catch(function(e) {
+                console.log(e);
                 dispatch(getError(l10n.venues_fetch_error));
             });
     }
