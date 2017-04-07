@@ -8,6 +8,7 @@ import VenuesList from "../components/venues/VenuesList";
 
 import EventsForm from "../components/events/EventsForm";
 import EventsList from "../components/events/EventsList";
+import PastEventsList from "../components/events/PastEventsList";
 
 import * as routes from '../constants/routes';
 import l10n from '../l10n/localization';
@@ -25,6 +26,7 @@ class App extends React.Component {
                         <Route path={l10n.formatString(routes.VENUES_EDIT, ':venueId')} component={VenuesForm}/>
 
                         <Route path={routes.EVENTS_LIST} exact={true} component={EventsList}/>
+                        <Route path={routes.EVENTS_LIST_PAST} exact={true} component={PastEventsList}/>
                         <Route path={routes.EVENTS_ADD} exact={true} component={EventsForm}/>
                         <Route path={l10n.formatString(routes.EVENTS_EDIT, ':eventId')} component={EventsForm}/>
                     </main>

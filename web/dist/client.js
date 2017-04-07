@@ -6842,6 +6842,7 @@ var VENUES_ADD = exports.VENUES_ADD = '/venues/add/';
 var VENUES_EDIT = exports.VENUES_EDIT = '/venues/show/{0}';
 
 var EVENTS_LIST = exports.EVENTS_LIST = '/events/';
+var EVENTS_LIST_PAST = exports.EVENTS_LIST_PAST = '/past-events/';
 var EVENTS_ADD = exports.EVENTS_ADD = '/events/add/';
 var EVENTS_EDIT = exports.EVENTS_EDIT = '/events/show/{0}';
 
@@ -9327,7 +9328,11 @@ var FixedNavBar = function FixedNavBar(_ref) {
         align = _ref.align,
         children = _ref.children,
         _ref$icon = _ref.icon,
-        icon = _ref$icon === undefined ? null : _ref$icon;
+        icon = _ref$icon === undefined ? null : _ref$icon,
+        _ref$showAddBtn = _ref.showAddBtn,
+        showAddBtn = _ref$showAddBtn === undefined ? false : _ref$showAddBtn,
+        _ref$addRoute = _ref.addRoute,
+        addRoute = _ref$addRoute === undefined ? '' : _ref$addRoute;
 
     var iconTag = '';
     if (icon) {
@@ -9358,10 +9363,23 @@ var FixedNavBar = function FixedNavBar(_ref) {
                             iconTag,
                             title
                         ),
-                        _react2.default.createElement(
+                        children,
+                        !children && _react2.default.createElement(
                             'ul',
                             { className: 'right' },
-                            children
+                            showAddBtn && _react2.default.createElement(
+                                'li',
+                                null,
+                                _react2.default.createElement(
+                                    _reactRouterDom.Link,
+                                    { className: 'blue waves-effect', to: addRoute },
+                                    _react2.default.createElement(
+                                        _reactMaterialize.Icon,
+                                        null,
+                                        'add'
+                                    )
+                                )
+                            )
                         )
                     )
                 )
@@ -9464,6 +9482,7 @@ var REMOVING_EVENT = exports.REMOVING_EVENT = 'REMOVING_EVENT';
 var FETCH_EVENTS = exports.FETCH_EVENTS = 'FETCH_EVENTS';
 var FETCH_EVENT = exports.FETCH_EVENT = 'FETCH_EVENT';
 var RECEIVE_EVENTS = exports.RECEIVE_EVENTS = 'RECEIVE_EVENTS';
+var RECEIVE_PAST_EVENTS = exports.RECEIVE_PAST_EVENTS = 'RECEIVE_PAST_EVENTS';
 var RECEIVE_EVENT = exports.RECEIVE_EVENT = 'RECEIVE_EVENT';
 var LOADING_EVENTS = exports.LOADING_EVENTS = 'LOADING_EVENTS';
 var UPDATE_EVENT = exports.UPDATE_EVENT = 'UPDATE_EVENT';
@@ -11154,6 +11173,7 @@ exports.removingEvent = removingEvent;
 exports.editEvent = editEvent;
 exports.removeEvent = removeEvent;
 exports.receiveEvents = receiveEvents;
+exports.receivePastEvents = receivePastEvents;
 exports.leaveForm = leaveForm;
 exports.receiveEvent = receiveEvent;
 exports.saveSuccess = saveSuccess;
@@ -11166,6 +11186,7 @@ exports.addEvent = addEvent;
 exports.confirmRemoveEvent = confirmRemoveEvent;
 exports.updateEvent = updateEvent;
 exports.fetchEvents = fetchEvents;
+exports.fetchPastEvents = fetchPastEvents;
 exports.fetchEvent = fetchEvent;
 
 var _actionTypes = __webpack_require__(51);
@@ -11230,6 +11251,13 @@ function removeEvent(id) {
 function receiveEvents(items) {
     return {
         type: types.RECEIVE_EVENTS,
+        payload: items
+    };
+}
+
+function receivePastEvents(items) {
+    return {
+        type: types.RECEIVE_PAST_EVENTS,
         payload: items
     };
 }
@@ -11365,6 +11393,19 @@ function fetchEvents() {
             return response.json();
         }).then(function (json) {
             dispatch(receiveEvents(json));
+        }).catch(function () {
+            dispatch(getError(_localization2.default.events_fetch_error));
+        });
+    };
+}
+
+function fetchPastEvents() {
+    return function (dispatch) {
+        dispatch(loadingEvents());
+        fetch(ajaxRoutes.EVENTS_GET_PAST).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            dispatch(receivePastEvents(json));
         }).catch(function () {
             dispatch(getError(_localization2.default.events_fetch_error));
         });
@@ -14604,7 +14645,8 @@ var VENUE_GET = exports.VENUE_GET = '/api/venues/get/{0}';
 var EVENT_ADD = exports.EVENT_ADD = '/api/events/new/';
 var EVENT_REMOVE = exports.EVENT_REMOVE = '/api/events/delete/{0}';
 var EVENT_EDIT = exports.EVENT_EDIT = '/api/events/edit/{0}';
-var EVENTS_GET = exports.EVENTS_GET = '/api/events/get';
+var EVENTS_GET = exports.EVENTS_GET = '/api/events/getNext';
+var EVENTS_GET_PAST = exports.EVENTS_GET_PAST = '/api/events/getPast';
 var EVENT_GET = exports.EVENT_GET = '/api/events/get/{0}';
 
 var BOOKING_ADD = exports.BOOKING_ADD = '/api/bookings/new/';
@@ -31879,6 +31921,10 @@ var _EventsList = __webpack_require__(277);
 
 var _EventsList2 = _interopRequireDefault(_EventsList);
 
+var _PastEventsList = __webpack_require__(541);
+
+var _PastEventsList2 = _interopRequireDefault(_PastEventsList);
+
 var _routes = __webpack_require__(23);
 
 var routes = _interopRequireWildcard(_routes);
@@ -31924,6 +31970,7 @@ var App = function (_React$Component) {
                         _react2.default.createElement(_reactRouterDom.Route, { path: routes.VENUES_ADD, exact: true, component: _VenueForm2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.VENUES_EDIT, ':venueId'), component: _VenueForm2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: routes.EVENTS_LIST, exact: true, component: _EventsList2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: routes.EVENTS_LIST_PAST, exact: true, component: _PastEventsList2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: routes.EVENTS_ADD, exact: true, component: _EventsForm2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.EVENTS_EDIT, ':eventId'), component: _EventsForm2.default })
                     )
@@ -32063,7 +32110,8 @@ var propTypes = {
     dispatch: _react.PropTypes.func.isRequired,
     name: _react.PropTypes.string.isRequired,
     address: _react.PropTypes.string,
-    website: _react.PropTypes.string
+    website: _react.PropTypes.string,
+    editLink: _react.PropTypes.bool
 };
 
 var EventListItem = function (_React$Component) {
@@ -32081,36 +32129,48 @@ var EventListItem = function (_React$Component) {
             var image = _react2.default.createElement(
                 _reactMaterialize.Icon,
                 { className: "large grey-text" },
-                "movie"
+                "event"
             );
             if (this.props.image !== undefined && this.props.image) {
                 image = _react2.default.createElement("img", { className: "circle responsive-img", src: this.props.image });
             }
-            return _react2.default.createElement(
-                _reactRouterDom.Link,
-                { to: _localization2.default.formatString(routes.EVENTS_EDIT, this.props.id), className: "collection-item", href: "#" },
+
+            var content = _react2.default.createElement(
+                _reactMaterialize.Row,
+                { className: "valign-wrapper" },
                 _react2.default.createElement(
-                    _reactMaterialize.Row,
-                    { className: "valign-wrapper" },
+                    _reactMaterialize.Col,
+                    { s: 3, l: 2, className: "collection-image center-align valign" },
+                    _react2.default.createElement(_DateTimeBox2.default, { dateTime: this.props.startDate })
+                ),
+                _react2.default.createElement(
+                    _reactMaterialize.Col,
+                    { s: 9, l: 10 },
                     _react2.default.createElement(
-                        _reactMaterialize.Col,
-                        { s: 3, l: 2, className: "collection-image center-align valign" },
-                        _react2.default.createElement(_DateTimeBox2.default, { dateTime: this.props.startDate })
+                        "h4",
+                        null,
+                        this.props.name
                     ),
                     _react2.default.createElement(
-                        _reactMaterialize.Col,
-                        { s: 9, l: 10 },
-                        _react2.default.createElement(
-                            "h4",
-                            null,
-                            this.props.name
-                        ),
-                        _react2.default.createElement(
-                            "p",
-                            null,
-                            this.props.venue.name
-                        )
+                        "p",
+                        null,
+                        this.props.venue.name
                     )
+                )
+            );
+
+            return _react2.default.createElement(
+                "div",
+                null,
+                this.props.editLink && _react2.default.createElement(
+                    _reactRouterDom.Link,
+                    { to: _localization2.default.formatString(routes.EVENTS_EDIT, this.props.id), className: "collection-item", href: "#" },
+                    content
+                ),
+                !this.props.editLink && _react2.default.createElement(
+                    "a",
+                    { href: "javascript:;", className: "collection-item" },
+                    content
                 )
             );
         }
@@ -32300,6 +32360,22 @@ var EventForm = function (_React$Component) {
             this.setState(newState);
             this.props.dispatch(actions.editEvent(e.target.name, e.target.value));
         }
+    }, {
+        key: "onVenueSelectChange",
+        value: function onVenueSelectChange(e) {
+            var venueId = e.target.value;
+            var venue = this.props.venues.filter(function (venue) {
+                return venue.id == venueId;
+            });
+            if (venue.length) {
+                this.onChange({
+                    target: {
+                        name: 'venue',
+                        value: venue[0]
+                    }
+                });
+            }
+        }
 
         /**
          * Update the start date
@@ -32400,9 +32476,9 @@ var EventForm = function (_React$Component) {
                         s: 12,
                         type: "select",
                         name: "venue",
-                        error: this.state.errors.venue ? this.state.errors['venue.id'] : '',
+                        error: this.state.errors['venue.id'] ? this.state.errors['venue.id'] : '',
                         value: this.state.fields.venue ? this.state.fields.venue.id : '',
-                        onChange: this.onChange.bind(this),
+                        onChange: this.onVenueSelectChange.bind(this),
                         label: _localization2.default.fields.events.venue },
                     _react2.default.createElement(
                         "option",
@@ -32520,7 +32596,7 @@ var EventForm = function (_React$Component) {
                 "div",
                 null,
                 this.props.saveSuccess && _react2.default.createElement(_reactRouterDom.Redirect, { to: {
-                        pathname: routes.VENUES_LIST
+                        pathname: routes.EVENTS_LIST
                     } }),
                 this.props.fetching && _react2.default.createElement(_Loader2.default, null),
                 _react2.default.createElement(_ConfirmModal2.default, { title: _localization2.default.delete_event_title,
@@ -32531,7 +32607,7 @@ var EventForm = function (_React$Component) {
                     itemId: this.props.item.id ? this.props.item.id : null }),
                 _react2.default.createElement(_FormNavBar2.default, {
                     title: this.getTitle(),
-                    icon: "movie",
+                    icon: "event",
                     showRemoveBtn: !this.isNew(),
                     onValidate: this.onSubmit.bind(this),
                     onRemove: this.onRemove.bind(this)
@@ -32571,11 +32647,8 @@ var EventForm = function (_React$Component) {
 EventForm.propTypes = propTypes;
 
 exports.default = (0, _reactRedux.connect)(function (state) {
-    var item = state.events.item;
-    item.startDate = (0, _moment2.default)(item.startDate);
-
     return Object.assign({}, {
-        item: item,
+        item: state.events.item,
         venues: state.venues.items,
         dispatch: state.events.dispatch,
         fetching: state.events.fetching || state.venues.fetching,
@@ -32725,59 +32798,6 @@ var EventsList = function (_React$Component) {
         }
 
         /**
-         * Display the loading spinner if we're currently loading the list
-         * @returns {XML}
-         */
-
-    }, {
-        key: "getLoader",
-        value: function getLoader() {
-            if (this.props.fetching) {
-                return _react2.default.createElement(_Loader2.default, null);
-            }
-        }
-
-        /**
-         * If we're done loading and there has been an error, display it along with a reload button
-         * @returns {XML}
-         */
-
-    }, {
-        key: "getError",
-        value: function getError() {
-            if (!this.props.fetching && this.props.error) {
-                return _react2.default.createElement(_Reload2.default, { onClick: this.fetchEvents.bind(this), error: this.props.error });
-            }
-        }
-
-        /**
-         * Returns the list's navbar
-         * @returns {XML}
-         */
-
-    }, {
-        key: "getNavBar",
-        value: function getNavBar() {
-            return _react2.default.createElement(
-                _FixedNavBar2.default,
-                { title: _localization2.default.events_title },
-                _react2.default.createElement(
-                    "li",
-                    null,
-                    _react2.default.createElement(
-                        _reactRouterDom.Link,
-                        { className: "blue waves-effect", to: routes.EVENTS_ADD },
-                        _react2.default.createElement(
-                            _reactMaterialize.Icon,
-                            null,
-                            "add"
-                        )
-                    )
-                )
-            );
-        }
-
-        /**
          * General render method. Builds the list of events to display
          * @returns {XML}
          */
@@ -32787,21 +32807,21 @@ var EventsList = function (_React$Component) {
         value: function render() {
             // Display the list
             var itemList = this.props.items.map(function (event) {
-                return _react2.default.createElement(_EventListItem2.default, _extends({ key: event.id }, event));
+                return _react2.default.createElement(_EventListItem2.default, _extends({ editLink: true, key: event.id }, event));
             });
+            var body = _react2.default.createElement(
+                _reactMaterialize.Collection,
+                null,
+                itemList
+            );
 
             return _react2.default.createElement(
                 "div",
                 null,
-                this.getNavBar(),
-                this.getEmptyMessage(),
-                this.getLoader(),
-                this.getError(),
-                _react2.default.createElement(
-                    _reactMaterialize.Collection,
-                    null,
-                    itemList
-                )
+                _react2.default.createElement(_FixedNavBar2.default, { title: _localization2.default.incoming_events_title, showAddBtn: true, addRoute: routes.EVENTS_ADD }),
+                this.props.fetching && _react2.default.createElement(_Loader2.default, null),
+                this.props.error && !this.prop.fetching && _react2.default.createElement(_Reload2.default, { onClick: this.fetchEvents.bind(this), error: this.props.error }),
+                !this.props.fetching && !this.props.error && body
             );
         }
     }]);
@@ -32892,9 +32912,44 @@ var MainMenu = function (_React$Component) {
                         _localization2.default.venues_title
                     ),
                     _react2.default.createElement(
-                        _NavLink2.default,
-                        { to: routes.EVENTS_LIST, icon: 'movie' },
-                        _localization2.default.events_title
+                        'li',
+                        { className: 'no-padding' },
+                        _react2.default.createElement(
+                            'ul',
+                            { className: 'collapsible collapsible-accordion' },
+                            _react2.default.createElement(
+                                'li',
+                                null,
+                                _react2.default.createElement(
+                                    'a',
+                                    { className: 'collapsible-header' },
+                                    _localization2.default.events_title,
+                                    _react2.default.createElement(
+                                        'i',
+                                        { className: 'material-icons' },
+                                        'event'
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    'div',
+                                    { className: 'collapsible-body' },
+                                    _react2.default.createElement(
+                                        'ul',
+                                        null,
+                                        _react2.default.createElement(
+                                            _NavLink2.default,
+                                            { to: routes.EVENTS_LIST, icon: 'fast_forward' },
+                                            _localization2.default.incoming_events
+                                        ),
+                                        _react2.default.createElement(
+                                            _NavLink2.default,
+                                            { to: routes.EVENTS_LIST_PAST, icon: 'history' },
+                                            _localization2.default.past_events
+                                        )
+                                    )
+                                )
+                            )
+                        )
                     ),
                     _react2.default.createElement(
                         _NavLink2.default,
@@ -32935,7 +32990,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var NavLink = function NavLink(_ref) {
     var to = _ref.to,
         _children = _ref.children,
-        icon = _ref.icon;
+        icon = _ref.icon,
+        collapsible = _ref.collapsible;
     return _react2.default.createElement(_reactRouterDom.Route, { path: to, children: function children(_ref2) {
             var match = _ref2.match;
             return _react2.default.createElement(
@@ -32943,7 +32999,7 @@ var NavLink = function NavLink(_ref) {
                 { role: 'presentation', className: match ? 'active' : '' },
                 _react2.default.createElement(
                     _reactRouterDom.Link,
-                    { to: to },
+                    { to: to, className: collapsible ? 'collapsible-header' : '' },
                     _react2.default.createElement(
                         'i',
                         { className: 'material-icons' },
@@ -33552,47 +33608,23 @@ var VenuesList = function (_React$Component) {
     }, {
         key: "render",
         value: function render() {
-            var header = _react2.default.createElement(
-                _FixedNavBar2.default,
-                { title: _localization2.default.venues_title },
-                _react2.default.createElement(
-                    "li",
-                    null,
-                    _react2.default.createElement(
-                        _reactRouterDom.Link,
-                        { className: "blue waves-effect", to: routes.VENUES_ADD },
-                        _react2.default.createElement(
-                            _reactMaterialize.Icon,
-                            null,
-                            "add"
-                        )
-                    )
-                )
+            // Display the list
+            var itemList = this.props.items.map(function (venue) {
+                return _react2.default.createElement(_VenueListItem2.default, _extends({ key: venue.id }, venue));
+            });
+            var body = _react2.default.createElement(
+                _reactMaterialize.Collection,
+                null,
+                itemList
             );
-
-            var body = '';
-            if (this.props.fetching) {
-                // If we're currently loading the list, display the loader in the content
-                body = _react2.default.createElement(_Loader2.default, null);
-            } else if (this.props.error) {
-                body = _react2.default.createElement(_Reload2.default, { onClick: this.fetchVenues.bind(this), error: this.props.error });
-            } else {
-                // Display the list
-                var itemList = this.props.items.map(function (venue) {
-                    return _react2.default.createElement(_VenueListItem2.default, _extends({ key: venue.id }, venue));
-                });
-                body = _react2.default.createElement(
-                    _reactMaterialize.Collection,
-                    null,
-                    itemList
-                );
-            }
 
             return _react2.default.createElement(
                 "div",
                 null,
-                header,
-                body
+                _react2.default.createElement(_FixedNavBar2.default, { title: _localization2.default.venues_title, showAddBtn: true, addRoute: routes.VENUES_ADD }),
+                this.props.fetching && _react2.default.createElement(_Loader2.default, null),
+                this.props.error && !this.prop.fetching && _react2.default.createElement(_Reload2.default, { onClick: this.fetchVenues.bind(this), error: this.props.error }),
+                !this.props.fetching && !this.props.error && body
             );
         }
     }]);
@@ -33626,6 +33658,10 @@ exports.default = {
 
     event_title: 'Événement',
     events_title: 'Événements',
+    incoming_events_title: 'Événements à venir',
+    past_events_title: 'Événements passés',
+    incoming_events: 'À venir',
+    past_events: 'Passés',
     event: 'événement',
     events: 'événements',
 
@@ -33718,6 +33754,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 var initialState = {
     items: [],
+    pastItems: [],
     item: {},
     fetching: false,
     error: null,
@@ -33747,6 +33784,11 @@ function events() {
             break;
         case types.RECEIVE_EVENTS:
             newState.items = action.payload;
+            newState.fetching = false;
+            newState.error = null;
+            break;
+        case types.RECEIVE_PAST_EVENTS:
+            newState.pastItems = action.payload;
             newState.fetching = false;
             newState.error = null;
             break;
@@ -57620,29 +57662,33 @@ exports.default = function (_ref) {
     return _react2.default.createElement(
         _FixedNavBar2.default,
         { title: title, icon: icon },
-        showRemoveBtn && _react2.default.createElement(
-            'li',
-            null,
-            _react2.default.createElement(
-                'a',
-                { className: 'red waves-effect', href: '#', onClick: onRemove },
-                _react2.default.createElement(
-                    _reactMaterialize.Icon,
-                    null,
-                    'delete'
-                )
-            )
-        ),
         _react2.default.createElement(
-            'li',
-            null,
-            _react2.default.createElement(
-                'a',
-                { className: 'blue waves-effect', href: '#', onClick: onValidate },
+            'ul',
+            { className: 'right' },
+            showRemoveBtn && _react2.default.createElement(
+                'li',
+                null,
                 _react2.default.createElement(
-                    _reactMaterialize.Icon,
-                    null,
-                    'done'
+                    'a',
+                    { className: 'red waves-effect', href: '#', onClick: onRemove },
+                    _react2.default.createElement(
+                        _reactMaterialize.Icon,
+                        null,
+                        'delete'
+                    )
+                )
+            ),
+            _react2.default.createElement(
+                'li',
+                null,
+                _react2.default.createElement(
+                    'a',
+                    { className: 'blue waves-effect', href: '#', onClick: onValidate },
+                    _react2.default.createElement(
+                        _reactMaterialize.Icon,
+                        null,
+                        'done'
+                    )
                 )
             )
         )
@@ -57695,6 +57741,183 @@ exports.default = function (_ref) {
         )
     );
 };
+
+/***/ }),
+/* 541 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(20);
+
+var _reactMaterialize = __webpack_require__(14);
+
+var _reactCssTransition = __webpack_require__(224);
+
+var _Loader = __webpack_require__(50);
+
+var _Loader2 = _interopRequireDefault(_Loader);
+
+var _Reload = __webpack_require__(101);
+
+var _Reload2 = _interopRequireDefault(_Reload);
+
+var _reactRouterDom = __webpack_require__(17);
+
+var _localization = __webpack_require__(11);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+var _routes = __webpack_require__(23);
+
+var routes = _interopRequireWildcard(_routes);
+
+var _eventsActions = __webpack_require__(62);
+
+var actions = _interopRequireWildcard(_eventsActions);
+
+var _EventListItem = __webpack_require__(275);
+
+var _EventListItem2 = _interopRequireDefault(_EventListItem);
+
+var _FixedNavBar = __webpack_require__(49);
+
+var _FixedNavBar2 = _interopRequireDefault(_FixedNavBar);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var propTypes = {
+    dispatch: _react.PropTypes.func.isRequired,
+    items: _react.PropTypes.array,
+    fetching: _react.PropTypes.bool,
+    error: _react.PropTypes.string,
+    active: _react.PropTypes.bool
+};
+
+var PastEventsList = function (_React$Component) {
+    _inherits(PastEventsList, _React$Component);
+
+    function PastEventsList(props) {
+        _classCallCheck(this, PastEventsList);
+
+        return _possibleConstructorReturn(this, (PastEventsList.__proto__ || Object.getPrototypeOf(PastEventsList)).call(this, props));
+    }
+
+    /**
+     * When the component is loaded, automatically fetch events via AJAX
+     */
+
+
+    _createClass(PastEventsList, [{
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            this.fetchPastEvents();
+        }
+
+        /**
+         * Force reload of the current list
+         * @param e
+         */
+
+    }, {
+        key: "onReload",
+        value: function onReload(e) {
+            e.preventDefault();
+            this.fetchPastEvents();
+        }
+
+        /**
+         * Fetch events list via ajax
+         */
+
+    }, {
+        key: "fetchPastEvents",
+        value: function fetchPastEvents() {
+            this.props.dispatch(actions.fetchPastEvents());
+        }
+
+        /**
+         * If AJAX returned no data, display a message + a reload button
+         * @returns {XML}
+         */
+
+    }, {
+        key: "getEmptyMessage",
+        value: function getEmptyMessage() {
+            if (this.isListEmpty() && !this.props.fetching) {
+                return _react2.default.createElement(_Reload2.default, { onClick: this.onReload.bind(this), error: _localization2.default.no_events });
+            }
+        }
+
+        /**
+         * Returns true if the items list is empty or undefined, else false
+         * @returns {boolean}
+         */
+
+    }, {
+        key: "isListEmpty",
+        value: function isListEmpty() {
+            return this.props.pastItems === undefined || this.props.pastItems === null || this.props.pastItems.length === 0;
+        }
+
+        /**
+         * General render method. Builds the list of events to display
+         * @returns {XML}
+         */
+
+    }, {
+        key: "render",
+        value: function render() {
+            // Display the list
+            var itemList = this.props.pastItems.map(function (event) {
+                return _react2.default.createElement(_EventListItem2.default, _extends({ editLink: false, key: event.id }, event));
+            });
+            var body = _react2.default.createElement(
+                _reactMaterialize.Collection,
+                null,
+                itemList
+            );
+
+            return _react2.default.createElement(
+                "div",
+                null,
+                _react2.default.createElement(_FixedNavBar2.default, { title: _localization2.default.past_events_title, showAddBtn: false }),
+                this.props.fetching && _react2.default.createElement(_Loader2.default, null),
+                this.props.error && !this.prop.fetching && _react2.default.createElement(_Reload2.default, { onClick: this.fetchPastEvents.bind(this), error: this.props.error }),
+                !this.props.fetching && !this.props.error && body
+            );
+        }
+    }]);
+
+    return PastEventsList;
+}(_react2.default.Component);
+
+PastEventsList.propTypes = propTypes;
+
+exports.default = (0, _reactRedux.connect)(function (state) {
+    return Object.assign({}, state.events);
+})(PastEventsList);
 
 /***/ })
 /******/ ]);

@@ -7,7 +7,8 @@ export const VENUE_GET = '/api/venues/get/{0}';
 export const EVENT_ADD = '/api/events/new/';
 export const EVENT_REMOVE = '/api/events/delete/{0}';
 export const EVENT_EDIT = '/api/events/edit/{0}';
-export const EVENTS_GET = '/api/events/get';
+export const EVENTS_GET = '/api/events/getNext';
+export const EVENTS_GET_PAST = '/api/events/getPast';
 export const EVENT_GET = '/api/events/get/{0}';
 
 export const BOOKING_ADD = '/api/bookings/new/';

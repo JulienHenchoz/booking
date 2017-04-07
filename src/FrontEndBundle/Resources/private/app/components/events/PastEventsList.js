@@ -22,7 +22,7 @@ const propTypes = {
     active: PropTypes.bool
 };
 
-class EventsList extends React.Component {
+class PastEventsList extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -31,7 +31,7 @@ class EventsList extends React.Component {
      * When the component is loaded, automatically fetch events via AJAX
      */
     componentWillMount() {
-        this.fetchEvents();
+        this.fetchPastEvents();
     }
 
     /**
@@ -40,14 +40,14 @@ class EventsList extends React.Component {
      */
     onReload(e) {
         e.preventDefault();
-        this.fetchEvents();
+        this.fetchPastEvents();
     }
 
     /**
      * Fetch events list via ajax
      */
-    fetchEvents() {
-        this.props.dispatch(actions.fetchEvents());
+    fetchPastEvents() {
+        this.props.dispatch(actions.fetchPastEvents());
     }
 
     /**
@@ -67,9 +67,9 @@ class EventsList extends React.Component {
      * @returns {boolean}
      */
     isListEmpty() {
-        return (this.props.items === undefined
-        || this.props.items === null
-        || this.props.items.length === 0);
+        return (this.props.pastItems === undefined
+        || this.props.pastItems === null
+        || this.props.pastItems.length === 0);
     }
 
     /**
@@ -78,8 +78,8 @@ class EventsList extends React.Component {
      */
     render() {
         // Display the list
-        const itemList = this.props.items.map(function (event) {
-            return (<EventListItem editLink={true} key={event.id} {...event} />);
+        const itemList = this.props.pastItems.map(function (event) {
+            return (<EventListItem editLink={false} key={event.id} {...event} />);
         });
         let body = (
             <Collection>
@@ -89,14 +89,14 @@ class EventsList extends React.Component {
 
         return (
             <div>
-                <FixedNavBar title={l10n.incoming_events_title} showAddBtn={true} addRoute={routes.EVENTS_ADD} />
+                <FixedNavBar title={l10n.past_events_title} showAddBtn={false} />
 
                 {this.props.fetching &&
                     <Loader />
                 }
 
                 {this.props.error && !this.prop.fetching &&
-                    <Reload onClick={this.fetchEvents.bind(this)} error={this.props.error} />
+                    <Reload onClick={this.fetchPastEvents.bind(this)} error={this.props.error} />
                 }
 
                 {!this.props.fetching && !this.props.error &&
@@ -107,9 +107,9 @@ class EventsList extends React.Component {
     }
 }
 
-EventsList.propTypes = propTypes;
+PastEventsList.propTypes = propTypes;
 
 export default connect((state) => {
     return Object.assign({},
         state.events);
-})(EventsList);
+})(PastEventsList);

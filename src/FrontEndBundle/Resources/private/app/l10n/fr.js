@@ -8,6 +8,10 @@ export default {
 
     event_title: 'Événement',
     events_title: 'Événements',
+    incoming_events_title: 'Événements à venir',
+    past_events_title: 'Événements passés',
+    incoming_events: 'À venir',
+    past_events: 'Passés',
     event: 'événement',
     events: 'événements',
 

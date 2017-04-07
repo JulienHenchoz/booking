@@ -2,6 +2,7 @@ import * as types from '../constants/actionTypes';
 
 const initialState = {
     items: [],
+    pastItems: [],
     item: {},
     fetching: false,
     error: null,
@@ -28,6 +29,11 @@ export default function events(state = initialState, action) {
             break;
         case types.RECEIVE_EVENTS:
             newState.items = action.payload;
+            newState.fetching = false;
+            newState.error = null;
+            break;
+        case types.RECEIVE_PAST_EVENTS:
+            newState.pastItems = action.payload;
             newState.fetching = false;
             newState.error = null;
             break;

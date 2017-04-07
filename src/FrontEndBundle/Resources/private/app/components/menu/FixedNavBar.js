@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from 'react-router-dom';
 import {Navbar, NavItem, Row, Col, Icon} from 'react-materialize';
 
-const FixedNavBar = ({title, align, children, icon = null}) => {
+const FixedNavBar = ({title, align, children, icon = null, showAddBtn = false, addRoute = ''}) => {
     let iconTag = '';
     if (icon) {
         iconTag = <Icon>{icon}</Icon>
@@ -18,9 +18,20 @@ const FixedNavBar = ({title, align, children, icon = null}) => {
                             {iconTag}
                             {title}
                         </span>
+                            {children}
+
+                            {!children &&
                             <ul className="right">
-                                {children}
+                                {showAddBtn &&
+                                <li>
+                                    <Link className="blue waves-effect" to={addRoute}>
+                                        <Icon>add</Icon>
+                                    </Link>
+                                </li>
+                                }
                             </ul>
+                            }
+
                         </Col>
 
                     </div>

@@ -102,6 +102,21 @@ class EventForm extends React.Component {
         this.props.dispatch(actions.editEvent(e.target.name, e.target.value));
     }
 
+    onVenueSelectChange(e) {
+        let venueId = e.target.value;
+        let venue = this.props.venues.filter(function (venue) {
+            return venue.id == venueId;
+        });
+        if (venue.length) {
+            this.onChange({
+               target: {
+                   name: 'venue',
+                   value: venue[0],
+               }
+            });
+        }
+    }
+
     /**
      * Update the start date
      * @param newDate
@@ -181,9 +196,9 @@ class EventForm extends React.Component {
                     s={12}
                     type='select'
                     name="venue"
-                    error={this.state.errors.venue ? this.state.errors['venue.id'] : ''}
+                    error={this.state.errors['venue.id'] ? this.state.errors['venue.id'] : ''}
                     value={this.state.fields.venue ? this.state.fields.venue.id : ''}
-                    onChange={this.onChange.bind(this)}
+                    onChange={this.onVenueSelectChange.bind(this)}
                     label={l10n.fields.events.venue}>
                     <option value="" disabled>{l10n.venue_select_default}</option>
                     {itemList}
@@ -274,7 +289,7 @@ class EventForm extends React.Component {
             <div>
                 {this.props.saveSuccess &&
                     <Redirect to={{
-                        pathname: routes.VENUES_LIST
+                        pathname: routes.EVENTS_LIST
                     }}/>
                 }
                 {this.props.fetching &&
@@ -290,7 +305,7 @@ class EventForm extends React.Component {
 
                 <FormNavBar
                     title={this.getTitle()}
-                    icon="movie"
+                    icon="event"
                     showRemoveBtn={!this.isNew()}
                     onValidate={this.onSubmit.bind(this)}
                     onRemove={this.onRemove.bind(this)}
@@ -326,11 +341,8 @@ EventForm.propTypes = propTypes;
 
 
 export default connect((state) => {
-    let item = state.events.item;
-    item.startDate = moment(item.startDate);
-
     return Object.assign({}, {
-        item: item,
+        item: state.events.item,
         venues: state.venues.items,
         dispatch: state.events.dispatch,
         fetching: state.events.fetching || state.venues.fetching,

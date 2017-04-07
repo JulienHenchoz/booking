@@ -42,38 +42,31 @@ class VenuesList extends React.Component {
 
 
     render() {
-        let header = (
-            <FixedNavBar title={l10n.venues_title}>
-                <li>
-                    <Link className="blue waves-effect" to={routes.VENUES_ADD}><Icon>add</Icon></Link>
-                </li>
-            </FixedNavBar>
+        // Display the list
+        const itemList = this.props.items.map(function (venue) {
+            return (<VenueListItem key={venue.id} {...venue} />);
+        });
+        let body = (
+            <Collection>
+                {itemList}
+            </Collection>
         );
-
-        let body = '';
-        if (this.props.fetching) {
-            // If we're currently loading the list, display the loader in the content
-            body = <Loader />
-        }
-        else if (this.props.error) {
-            body = <Reload onClick={this.fetchVenues.bind(this)} error={this.props.error} />
-        }
-        else {
-            // Display the list
-            const itemList = this.props.items.map(function (venue) {
-                return (<VenueListItem key={venue.id} {...venue} />);
-            });
-            body = (
-                <Collection>
-                    {itemList}
-                </Collection>
-            )
-        }
 
         return (
             <div>
-                {header}
-                {body}
+                <FixedNavBar title={l10n.venues_title} showAddBtn={true} addRoute={routes.VENUES_ADD} />
+
+                {this.props.fetching &&
+                    <Loader />
+                }
+
+                {this.props.error && !this.prop.fetching &&
+                    <Reload onClick={this.fetchVenues.bind(this)} error={this.props.error} />
+                }
+
+                {!this.props.fetching && !this.props.error &&
+                    body
+                }
             </div>
         )
     }

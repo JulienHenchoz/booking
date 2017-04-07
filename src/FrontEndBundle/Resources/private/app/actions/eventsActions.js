@@ -51,6 +51,13 @@ export function receiveEvents(items) {
     };
 }
 
+export function receivePastEvents(items) {
+    return {
+        type: types.RECEIVE_PAST_EVENTS,
+        payload: items
+    };
+}
+
 export function leaveForm() {
     return {
         type: types.LEAVE_FORM
@@ -198,6 +205,22 @@ export function fetchEvents() {
             })
             .then(json => {
                 dispatch(receiveEvents(json));
+            })
+            .catch(function() {
+                dispatch(getError(l10n.events_fetch_error));
+            });
+    }
+}
+
+export function fetchPastEvents() {
+    return dispatch => {
+        dispatch(loadingEvents());
+        fetch(ajaxRoutes.EVENTS_GET_PAST)
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                dispatch(receivePastEvents(json));
             })
             .catch(function() {
                 dispatch(getError(l10n.events_fetch_error));
