@@ -13,7 +13,9 @@ export function toastError(message) {
 export function getErrors(validationErrors) {
     var errors = {};
     Object.keys(validationErrors).forEach(function(index) {
-        errors[index] = validationErrors[index].length ? validationErrors[index][0] : '';
+        if (validationErrors[index].length) {
+            errors[index] = validationErrors[index][0];
+        }
     });
     return errors;
 }

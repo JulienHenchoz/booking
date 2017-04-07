@@ -113,7 +113,7 @@ class VenueForm extends React.Component {
      */
     onSubmit(e) {
         e.preventDefault();
-        let item = this.props.item;
+        let item = this.state.fields;
 
         // Get any validations errors using validate.js
         // Use replaceEmptyWithNull because validate.js requires an element with a constraint to be null
@@ -140,7 +140,7 @@ class VenueForm extends React.Component {
             let newState = Object.assign({}, this.state);
             newState.errors = utils.getErrors(validationErrors);
             this.setState(newState);
-            this.props.dispatch(actions.validationError());
+            this.props.dispatch(actions.validationError(newState.errors));
         }
     }
 

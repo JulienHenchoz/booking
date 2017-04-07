@@ -5,6 +5,7 @@ import {CollectionItem, Icon} from 'react-materialize';
 import {Link} from 'react-router-dom';
 import * as routes from '../../constants/routes';
 import l10n from '../../l10n/localization';
+import DateTimeBox from './DateTimeBox';
 
 import * as actions from '../../actions/eventsActions';
 
@@ -27,13 +28,13 @@ class EventListItem extends React.Component {
         }
         return (
             <Link to={l10n.formatString(routes.EVENTS_EDIT, this.props.id)} className="collection-item" href="#">
-                <Row>
-                    <Col s={3} l={2} className="collection-image center-align">
-                        {image}
+                <Row className="valign-wrapper">
+                    <Col s={3} l={2} className="collection-image center-align valign">
+                        <DateTimeBox dateTime={this.props.startDate} />
                     </Col>
                     <Col s={9} l={10}>
                         <h4>{this.props.name}</h4>
-                        <p>{this.props.address}</p>
+                        <p>{this.props.venue.name}</p>
                     </Col>
                 </Row>
             </Link>

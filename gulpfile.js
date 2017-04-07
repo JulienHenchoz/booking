@@ -26,9 +26,4 @@ gulp.task('sass', function () {
 
 gulp.task('watch', function () {
     gulp.watch(scssSource, ['sass']);
-
-    gulp.watch('./src/FrontEndBundle/Resources/private/app/**/*.js', ['webpack']).on('error', (err) => {
-        console.log(error.toString(err));
-        this.emit('end');
-    })
 });

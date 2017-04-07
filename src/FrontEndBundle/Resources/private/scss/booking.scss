@@ -1,6 +1,13 @@
 @import './materialize/materialize';
 @import './react-datetime';
 $sideBarWidth: 300px;
+
+$textColor: #333;
+
+h4 {
+  color: $textColor;
+}
+
 @media (min-width: 767px) {
   .side-nav {
     transform: translateX(0px) !important;
@@ -13,7 +20,6 @@ $sideBarWidth: 300px;
     left: $sideBarWidth;
     width: auto;
   }
-
 }
 
 .side-nav {
@@ -29,6 +35,9 @@ $sideBarWidth: 300px;
 }
 
 .collection-item {
+  .row {
+    margin: 0;
+  }
   .collection-image {
     img {
       max-width: 200px;
@@ -82,4 +91,16 @@ nav {
 .rdtPicker td,
 .rdtPicker th {
   padding: 5px;
+}
+
+
+
+.datetime-box span {
+  display: block;
+  font-size: 12px;
+  line-height: 0.4em;
+  &.month-day {
+    font-size: 2.5em;
+    line-height: 1.2em;
+  }
 }

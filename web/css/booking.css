@@ -6785,6 +6785,9 @@ td.rdtYear:hover {
   font-size: 1.2em;
   margin-top: 37px; }
 
+h4 {
+  color: #333; }
+
 @media (min-width: 767px) {
   .side-nav {
     transform: translateX(0px) !important; }
@@ -6802,6 +6805,9 @@ td.rdtYear:hover {
 .side-nav .userView {
   min-height: 120px;
   text-align: center; }
+
+.collection-item .row {
+  margin: 0; }
 
 .collection-item .collection-image img {
   max-width: 200px;
@@ -6841,5 +6847,14 @@ nav {
     max-width: 65%;
     margin: auto; }
 
-.rdtPicker td {
+.rdtPicker td,
+.rdtPicker th {
   padding: 5px; }
+
+.datetime-box span {
+  display: block;
+  font-size: 12px;
+  line-height: 0.4em; }
+  .datetime-box span.month-day {
+    font-size: 2.5em;
+    line-height: 1.2em; }

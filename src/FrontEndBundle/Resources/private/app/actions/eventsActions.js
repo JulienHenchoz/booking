@@ -104,10 +104,11 @@ export function getError(message) {
     };
 }
 
-export function validationError() {
+export function validationError(errors) {
     utils.toastError(l10n.validation_errors);
     return {
         type: types.VALIDATION_ERROR,
+        payload: errors
     };
 }
 

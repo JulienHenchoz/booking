@@ -42,6 +42,7 @@ export default {
     /** Buttons **/
     btn_confirm: 'Confirmer',
     btn_cancel: 'Annuler',
+    venue_select_default: 'Choisissez une salle...',
 
     /** Modals **/
     delete_venue_title: 'Supprimer la salle',

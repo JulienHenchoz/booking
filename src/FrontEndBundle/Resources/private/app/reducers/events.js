@@ -64,6 +64,7 @@ export default function events(state = initialState, action) {
          * Add/Edit actions
          */
         case types.EDIT_EVENT:
+            newState.formErrors = {};
             newState.item[action.property] = action.payload;
             break;
         case types.SAVING_EVENT:

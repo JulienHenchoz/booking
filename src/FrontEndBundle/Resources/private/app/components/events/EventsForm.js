@@ -12,6 +12,7 @@ import FixedNavBar from '../menu/FixedNavBar';
 import moment from 'moment';
 import DateTime from 'react-datetime';
 import * as actions from '../../actions/eventsActions';
+import * as venuesActions from '../../actions/venuesActions';
 import ConfirmModal from "../utils/ConfirmModal";
 import l10n from "../../l10n/localization";
 
@@ -87,6 +88,11 @@ class EventForm extends React.Component {
         if (this.props.match.params.eventId !== undefined) {
             this.props.dispatch(actions.fetchEvent(this.props.match.params.eventId));
         }
+
+        // If we don't have any loaded venues, fetch them to populate our venues list
+        if (this.props.venues === undefined || this.props.venues.length === 0) {
+            this.props.dispatch(venuesActions.fetchVenues());
+        }
     }
 
     /**
@@ -104,6 +110,7 @@ class EventForm extends React.Component {
         // Update only if nextProps comes with a valid item, so the form never displays any "null" value
         if (nextProps.item !== undefined && nextProps.item !== null && !utils.objectIsEmpty(nextProps.item)) {
             this.setState({
+                venues: nextProps.venues,
                 fields: nextProps.item,
                 errors: nextProps.errors || this.getEmptyFields()
             });
@@ -143,7 +150,7 @@ class EventForm extends React.Component {
             let newState = Object.assign({}, this.state);
             newState.errors = utils.getErrors(validationErrors);
             this.setState(newState);
-            this.props.dispatch(actions.validationError());
+            this.props.dispatch(actions.validationError(newState.errors));
         }
     }
 
@@ -164,7 +171,7 @@ class EventForm extends React.Component {
         let newState = Object.assign({}, this.state);
         newState.fields[e.target.name] = e.target.value;
         this.setState(newState);
-        this.props.dispatch(actions.editEvent(fieldName, value));
+        this.props.dispatch(actions.editEvent(e.target.name, e.target.value));
     }
 
     /**
@@ -272,7 +279,7 @@ class EventForm extends React.Component {
                    onChange={this.onChange.bind(this)}
                    onBlur={this.onBlur.bind(this)}
                    label={l10n.fields.events[fieldName]}
-                   value={this.state.fields[fieldName]}/>
+                   value={this.state.fields[fieldName] ? this.state.fields[fieldName] : ''}/>
         )
     }
 
@@ -284,8 +291,31 @@ class EventForm extends React.Component {
                    onChange={this.onChange.bind(this)}
                    onBlur={this.onBlur.bind(this)}
                    label={l10n.fields.events[fieldName]}
-                   value={this.state.fields[fieldName]}/>
+                   value={this.state.fields[fieldName] ? this.state.fields[fieldName] : ''}/>
         )
+    }
+
+    getVenueSelect() {
+        // Display the list
+        if (this.props.venues !== undefined) {
+            const itemList = this.props.venues.map(function (venue) {
+                return (<option key={venue.id} value={venue.id}>{venue.name}</option>);
+            });
+
+            return (
+                <Input
+                    s={12}
+                    type='select'
+                    name="venue"
+                    error={this.state.errors['venue.id'] ? this.state.errors['venue.id'] : ''}
+                    value={this.state.fields.venue ? this.state.fields.venue.id : ''}
+                    onChange={this.onChange.bind(this)}
+                    label={l10n.fields.events.venue}>
+                    <option value="" disabled>{l10n.venue_select_default}</option>
+                    {itemList}
+                </Input>
+            );
+        }
     }
 
     /**
@@ -327,11 +357,13 @@ class EventForm extends React.Component {
                       onSubmit={this.onSubmit.bind(this)}>
                     <Row>
                         {this.getTextInput('name')}
+                        {this.getVenueSelect()}
+
                         <div className="col input-field s12">
                             <DateTime
                                 inputProps={{name: 'startDate', id: 'input_startDate'}}
                                 dateFormat="DD.MM.YYYY"
-                                timeFormat={l10n.time_at + " HH:mm"}
+                                timeFormat="HH:mm"
                                 closeOnSelect={true}
                                 value={this.state.fields.startDate ? this.state.fields.startDate : moment()}
                                 onChange={this.onStartDateChange.bind(this)}
@@ -342,7 +374,6 @@ class EventForm extends React.Component {
                             </label>
                         </div>
                         {this.getTextAreaInput('description')}
-                        {this.getTextInput('venue')}
                         {this.getTextInput('image')}
                     </Row>
                     <Row>
@@ -363,8 +394,9 @@ export default connect((state) => {
 
     return Object.assign({}, {
         item: item,
+        venues: state.venues.items,
         dispatch: state.events.dispatch,
-        fetching: state.events.fetching,
+        fetching: state.events.fetching || state.venues.fetching,
         errors: state.events.formErrors,
         saveSuccess: state.events.saveSuccess,
         removeModal: state.events.removeModal

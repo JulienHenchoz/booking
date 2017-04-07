@@ -31,9 +31,9 @@ class Event
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="start_date", type="date")
+     * @ORM\Column(name="start_date", type="datetime")
      * @Groups({"public", "authenticated"})
-     * @Assert\Date()
+     * @Assert\DateTime()
      * @Assert\NotBlank()
      */
     private $startDate;
@@ -45,7 +45,7 @@ class Event
      * @Groups({"public", "authenticated"})
      * @Assert\NotBlank()
      */
-    private $name;
+    private $name = '';
 
     /**
      * @var string
@@ -53,7 +53,7 @@ class Event
      * @ORM\Column(name="description", type="string", nullable=true)
      * @Groups({"public", "authenticated"})
      */
-    private $description;
+    private $description = '';
 
     /**
      * @var string
@@ -61,7 +61,7 @@ class Event
      * @ORM\Column(name="image", type="string", nullable=true)
      * @Groups({"public", "authenticated"})
      */
-    private $image;
+    private $image = '';
 
     /**
      *
