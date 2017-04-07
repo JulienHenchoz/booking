@@ -1,16 +1,16 @@
 import React, {PropTypes} from "react"
 import {connect} from "react-redux"
 import {Redirect} from 'react-router-dom';
-import {Row, Input, Button, Icon} from 'react-materialize';
+import {Row, Input} from 'react-materialize';
 import * as routes from '../../constants/routes';
 import Loader from '../utils/Loader';
 import validate from 'validate.js';
 import eventConstraints from '../../validation/event';
 import * as utils from '../../utils/utils';
-import FixedNavBar from '../menu/FixedNavBar';
+import FormNavBar from '../menu/FormNavBar';
 
 import moment from 'moment';
-import DateTime from 'react-datetime';
+import DateTime from '../fields/DateTime';
 import * as actions from '../../actions/eventsActions';
 import * as venuesActions from '../../actions/venuesActions';
 import ConfirmModal from "../utils/ConfirmModal";
@@ -30,91 +30,19 @@ const propTypes = {
 
 class EventForm extends React.Component {
     /**
-     * Initial state for the form fields and errors
-     * @returns {{name: string, capacity: string, address: string, phone: string, website: string, image: string}}
-     */
-    getEmptyFields() {
-        return {
-            name: '',
-            startDate: moment({hour: 20}),
-            description: '',
-            image: '',
-            venue: ''
-        };
-    }
-
-    /**
      * Initialize the state of form fields and errors
      * @param props
      */
     constructor(props) {
         super(props);
         this.state = {
-            dateTimeFormat: 'DD.MM.YYYY HH:mm'
+            dateTimeFormat: 'DD.MM.YYYY HH:mm',
+            defaultDateTime: moment({hour: 20}),
         };
         this.state = Object.assign(this.state, {
             fields: this.getEmptyFields(),
             errors: this.getEmptyFields(),
         });
-    }
-
-    /**
-     * Force Materialize lib to update the text fields, so the labels and fields do not overlap
-     */
-    updateMaterializeFields() {
-        if (Materialize.updateTextFields !== undefined) {
-            Materialize.updateTextFields();
-        }
-    }
-
-    /**
-     * After component has been mounted, make sure the Materialize fields are up to date.
-     */
-    componentDidMount() {
-        this.updateMaterializeFields();
-    }
-
-    /**
-     * After component has been updated, make sure the Materialize fields are up to date.
-     */
-    componentDidUpdate() {
-        this.updateMaterializeFields();
-    }
-
-    /**
-     * When the component is loading, fetch the eventId we're supposed to display in the route
-     */
-    componentWillMount() {
-        if (this.props.match.params.eventId !== undefined) {
-            this.props.dispatch(actions.fetchEvent(this.props.match.params.eventId));
-        }
-
-        // If we don't have any loaded venues, fetch them to populate our venues list
-        if (this.props.venues === undefined || this.props.venues.length === 0) {
-            this.props.dispatch(venuesActions.fetchVenues());
-        }
-    }
-
-    /**
-     * Dispatch an even whenever the component is destroyed
-     */
-    componentWillUnmount() {
-        this.props.dispatch(actions.leaveForm());
-    }
-
-    /**
-     * When receiving new props, update current state to get new field values and errors
-     * @param nextProps
-     */
-    componentWillReceiveProps(nextProps) {
-        // Update only if nextProps comes with a valid item, so the form never displays any "null" value
-        if (nextProps.item !== undefined && nextProps.item !== null && !utils.objectIsEmpty(nextProps.item)) {
-            this.setState({
-                venues: nextProps.venues,
-                fields: nextProps.item,
-                errors: nextProps.errors || this.getEmptyFields()
-            });
-        }
     }
 
     /**
@@ -200,33 +128,6 @@ class EventForm extends React.Component {
     }
 
     /**
-     * Decides
-     * @returns {string}
-     */
-    getSuccessRedirection() {
-        let output = '';
-        if (this.props.saveSuccess) {
-            return (
-                <Redirect to={{
-                    pathname: routes.EVENTS_LIST
-                }}/>
-            );
-        }
-    }
-
-    /**
-     * If form is loading, display the loading spinner
-     * @returns {XML}
-     */
-    getLoader() {
-        if (this.props.fetching) {
-            return (
-                <Loader />
-            )
-        }
-    }
-
-    /**
      * Returns true if the current form is creating a new record, false if we're editing
      * @returns {boolean}
      */
@@ -251,41 +152,14 @@ class EventForm extends React.Component {
     }
 
     /**
-     * Returns the markup for the remove button, only if we're editing a record
-     * @returns {XML}
-     */
-    getNavBarRemoveBtn() {
-        if (!this.isNew()) {
-            return (
-                <li>
-                    <a className="red waves-effect" href="#" onClick={this.onRemove.bind(this)}>
-                        <Icon>delete</Icon>
-                    </a>
-                </li>
-            )
-        }
-    }
-
-    /**
      * Returns a text input for the given form field
      * @param fieldName
+     * @param type
      * @returns {XML}
      */
-    getTextInput(fieldName) {
+    getTextInput(fieldName, type = '') {
         return (
-            <Input className="active" s={12}
-                   name={fieldName}
-                   error={this.state.errors[fieldName] ? this.state.errors[fieldName] : ''}
-                   onChange={this.onChange.bind(this)}
-                   onBlur={this.onBlur.bind(this)}
-                   label={l10n.fields.events[fieldName]}
-                   value={this.state.fields[fieldName] ? this.state.fields[fieldName] : ''}/>
-        )
-    }
-
-    getTextAreaInput(fieldName) {
-        return (
-            <Input type="textarea" className="active" s={12}
+            <Input type={type} className="active" s={12}
                    name={fieldName}
                    error={this.state.errors[fieldName] ? this.state.errors[fieldName] : ''}
                    onChange={this.onChange.bind(this)}
@@ -307,7 +181,7 @@ class EventForm extends React.Component {
                     s={12}
                     type='select'
                     name="venue"
-                    error={this.state.errors['venue.id'] ? this.state.errors['venue.id'] : ''}
+                    error={this.state.errors.venue ? this.state.errors['venue.id'] : ''}
                     value={this.state.fields.venue ? this.state.fields.venue.id : ''}
                     onChange={this.onChange.bind(this)}
                     label={l10n.fields.events.venue}>
@@ -319,20 +193,76 @@ class EventForm extends React.Component {
     }
 
     /**
-     * Returns the form navbar
-     * @returns {XML}
+     * Initial state for the form fields and errors
+     * @returns {{name: string, capacity: string, address: string, phone: string, website: string, image: string}}
      */
-    getNavBar() {
-        return (
-            <FixedNavBar title={this.getTitle()} icon="movie">
-                {this.getNavBarRemoveBtn()}
-                <li>
-                    <a className="blue waves-effect" href="#" onClick={this.onSubmit.bind(this)}>
-                        <Icon>done</Icon>
-                    </a>
-                </li>
-            </FixedNavBar>
-        )
+    getEmptyFields() {
+        return {
+            name: '',
+            startDate: moment({hour: 20}),
+            description: '',
+            image: '',
+            venue: ''
+        };
+    }
+
+    /**
+     * Force Materialize lib to update the text fields, so the labels and fields do not overlap
+     */
+    updateMaterializeFields() {
+        if (Materialize.updateTextFields !== undefined) {
+            Materialize.updateTextFields();
+        }
+    }
+
+    /**
+     * After component has been mounted, make sure the Materialize fields are up to date.
+     */
+    componentDidMount() {
+        this.updateMaterializeFields();
+    }
+
+    /**
+     * After component has been updated, make sure the Materialize fields are up to date.
+     */
+    componentDidUpdate() {
+        this.updateMaterializeFields();
+    }
+
+    /**
+     * When the component is loading, fetch the eventId we're supposed to display in the route
+     */
+    componentWillMount() {
+        if (this.props.match.params.eventId !== undefined) {
+            this.props.dispatch(actions.fetchEvent(this.props.match.params.eventId));
+        }
+
+        // If we don't have any loaded venues, fetch them to populate our venues list
+        if (this.props.venues === undefined || this.props.venues.length === 0) {
+            this.props.dispatch(venuesActions.fetchVenues());
+        }
+    }
+
+    /**
+     * Dispatch an even whenever the component is destroyed
+     */
+    componentWillUnmount() {
+        this.props.dispatch(actions.leaveForm());
+    }
+
+    /**
+     * When receiving new props, update current state to get new field values and errors
+     * @param nextProps
+     */
+    componentWillReceiveProps(nextProps) {
+        // Update only if nextProps comes with a valid item, so the form never displays any "null" value
+        if (nextProps.item !== undefined && nextProps.item !== null && !utils.objectIsEmpty(nextProps.item)) {
+            this.setState({
+                venues: nextProps.venues,
+                fields: nextProps.item,
+                errors: nextProps.errors || this.getEmptyFields()
+            });
+        }
     }
 
     /**
@@ -342,8 +272,15 @@ class EventForm extends React.Component {
     render() {
         return (
             <div>
-                {this.getSuccessRedirection()}
-                {this.getLoader()}
+                {this.props.saveSuccess &&
+                    <Redirect to={{
+                        pathname: routes.VENUES_LIST
+                    }}/>
+                }
+                {this.props.fetching &&
+                    <Loader />
+                }
+
                 <ConfirmModal title={l10n.delete_event_title}
                               content={l10n.formatString(l10n.delete_event_content, this.props.item.name)}
                               active={this.props.removeModal}
@@ -351,7 +288,13 @@ class EventForm extends React.Component {
                               confirmAction={actions.confirmRemoveEvent}
                               itemId={this.props.item.id ? this.props.item.id : null}/>
 
-                {this.getNavBar()}
+                <FormNavBar
+                    title={this.getTitle()}
+                    icon="movie"
+                    showRemoveBtn={!this.isNew()}
+                    onValidate={this.onSubmit.bind(this)}
+                    onRemove={this.onRemove.bind(this)}
+                />
 
                 <form id="event-form" style={{opacity: this.props.fetching ? 0.3 : 1}}
                       onSubmit={this.onSubmit.bind(this)}>
@@ -359,21 +302,15 @@ class EventForm extends React.Component {
                         {this.getTextInput('name')}
                         {this.getVenueSelect()}
 
-                        <div className="col input-field s12">
-                            <DateTime
-                                inputProps={{name: 'startDate', id: 'input_startDate'}}
-                                dateFormat="DD.MM.YYYY"
-                                timeFormat="HH:mm"
-                                closeOnSelect={true}
-                                value={this.state.fields.startDate ? this.state.fields.startDate : moment()}
-                                onChange={this.onStartDateChange.bind(this)}
-                            />
-                            <label className={this.state.fields.startDate ? 'active' : ''} htmlFor="input_startDate"
-                                   data-error={this.state.errors.startDate ? this.state.errors.startDate : ''}>
-                                {l10n.fields.events.startDate}
-                            </label>
-                        </div>
-                        {this.getTextAreaInput('description')}
+                        <DateTime
+                            fieldName="startDate"
+                            value={this.state.fields.startDate ? this.state.fields.startDate : this.state.defaultDateTime}
+                            onChange={this.onStartDateChange.bind(this)}
+                            error={this.state.errors.startDate}
+                            label={l10n.fields.events.startDate}
+                        />
+
+                        {this.getTextInput('description', 'textarea')}
                         {this.getTextInput('image')}
                     </Row>
                     <Row>

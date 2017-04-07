@@ -7,7 +7,7 @@ import Loader from '../utils/Loader';
 import validate from 'validate.js';
 import venueConstraints from '../../validation/venue';
 import * as utils from '../../utils/utils';
-import FixedNavBar from '../menu/FixedNavBar';
+import FormNavBar from '../menu/FormNavBar';
 
 import * as actions from '../../actions/venuesActions';
 import ConfirmModal from "../utils/ConfirmModal";
@@ -178,33 +178,6 @@ class VenueForm extends React.Component {
     }
 
     /**
-     * Decides
-     * @returns {string}
-     */
-    getSuccessRedirection() {
-        let output = '';
-        if (this.props.saveSuccess) {
-            return (
-                <Redirect to={{
-                    pathname: routes.VENUES_LIST
-                }}/>
-            );
-        }
-    }
-
-    /**
-     * If form is loading, display the loading spinner
-     * @returns {XML}
-     */
-    getLoader() {
-        if (this.props.fetching) {
-            return (
-                <Loader />
-            )
-        }
-    }
-
-    /**
      * Returns true if the current form is creating a new record, false if we're editing
      * @returns {boolean}
      */
@@ -229,22 +202,6 @@ class VenueForm extends React.Component {
     }
 
     /**
-     * Returns the markup for the remove button, only if we're editing a record
-     * @returns {XML}
-     */
-    getNavBarRemoveBtn() {
-        if (!this.isNew()) {
-            return (
-                <li>
-                    <a className="red waves-effect" href="#" onClick={this.onRemove.bind(this)}>
-                        <Icon>delete</Icon>
-                    </a>
-                </li>
-            )
-        }
-    }
-
-    /**
      * Returns a text input for the given form field
      * @param fieldName
      * @returns {XML}
@@ -262,31 +219,22 @@ class VenueForm extends React.Component {
     }
 
     /**
-     * Returns the form navbar
-     * @returns {XML}
-     */
-    getNavBar() {
-        return (
-            <FixedNavBar title={this.getTitle()} icon="business">
-                {this.getNavBarRemoveBtn()}
-                <li>
-                    <a className="blue waves-effect" href="#" onClick={this.onSubmit.bind(this)}>
-                        <Icon>done</Icon>
-                    </a>
-                </li>
-            </FixedNavBar>
-        )
-    }
-
-    /**
      * General render function
      * @returns {XML}
      */
     render() {
         return (
             <div>
-                {this.getSuccessRedirection()}
-                {this.getLoader()}
+                {this.props.saveSuccess &&
+                    <Redirect to={{
+                        pathname: routes.VENUES_LIST
+                    }}/>
+                }
+
+                {this.props.fetching &&
+                    <Loader />
+                }
+
                 <ConfirmModal title={l10n.delete_venue_title}
                               content={l10n.formatString(l10n.delete_venue_content, this.props.item.name)}
                               active={this.props.removeModal}
@@ -294,7 +242,13 @@ class VenueForm extends React.Component {
                               confirmAction={actions.confirmRemoveVenue}
                               itemId={this.props.item.id ? this.props.item.id : null}/>
 
-                {this.getNavBar()}
+                <FormNavBar
+                    title={this.getTitle()}
+                    icon="business"
+                    showRemoveBtn={!this.isNew()}
+                    onValidate={this.onSubmit.bind(this)}
+                    onRemove={this.onRemove.bind(this)}
+                />
 
                 <form id="venue-form" style={{opacity: this.props.fetching ? 0.3 : 1}}
                       onSubmit={this.onSubmit.bind(this)}>

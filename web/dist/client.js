@@ -32168,17 +32168,17 @@ var _utils = __webpack_require__(52);
 
 var utils = _interopRequireWildcard(_utils);
 
-var _FixedNavBar = __webpack_require__(49);
+var _FormNavBar = __webpack_require__(539);
 
-var _FixedNavBar2 = _interopRequireDefault(_FixedNavBar);
+var _FormNavBar2 = _interopRequireDefault(_FormNavBar);
 
 var _moment = __webpack_require__(0);
 
 var _moment2 = _interopRequireDefault(_moment);
 
-var _reactDatetime = __webpack_require__(338);
+var _DateTime = __webpack_require__(540);
 
-var _reactDatetime2 = _interopRequireDefault(_reactDatetime);
+var _DateTime2 = _interopRequireDefault(_DateTime);
 
 var _eventsActions = __webpack_require__(62);
 
@@ -32220,37 +32220,18 @@ var propTypes = {
 var EventForm = function (_React$Component) {
     _inherits(EventForm, _React$Component);
 
-    _createClass(EventForm, [{
-        key: "getEmptyFields",
-
-        /**
-         * Initial state for the form fields and errors
-         * @returns {{name: string, capacity: string, address: string, phone: string, website: string, image: string}}
-         */
-        value: function getEmptyFields() {
-            return {
-                name: '',
-                startDate: (0, _moment2.default)({ hour: 20 }),
-                description: '',
-                image: '',
-                venue: ''
-            };
-        }
-
-        /**
-         * Initialize the state of form fields and errors
-         * @param props
-         */
-
-    }]);
-
+    /**
+     * Initialize the state of form fields and errors
+     * @param props
+     */
     function EventForm(props) {
         _classCallCheck(this, EventForm);
 
         var _this = _possibleConstructorReturn(this, (EventForm.__proto__ || Object.getPrototypeOf(EventForm)).call(this, props));
 
         _this.state = {
-            dateTimeFormat: 'DD.MM.YYYY HH:mm'
+            dateTimeFormat: 'DD.MM.YYYY HH:mm',
+            defaultDateTime: (0, _moment2.default)({ hour: 20 })
         };
         _this.state = Object.assign(_this.state, {
             fields: _this.getEmptyFields(),
@@ -32260,89 +32241,12 @@ var EventForm = function (_React$Component) {
     }
 
     /**
-     * Force Materialize lib to update the text fields, so the labels and fields do not overlap
+     * Called when the form is being submitted
+     * @param e
      */
 
 
     _createClass(EventForm, [{
-        key: "updateMaterializeFields",
-        value: function updateMaterializeFields() {
-            if (Materialize.updateTextFields !== undefined) {
-                Materialize.updateTextFields();
-            }
-        }
-
-        /**
-         * After component has been mounted, make sure the Materialize fields are up to date.
-         */
-
-    }, {
-        key: "componentDidMount",
-        value: function componentDidMount() {
-            this.updateMaterializeFields();
-        }
-
-        /**
-         * After component has been updated, make sure the Materialize fields are up to date.
-         */
-
-    }, {
-        key: "componentDidUpdate",
-        value: function componentDidUpdate() {
-            this.updateMaterializeFields();
-        }
-
-        /**
-         * When the component is loading, fetch the eventId we're supposed to display in the route
-         */
-
-    }, {
-        key: "componentWillMount",
-        value: function componentWillMount() {
-            if (this.props.match.params.eventId !== undefined) {
-                this.props.dispatch(actions.fetchEvent(this.props.match.params.eventId));
-            }
-
-            // If we don't have any loaded venues, fetch them to populate our venues list
-            if (this.props.venues === undefined || this.props.venues.length === 0) {
-                this.props.dispatch(venuesActions.fetchVenues());
-            }
-        }
-
-        /**
-         * Dispatch an even whenever the component is destroyed
-         */
-
-    }, {
-        key: "componentWillUnmount",
-        value: function componentWillUnmount() {
-            this.props.dispatch(actions.leaveForm());
-        }
-
-        /**
-         * When receiving new props, update current state to get new field values and errors
-         * @param nextProps
-         */
-
-    }, {
-        key: "componentWillReceiveProps",
-        value: function componentWillReceiveProps(nextProps) {
-            // Update only if nextProps comes with a valid item, so the form never displays any "null" value
-            if (nextProps.item !== undefined && nextProps.item !== null && !utils.objectIsEmpty(nextProps.item)) {
-                this.setState({
-                    venues: nextProps.venues,
-                    fields: nextProps.item,
-                    errors: nextProps.errors || this.getEmptyFields()
-                });
-            }
-        }
-
-        /**
-         * Called when the form is being submitted
-         * @param e
-         */
-
-    }, {
         key: "onSubmit",
         value: function onSubmit(e) {
             e.preventDefault();
@@ -32429,35 +32333,6 @@ var EventForm = function (_React$Component) {
         }
 
         /**
-         * Decides
-         * @returns {string}
-         */
-
-    }, {
-        key: "getSuccessRedirection",
-        value: function getSuccessRedirection() {
-            var output = '';
-            if (this.props.saveSuccess) {
-                return _react2.default.createElement(_reactRouterDom.Redirect, { to: {
-                        pathname: routes.EVENTS_LIST
-                    } });
-            }
-        }
-
-        /**
-         * If form is loading, display the loading spinner
-         * @returns {XML}
-         */
-
-    }, {
-        key: "getLoader",
-        value: function getLoader() {
-            if (this.props.fetching) {
-                return _react2.default.createElement(_Loader2.default, null);
-            }
-        }
-
-        /**
          * Returns true if the current form is creating a new record, false if we're editing
          * @returns {boolean}
          */
@@ -32487,51 +32362,18 @@ var EventForm = function (_React$Component) {
         }
 
         /**
-         * Returns the markup for the remove button, only if we're editing a record
-         * @returns {XML}
-         */
-
-    }, {
-        key: "getNavBarRemoveBtn",
-        value: function getNavBarRemoveBtn() {
-            if (!this.isNew()) {
-                return _react2.default.createElement(
-                    "li",
-                    null,
-                    _react2.default.createElement(
-                        "a",
-                        { className: "red waves-effect", href: "#", onClick: this.onRemove.bind(this) },
-                        _react2.default.createElement(
-                            _reactMaterialize.Icon,
-                            null,
-                            "delete"
-                        )
-                    )
-                );
-            }
-        }
-
-        /**
          * Returns a text input for the given form field
          * @param fieldName
+         * @param type
          * @returns {XML}
          */
 
     }, {
         key: "getTextInput",
         value: function getTextInput(fieldName) {
-            return _react2.default.createElement(_reactMaterialize.Input, { className: "active", s: 12,
-                name: fieldName,
-                error: this.state.errors[fieldName] ? this.state.errors[fieldName] : '',
-                onChange: this.onChange.bind(this),
-                onBlur: this.onBlur.bind(this),
-                label: _localization2.default.fields.events[fieldName],
-                value: this.state.fields[fieldName] ? this.state.fields[fieldName] : '' });
-        }
-    }, {
-        key: "getTextAreaInput",
-        value: function getTextAreaInput(fieldName) {
-            return _react2.default.createElement(_reactMaterialize.Input, { type: "textarea", className: "active", s: 12,
+            var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+            return _react2.default.createElement(_reactMaterialize.Input, { type: type, className: "active", s: 12,
                 name: fieldName,
                 error: this.state.errors[fieldName] ? this.state.errors[fieldName] : '',
                 onChange: this.onChange.bind(this),
@@ -32558,7 +32400,7 @@ var EventForm = function (_React$Component) {
                         s: 12,
                         type: "select",
                         name: "venue",
-                        error: this.state.errors['venue.id'] ? this.state.errors['venue.id'] : '',
+                        error: this.state.errors.venue ? this.state.errors['venue.id'] : '',
                         value: this.state.fields.venue ? this.state.fields.venue.id : '',
                         onChange: this.onChange.bind(this),
                         label: _localization2.default.fields.events.venue },
@@ -32573,31 +32415,97 @@ var EventForm = function (_React$Component) {
         }
 
         /**
-         * Returns the form navbar
-         * @returns {XML}
+         * Initial state for the form fields and errors
+         * @returns {{name: string, capacity: string, address: string, phone: string, website: string, image: string}}
          */
 
     }, {
-        key: "getNavBar",
-        value: function getNavBar() {
-            return _react2.default.createElement(
-                _FixedNavBar2.default,
-                { title: this.getTitle(), icon: "movie" },
-                this.getNavBarRemoveBtn(),
-                _react2.default.createElement(
-                    "li",
-                    null,
-                    _react2.default.createElement(
-                        "a",
-                        { className: "blue waves-effect", href: "#", onClick: this.onSubmit.bind(this) },
-                        _react2.default.createElement(
-                            _reactMaterialize.Icon,
-                            null,
-                            "done"
-                        )
-                    )
-                )
-            );
+        key: "getEmptyFields",
+        value: function getEmptyFields() {
+            return {
+                name: '',
+                startDate: (0, _moment2.default)({ hour: 20 }),
+                description: '',
+                image: '',
+                venue: ''
+            };
+        }
+
+        /**
+         * Force Materialize lib to update the text fields, so the labels and fields do not overlap
+         */
+
+    }, {
+        key: "updateMaterializeFields",
+        value: function updateMaterializeFields() {
+            if (Materialize.updateTextFields !== undefined) {
+                Materialize.updateTextFields();
+            }
+        }
+
+        /**
+         * After component has been mounted, make sure the Materialize fields are up to date.
+         */
+
+    }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            this.updateMaterializeFields();
+        }
+
+        /**
+         * After component has been updated, make sure the Materialize fields are up to date.
+         */
+
+    }, {
+        key: "componentDidUpdate",
+        value: function componentDidUpdate() {
+            this.updateMaterializeFields();
+        }
+
+        /**
+         * When the component is loading, fetch the eventId we're supposed to display in the route
+         */
+
+    }, {
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            if (this.props.match.params.eventId !== undefined) {
+                this.props.dispatch(actions.fetchEvent(this.props.match.params.eventId));
+            }
+
+            // If we don't have any loaded venues, fetch them to populate our venues list
+            if (this.props.venues === undefined || this.props.venues.length === 0) {
+                this.props.dispatch(venuesActions.fetchVenues());
+            }
+        }
+
+        /**
+         * Dispatch an even whenever the component is destroyed
+         */
+
+    }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+            this.props.dispatch(actions.leaveForm());
+        }
+
+        /**
+         * When receiving new props, update current state to get new field values and errors
+         * @param nextProps
+         */
+
+    }, {
+        key: "componentWillReceiveProps",
+        value: function componentWillReceiveProps(nextProps) {
+            // Update only if nextProps comes with a valid item, so the form never displays any "null" value
+            if (nextProps.item !== undefined && nextProps.item !== null && !utils.objectIsEmpty(nextProps.item)) {
+                this.setState({
+                    venues: nextProps.venues,
+                    fields: nextProps.item,
+                    errors: nextProps.errors || this.getEmptyFields()
+                });
+            }
         }
 
         /**
@@ -32611,15 +32519,23 @@ var EventForm = function (_React$Component) {
             return _react2.default.createElement(
                 "div",
                 null,
-                this.getSuccessRedirection(),
-                this.getLoader(),
+                this.props.saveSuccess && _react2.default.createElement(_reactRouterDom.Redirect, { to: {
+                        pathname: routes.VENUES_LIST
+                    } }),
+                this.props.fetching && _react2.default.createElement(_Loader2.default, null),
                 _react2.default.createElement(_ConfirmModal2.default, { title: _localization2.default.delete_event_title,
                     content: _localization2.default.formatString(_localization2.default.delete_event_content, this.props.item.name),
                     active: this.props.removeModal,
                     dispatch: this.props.dispatch, cancelAction: actions.cancelRemoveEvent,
                     confirmAction: actions.confirmRemoveEvent,
                     itemId: this.props.item.id ? this.props.item.id : null }),
-                this.getNavBar(),
+                _react2.default.createElement(_FormNavBar2.default, {
+                    title: this.getTitle(),
+                    icon: "movie",
+                    showRemoveBtn: !this.isNew(),
+                    onValidate: this.onSubmit.bind(this),
+                    onRemove: this.onRemove.bind(this)
+                }),
                 _react2.default.createElement(
                     "form",
                     { id: "event-form", style: { opacity: this.props.fetching ? 0.3 : 1 },
@@ -32629,25 +32545,14 @@ var EventForm = function (_React$Component) {
                         null,
                         this.getTextInput('name'),
                         this.getVenueSelect(),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "col input-field s12" },
-                            _react2.default.createElement(_reactDatetime2.default, {
-                                inputProps: { name: 'startDate', id: 'input_startDate' },
-                                dateFormat: "DD.MM.YYYY",
-                                timeFormat: "HH:mm",
-                                closeOnSelect: true,
-                                value: this.state.fields.startDate ? this.state.fields.startDate : (0, _moment2.default)(),
-                                onChange: this.onStartDateChange.bind(this)
-                            }),
-                            _react2.default.createElement(
-                                "label",
-                                { className: this.state.fields.startDate ? 'active' : '', htmlFor: "input_startDate",
-                                    "data-error": this.state.errors.startDate ? this.state.errors.startDate : '' },
-                                _localization2.default.fields.events.startDate
-                            )
-                        ),
-                        this.getTextAreaInput('description'),
+                        _react2.default.createElement(_DateTime2.default, {
+                            fieldName: "startDate",
+                            value: this.state.fields.startDate ? this.state.fields.startDate : this.state.defaultDateTime,
+                            onChange: this.onStartDateChange.bind(this),
+                            error: this.state.errors.startDate,
+                            label: _localization2.default.fields.events.startDate
+                        }),
+                        this.getTextInput('description', 'textarea'),
                         this.getTextInput('image')
                     ),
                     _react2.default.createElement(
@@ -33095,9 +33000,9 @@ var _utils = __webpack_require__(52);
 
 var utils = _interopRequireWildcard(_utils);
 
-var _FixedNavBar = __webpack_require__(49);
+var _FormNavBar = __webpack_require__(539);
 
-var _FixedNavBar2 = _interopRequireDefault(_FixedNavBar);
+var _FormNavBar2 = _interopRequireDefault(_FormNavBar);
 
 var _venuesActions = __webpack_require__(48);
 
@@ -33321,35 +33226,6 @@ var VenueForm = function (_React$Component) {
         }
 
         /**
-         * Decides
-         * @returns {string}
-         */
-
-    }, {
-        key: "getSuccessRedirection",
-        value: function getSuccessRedirection() {
-            var output = '';
-            if (this.props.saveSuccess) {
-                return _react2.default.createElement(_reactRouterDom.Redirect, { to: {
-                        pathname: routes.VENUES_LIST
-                    } });
-            }
-        }
-
-        /**
-         * If form is loading, display the loading spinner
-         * @returns {XML}
-         */
-
-    }, {
-        key: "getLoader",
-        value: function getLoader() {
-            if (this.props.fetching) {
-                return _react2.default.createElement(_Loader2.default, null);
-            }
-        }
-
-        /**
          * Returns true if the current form is creating a new record, false if we're editing
          * @returns {boolean}
          */
@@ -33379,31 +33255,6 @@ var VenueForm = function (_React$Component) {
         }
 
         /**
-         * Returns the markup for the remove button, only if we're editing a record
-         * @returns {XML}
-         */
-
-    }, {
-        key: "getNavBarRemoveBtn",
-        value: function getNavBarRemoveBtn() {
-            if (!this.isNew()) {
-                return _react2.default.createElement(
-                    "li",
-                    null,
-                    _react2.default.createElement(
-                        "a",
-                        { className: "red waves-effect", href: "#", onClick: this.onRemove.bind(this) },
-                        _react2.default.createElement(
-                            _reactMaterialize.Icon,
-                            null,
-                            "delete"
-                        )
-                    )
-                );
-            }
-        }
-
-        /**
          * Returns a text input for the given form field
          * @param fieldName
          * @returns {XML}
@@ -33422,34 +33273,6 @@ var VenueForm = function (_React$Component) {
         }
 
         /**
-         * Returns the form navbar
-         * @returns {XML}
-         */
-
-    }, {
-        key: "getNavBar",
-        value: function getNavBar() {
-            return _react2.default.createElement(
-                _FixedNavBar2.default,
-                { title: this.getTitle(), icon: "business" },
-                this.getNavBarRemoveBtn(),
-                _react2.default.createElement(
-                    "li",
-                    null,
-                    _react2.default.createElement(
-                        "a",
-                        { className: "blue waves-effect", href: "#", onClick: this.onSubmit.bind(this) },
-                        _react2.default.createElement(
-                            _reactMaterialize.Icon,
-                            null,
-                            "done"
-                        )
-                    )
-                )
-            );
-        }
-
-        /**
          * General render function
          * @returns {XML}
          */
@@ -33460,15 +33283,23 @@ var VenueForm = function (_React$Component) {
             return _react2.default.createElement(
                 "div",
                 null,
-                this.getSuccessRedirection(),
-                this.getLoader(),
+                this.props.saveSuccess && _react2.default.createElement(_reactRouterDom.Redirect, { to: {
+                        pathname: routes.VENUES_LIST
+                    } }),
+                this.props.fetching && _react2.default.createElement(_Loader2.default, null),
                 _react2.default.createElement(_ConfirmModal2.default, { title: _localization2.default.delete_venue_title,
                     content: _localization2.default.formatString(_localization2.default.delete_venue_content, this.props.item.name),
                     active: this.props.removeModal,
                     dispatch: this.props.dispatch, cancelAction: actions.cancelRemoveVenue,
                     confirmAction: actions.confirmRemoveVenue,
                     itemId: this.props.item.id ? this.props.item.id : null }),
-                this.getNavBar(),
+                _react2.default.createElement(_FormNavBar2.default, {
+                    title: this.getTitle(),
+                    icon: "business",
+                    showRemoveBtn: !this.isNew(),
+                    onValidate: this.onSubmit.bind(this),
+                    onRemove: this.onRemove.bind(this)
+                }),
                 _react2.default.createElement(
                     "form",
                     { id: "venue-form", style: { opacity: this.props.fetching ? 0.3 : 1 },
@@ -57752,6 +57583,115 @@ exports.default = function (_ref) {
             "span",
             { className: "year" },
             (0, _moment2.default)(dateTime).format('YYYY')
+        )
+    );
+};
+
+/***/ }),
+/* 538 */,
+/* 539 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _FixedNavBar = __webpack_require__(49);
+
+var _FixedNavBar2 = _interopRequireDefault(_FixedNavBar);
+
+var _reactMaterialize = __webpack_require__(14);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (_ref) {
+    var title = _ref.title,
+        icon = _ref.icon,
+        showRemoveBtn = _ref.showRemoveBtn,
+        onValidate = _ref.onValidate,
+        onRemove = _ref.onRemove;
+    return _react2.default.createElement(
+        _FixedNavBar2.default,
+        { title: title, icon: icon },
+        showRemoveBtn && _react2.default.createElement(
+            'li',
+            null,
+            _react2.default.createElement(
+                'a',
+                { className: 'red waves-effect', href: '#', onClick: onRemove },
+                _react2.default.createElement(
+                    _reactMaterialize.Icon,
+                    null,
+                    'delete'
+                )
+            )
+        ),
+        _react2.default.createElement(
+            'li',
+            null,
+            _react2.default.createElement(
+                'a',
+                { className: 'blue waves-effect', href: '#', onClick: onValidate },
+                _react2.default.createElement(
+                    _reactMaterialize.Icon,
+                    null,
+                    'done'
+                )
+            )
+        )
+    );
+};
+
+/***/ }),
+/* 540 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDatetime = __webpack_require__(338);
+
+var _reactDatetime2 = _interopRequireDefault(_reactDatetime);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (_ref) {
+    var fieldName = _ref.fieldName,
+        value = _ref.value,
+        onChange = _ref.onChange,
+        error = _ref.error,
+        label = _ref.label;
+    return _react2.default.createElement(
+        "div",
+        { className: "col input-field s12" },
+        _react2.default.createElement(_reactDatetime2.default, {
+            inputProps: { name: fieldName, id: 'input_' + fieldName },
+            dateFormat: "DD.MM.YYYY",
+            timeFormat: "HH:mm",
+            closeOnSelect: true,
+            value: value,
+            onChange: onChange
+        }),
+        _react2.default.createElement(
+            "label",
+            { className: value ? 'active' : '', htmlFor: 'input_' + fieldName,
+                "data-error": error ? error : '' },
+            label
         )
     );
 };
