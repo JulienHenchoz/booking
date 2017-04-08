@@ -7,21 +7,31 @@ const FixedNavBar = ({title, align, children, icon = null, showAddBtn = false, a
     if (icon) {
         iconTag = <Icon>{icon}</Icon>
     }
+
     return (
         <div className="navbar-fixed">
             <Row>
                 <nav>
                     <div className="nav-wrapper">
                         <Col s={12}>
+                            {title &&
+                                <span className="brand-logo center">
+                                    {title}
+                                </span>
+                            }
 
-                        <span className="brand-logo center">
-                            {iconTag}
-                            {title}
-                        </span>
                             {children}
 
+                            <ul id="menu-trigger" className="left">
+                                <li>
+                                    <a data-activates="sidenav_0" href="#" onClick={(e) => {this.preventDefault(); }}>
+                                        <Icon>menu</Icon>
+                                    </a>
+                                </li>
+                            </ul>
+
                             {!children &&
-                            <ul className="right">
+                            <ul id="action-buttons" className="right">
                                 {showAddBtn &&
                                 <li>
                                     <Link className="blue waves-effect" to={addRoute}>

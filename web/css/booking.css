@@ -6785,6 +6785,23 @@ td.rdtYear:hover {
   font-size: 1.2em;
   margin-top: 37px; }
 
+h1 {
+  color: #333;
+  font-size: 3.2em;
+  margin: 0;
+  padding: 20px 10px; }
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 1.8em; } }
+
+@media (max-width: 767px) {
+  .hide-on-small-only {
+    display: none !important; } }
+
+@media (min-width: 767px) {
+  .hide-on-large-only {
+    display: none !important; } }
+
 h4 {
   color: #333; }
 
@@ -6796,7 +6813,13 @@ h4 {
   .navbar-fixed nav {
     right: 0;
     left: 300px;
-    width: auto; } }
+    width: auto; }
+  #menu-trigger {
+    display: none; } }
+
+@media (max-width: 767px) {
+  nav .brand-logo, nav .brand-logo.center {
+    font-size: 1.4em; } }
 
 .side-nav .background img {
   width: 200px;
@@ -6808,6 +6831,9 @@ h4 {
 
 .side-nav .collapsible-body > ul > li > a {
   padding-left: 50px; }
+
+.collection-item.unclickable a {
+  cursor: default; }
 
 .collection-item .row {
   margin: 0; }
@@ -6864,3 +6890,6 @@ nav {
 
 .side-nav .collapsible-header, .side-nav.fixed .collapsible-header {
   padding: 0 32px; }
+
+#action-buttons {
+  margin-top: -1px; }

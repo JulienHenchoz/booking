@@ -95,8 +95,12 @@ class EventsList extends React.Component {
                     <Loader />
                 }
 
-                {this.props.error && !this.prop.fetching &&
-                    <Reload onClick={this.fetchEvents.bind(this)} error={this.props.error} />
+                {this.props.error && !this.props.fetching &&
+                    <Reload onClick={this.onReload.bind(this)} error={this.props.error} />
+                }
+
+                {!this.props.fetching && this.props.items.length === 0 && !this.props.error &&
+                    <Reload onClick={this.onReload.bind(this)} error={l10n.no_events} />
                 }
 
                 {!this.props.fetching && !this.props.error &&

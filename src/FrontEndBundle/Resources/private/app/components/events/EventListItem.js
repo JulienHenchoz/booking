@@ -41,15 +41,15 @@ class EventListItem extends React.Component {
         );
 
         return (
-            <div>
+            <div className={"collection-item " + (!this.props.editLink ? 'unclickable' : '')}>
                 {this.props.editLink &&
-                <Link to={l10n.formatString(routes.EVENTS_EDIT, this.props.id)} className="collection-item" href="#">
+                <Link to={l10n.formatString(routes.EVENTS_EDIT, this.props.id)} href="#">
                     {content}
                 </Link>
                 }
 
                 {!this.props.editLink &&
-                <a href="javascript:;" className="collection-item">
+                <a href="javascript:;">
                     {content}
                 </a>
 

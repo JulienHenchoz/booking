@@ -60,7 +60,7 @@ class VenuesList extends React.Component {
                     <Loader />
                 }
 
-                {this.props.error && !this.prop.fetching &&
+                {this.props.error && !this.prop.fetching  &&
                     <Reload onClick={this.fetchVenues.bind(this)} error={this.props.error} />
                 }
 

@@ -21,7 +21,12 @@ class VenueListItem extends React.Component {
     }
 
     render() {
-        let image = <Icon className="large grey-text">business</Icon>
+        let image = (
+            <div>
+                <Icon className="large grey-text hide-on-small-only">business</Icon>
+                <Icon className="medium grey-text hide-on-large-only">business</Icon>
+            </div>
+        );
         if (this.props.image !== undefined && this.props.image) {
             image = <img className="circle responsive-img" src={this.props.image} />;
         }

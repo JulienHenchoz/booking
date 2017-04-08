@@ -1,8 +1,31 @@
 @import './materialize/materialize';
 @import './react-datetime';
+
 $sideBarWidth: 300px;
 
 $textColor: #333;
+
+h1 {
+  color: $textColor;
+  font-size: 3.2em;
+  @media (max-width: 768px) {
+    font-size: 1.8em;
+  }
+  margin: 0;
+  padding: 20px 10px;
+}
+
+.hide-on-small-only {
+  @media (max-width: 767px) {
+    display: none !important;
+  }
+}
+
+.hide-on-large-only {
+  @media (min-width: 767px) {
+    display: none !important;
+  }
+}
 
 h4 {
   color: $textColor;
@@ -20,11 +43,23 @@ h4 {
     left: $sideBarWidth;
     width: auto;
   }
+
+  #menu-trigger {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  nav .brand-logo {
+    &, &.center {
+      font-size: 1.4em;
+    }
+  }
 }
 
 .side-nav {
   .background img {
-   width: 200px;
+    width: 200px;
     height: auto;
   }
 
@@ -39,6 +74,9 @@ h4 {
 }
 
 .collection-item {
+  &.unclickable a {
+    cursor: default;
+  }
   .row {
     margin: 0;
   }
@@ -97,8 +135,6 @@ nav {
   padding: 5px;
 }
 
-
-
 .datetime-box span {
   display: block;
   font-size: 12px;
@@ -113,4 +149,6 @@ nav {
   padding: 0 32px;
 }
 
-
+#action-buttons {
+  margin-top: -1px;
+}

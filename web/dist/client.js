@@ -9342,6 +9342,7 @@ var FixedNavBar = function FixedNavBar(_ref) {
             icon
         );
     }
+
     return _react2.default.createElement(
         'div',
         { className: 'navbar-fixed' },
@@ -9357,16 +9358,34 @@ var FixedNavBar = function FixedNavBar(_ref) {
                     _react2.default.createElement(
                         _reactMaterialize.Col,
                         { s: 12 },
-                        _react2.default.createElement(
+                        title && _react2.default.createElement(
                             'span',
                             { className: 'brand-logo center' },
-                            iconTag,
                             title
                         ),
                         children,
+                        _react2.default.createElement(
+                            'ul',
+                            { id: 'menu-trigger', className: 'left' },
+                            _react2.default.createElement(
+                                'li',
+                                null,
+                                _react2.default.createElement(
+                                    'a',
+                                    { 'data-activates': 'sidenav_0', href: '#', onClick: function onClick(e) {
+                                            undefined.preventDefault();
+                                        } },
+                                    _react2.default.createElement(
+                                        _reactMaterialize.Icon,
+                                        null,
+                                        'menu'
+                                    )
+                                )
+                            )
+                        ),
                         !children && _react2.default.createElement(
                             'ul',
-                            { className: 'right' },
+                            { id: 'action-buttons', className: 'right' },
                             showAddBtn && _react2.default.createElement(
                                 'li',
                                 null,
@@ -32161,15 +32180,15 @@ var EventListItem = function (_React$Component) {
 
             return _react2.default.createElement(
                 "div",
-                null,
+                { className: "collection-item " + (!this.props.editLink ? 'unclickable' : '') },
                 this.props.editLink && _react2.default.createElement(
                     _reactRouterDom.Link,
-                    { to: _localization2.default.formatString(routes.EVENTS_EDIT, this.props.id), className: "collection-item", href: "#" },
+                    { to: _localization2.default.formatString(routes.EVENTS_EDIT, this.props.id), href: "#" },
                     content
                 ),
                 !this.props.editLink && _react2.default.createElement(
                     "a",
-                    { href: "javascript:;", className: "collection-item" },
+                    { href: "javascript:;" },
                     content
                 )
             );
@@ -32820,7 +32839,8 @@ var EventsList = function (_React$Component) {
                 null,
                 _react2.default.createElement(_FixedNavBar2.default, { title: _localization2.default.incoming_events_title, showAddBtn: true, addRoute: routes.EVENTS_ADD }),
                 this.props.fetching && _react2.default.createElement(_Loader2.default, null),
-                this.props.error && !this.prop.fetching && _react2.default.createElement(_Reload2.default, { onClick: this.fetchEvents.bind(this), error: this.props.error }),
+                this.props.error && !this.props.fetching && _react2.default.createElement(_Reload2.default, { onClick: this.onReload.bind(this), error: this.props.error }),
+                !this.props.fetching && this.props.items.length === 0 && !this.props.error && _react2.default.createElement(_Reload2.default, { onClick: this.onReload.bind(this), error: _localization2.default.no_events }),
                 !this.props.fetching && !this.props.error && body
             );
         }
@@ -32893,9 +32913,9 @@ var MainMenu = function (_React$Component) {
                 null,
                 _react2.default.createElement(
                     _reactMaterialize.SideNav,
-                    { options: { draggable: true }, trigger: _react2.default.createElement(
+                    { options: { draggable: true, closeOnClick: true }, trigger: _react2.default.createElement(
                             'div',
-                            { className: 'hide-on-med-and-up' },
+                            { className: 'hide' },
                             _react2.default.createElement(
                                 _reactMaterialize.Icon,
                                 null,
@@ -33461,9 +33481,18 @@ var VenueListItem = function (_React$Component) {
         key: "render",
         value: function render() {
             var image = _react2.default.createElement(
-                _reactMaterialize.Icon,
-                { className: "large grey-text" },
-                "business"
+                "div",
+                null,
+                _react2.default.createElement(
+                    _reactMaterialize.Icon,
+                    { className: "large grey-text hide-on-small-only" },
+                    "business"
+                ),
+                _react2.default.createElement(
+                    _reactMaterialize.Icon,
+                    { className: "medium grey-text hide-on-large-only" },
+                    "business"
+                )
             );
             if (this.props.image !== undefined && this.props.image) {
                 image = _react2.default.createElement("img", { className: "circle responsive-img", src: this.props.image });
@@ -57660,37 +57689,56 @@ exports.default = function (_ref) {
         onValidate = _ref.onValidate,
         onRemove = _ref.onRemove;
     return _react2.default.createElement(
-        _FixedNavBar2.default,
-        { title: title, icon: icon },
+        'div',
+        null,
         _react2.default.createElement(
-            'ul',
-            { className: 'right' },
-            showRemoveBtn && _react2.default.createElement(
-                'li',
-                null,
-                _react2.default.createElement(
-                    'a',
-                    { className: 'red waves-effect', href: '#', onClick: onRemove },
-                    _react2.default.createElement(
-                        _reactMaterialize.Icon,
-                        null,
-                        'delete'
-                    )
-                )
-            ),
+            _FixedNavBar2.default,
+            { icon: icon },
             _react2.default.createElement(
-                'li',
-                null,
-                _react2.default.createElement(
-                    'a',
-                    { className: 'blue waves-effect', href: '#', onClick: onValidate },
+                'ul',
+                { id: 'action-buttons', className: 'right' },
+                showRemoveBtn && _react2.default.createElement(
+                    'li',
+                    null,
                     _react2.default.createElement(
-                        _reactMaterialize.Icon,
-                        null,
-                        'done'
+                        'a',
+                        { className: 'red waves-effect', href: '#', onClick: onRemove },
+                        _react2.default.createElement(
+                            _reactMaterialize.Icon,
+                            null,
+                            'delete'
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    'li',
+                    null,
+                    _react2.default.createElement(
+                        'a',
+                        { className: 'blue waves-effect', href: '#', onClick: onValidate },
+                        _react2.default.createElement(
+                            _reactMaterialize.Icon,
+                            null,
+                            'done'
+                        )
                     )
                 )
             )
+        ),
+        _react2.default.createElement(
+            'h1',
+            null,
+            _react2.default.createElement(
+                _reactMaterialize.Icon,
+                { className: 'right medium hide-on-small-only' },
+                icon
+            ),
+            _react2.default.createElement(
+                _reactMaterialize.Icon,
+                { className: 'right small hide-on-large-only' },
+                icon
+            ),
+            title
         )
     );
 };
