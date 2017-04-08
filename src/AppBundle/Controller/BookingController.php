@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Tests\Util\Validator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class BookingController
@@ -82,6 +83,36 @@ class BookingController extends AbstractApiController
      */
     public function newAction(Request $request) {
         return parent::newAction($request);
+    }
+
+    /**
+     * @Route("/api/bookings/updateStatus/{id}", name="api_booking_update_status")
+     * @Method({"POST"})
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function updateStatusAction($id, Request $request) {
+        /** @var Booking $object */
+        $object = $this->getRepository()->find($id);
+        if ($object) {
+            $statusCode = Response::HTTP_OK;
+
+            $object->setShowedUp(!$object->isShowedUp());
+            $this->persistObject($object);
+            $resultData = [
+                'success' => true,
+                'status' => $object->isShowedUp()
+            ];
+        } else {
+            $statusCode = Response::HTTP_BAD_REQUEST;
+
+            $resultData = [
+                'success' => false,
+                'errors' => ['This record does not exist.']
+            ];
+        }
+        return new JsonResponse($resultData, $statusCode);
     }
 
 

@@ -2,7 +2,7 @@ import React from "react";
 import FixedNavBar from '../menu/FixedNavBar';
 import {Icon} from 'react-materialize';
 
-export default ({title, icon, showRemoveBtn, onValidate, onRemove}) => (
+export default ({title, subtitle, icon, showRemoveBtn, onValidate, onRemove}) => (
     <div>
         <FixedNavBar icon={icon}>
             <ul id="action-buttons" className="right">
@@ -23,9 +23,10 @@ export default ({title, icon, showRemoveBtn, onValidate, onRemove}) => (
         </FixedNavBar>
 
         <h1>
-            <Icon className="right medium hide-on-small-only">{icon}</Icon>
-            <Icon className="right small hide-on-large-only">{icon}</Icon>
             {title}
+            {subtitle &&
+            <span>{subtitle}</span>
+            }
         </h1>
     </div>
 );

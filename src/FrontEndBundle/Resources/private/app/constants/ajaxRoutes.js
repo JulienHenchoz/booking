@@ -17,3 +17,4 @@ export const BOOKING_EDIT = '/api/bookings/edit/{0}';
 export const BOOKINGS_GET = '/api/bookings/get';
 export const BOOKINGS_GET_BY_EVENT = '/api/bookings/getByEvent/{0}';
 export const BOOKING_GET = '/api/bookings/get/{0}';
+export const CHANGE_BOOKING_STATUS = '/api/bookings/updateStatus/{0}';

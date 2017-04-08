@@ -6793,6 +6793,9 @@ h1 {
   @media (max-width: 768px) {
     h1 {
       font-size: 1.8em; } }
+  h1 span {
+    font-size: 0.6em;
+    display: block; }
 
 @media (max-width: 767px) {
   .hide-on-small-only {
@@ -6833,6 +6836,7 @@ h4 {
   padding-left: 50px; }
 
 .collection .collection-item {
+  transition: box-shadow 1s;
   padding: 15px 20px; }
   .collection .collection-item h4 {
     margin-top: 0;
@@ -6844,6 +6848,8 @@ h4 {
     min-height: 77px; }
   .collection .collection-item .row {
     margin: 0; }
+  .collection .collection-item.status-ok {
+    box-shadow: inset 5px 0px 0 0 #4CAF50; }
   .collection .collection-item .collection-image img {
     max-width: 200px;
     width: 100%; }
@@ -6940,10 +6946,6 @@ nav {
 
 .progress .determinate {
   transition: width 2s; }
-
-.booking-loader .preloader-wrapper {
-  position: relative;
-  margin-left: 0; }
 
 .bookings-page .reload-block {
   height: auto; }

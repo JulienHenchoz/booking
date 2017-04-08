@@ -116,7 +116,7 @@ class BookingForm extends React.Component {
      * @returns {boolean}
      */
     isNew() {
-        return this.props.item.id === undefined;
+        return this.props.item === null || this.props.item.id === undefined;
     }
 
     /**
@@ -127,12 +127,18 @@ class BookingForm extends React.Component {
     getTitle() {
         let header = '';
         if (!this.isNew()) {
-            header = l10n.formatString(l10n.editing, this.state.fields.name);
+            header = l10n.formatString(l10n.editing, this.getFullName());
         }
         else if (!this.props.fetching) {
             header = l10n.new_booking;
         }
         return header;
+    }
+
+    getSubtitle() {
+        if (this.props.eventItem) {
+            return this.props.eventItem.name + ' / ' + moment(this.props.eventItem.startDate).format('D MMM YYYY');
+        }
     }
 
     /**
@@ -161,12 +167,11 @@ class BookingForm extends React.Component {
         return {
             firstName: '',
             lastName: '',
-            nbExpected: 1,
+            nbExpected: '',
             email: '',
             phone: '',
-            subscribedToNewsletter: false,
-            showedUp: false,
-            subscribeDate: moment(),
+            subscribedToNewsletter: '',
+            showedUp: '',
         };
     }
 
@@ -200,6 +205,12 @@ class BookingForm extends React.Component {
         if (this.props.match.params.bookingId !== undefined) {
             this.props.dispatch(actions.fetchBooking(this.props.match.params.bookingId));
         }
+
+        console.log(this.props.eventItem);
+        if (!this.props.eventItem && this.props.match.params.eventId !== undefined) {
+            this.props.dispatch(actions.fetchBookingEvent(this.props.match.params.eventId));
+        }
+
     }
 
     /**
@@ -216,12 +227,22 @@ class BookingForm extends React.Component {
     componentWillReceiveProps(nextProps) {
         // Update only if nextProps comes with a valid item, so the form never displays any "null" value
         if (nextProps.item !== undefined && nextProps.item !== null && !utils.objectIsEmpty(nextProps.item)) {
+            nextProps.item.subscribeDate = moment().format('DD.MM.YYYY HH:mm');
+            nextProps.item.event = this.props.eventItem ? this.props.eventItem.id : 0;
             this.setState({
                 venues: nextProps.venues,
                 fields: nextProps.item,
                 errors: nextProps.errors || this.getEmptyFields()
             });
         }
+    }
+
+    getFullName() {
+        let fullName = '';
+        if (this.state.fields) {
+            fullName = this.state.fields.lastName.toUpperCase() + ' ' + this.state.fields.firstName
+        }
+        return fullName;
     }
 
     /**
@@ -236,26 +257,27 @@ class BookingForm extends React.Component {
                         pathname: l10n.formatString(routes.BOOKINGS_LIST, this.props.eventItem.id)
                     }}/>
                 }
-                {this.props.fetching &&
+                {this.props.fetching || this.props.fetchingEvent &&
                     <Loader />
                 }
 
                 <ConfirmModal title={l10n.delete_booking_title}
-                              content={l10n.formatString(l10n.delete_booking_content, this.props.item.name)}
+                              content={l10n.formatString(l10n.delete_booking_content, this.getFullName())}
                               active={this.props.removeModal}
                               dispatch={this.props.dispatch} cancelAction={actions.cancelRemoveBooking}
                               confirmAction={actions.confirmRemoveBooking}
-                              itemId={this.props.item.id ? this.props.item.id : null}/>
+                              itemId={this.props.item ? this.props.item.id : null}/>
 
                 <FormNavBar
                     title={this.getTitle()}
+                    subtitle={this.getSubtitle()}
                     icon="email"
                     showRemoveBtn={!this.isNew()}
                     onValidate={this.onSubmit.bind(this)}
                     onRemove={this.onRemove.bind(this)}
                 />
 
-                <form id="booking-form" style={{opacity: this.props.fetching ? 0.3 : 1}}
+                <form id="booking-form" style={{opacity: this.props.fetching || this.props.fetchingEvent ? 0.3 : 1}}
                       onSubmit={this.onSubmit.bind(this)}>
                     <Row>
                         {this.getTextInput('firstName')}
@@ -263,6 +285,8 @@ class BookingForm extends React.Component {
                         {this.getTextInput('nbExpected')}
                         {this.getTextInput('email')}
                         {this.getTextInput('phone')}
+                        <input type="hidden" name="subscribeDate" value={this.state.fields.subscribeDate ? this.state.fields.subscribeDate : ''} />
+                        <input type="hidden" name="event" value={this.state.fields.event ? this.state.fields.event : 0} />
 
                     </Row>
                     <Row>
@@ -283,7 +307,8 @@ export default connect((state) => {
         eventItem: state.bookings.eventItem,
         venues: state.venues.items,
         dispatch: state.bookings.dispatch,
-        fetching: state.bookings.fetching || state.venues.fetching,
+        fetching: state.bookings.fetching,
+        fetchingEvent: state.bookings.fetchingEvent,
         errors: state.bookings.formErrors,
         saveSuccess: state.bookings.saveSuccess,
         removeModal: state.bookings.removeModal

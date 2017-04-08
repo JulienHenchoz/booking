@@ -44,6 +44,9 @@ export default {
     booking_fetch_error: 'Une erreur est survenue lors de la récupération de la réservation.',
     bookings_event_fetch_error: 'Impossible de récupérer les détails de l\'événement.',
 
+    change_booking_status_error: 'Impossible de changer le statut de la réservation.',
+    change_booking_status_success: 'Statut de la réservation modifié avec succès !',
+
     no_events: 'Aucun événement à afficher pour le moment.',
     no_bookings: 'Aucune réservation pour le moment.',
 

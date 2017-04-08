@@ -22,42 +22,36 @@ class BookingListItem extends React.Component {
         super(props);
     }
 
-    render() {
-        let image = <Icon className="large grey-text">booking</Icon>
-        if (this.props.image !== undefined && this.props.image) {
-            image = <img className="circle responsive-img" src={this.props.image}/>;
-        }
+    onChangeStatus(e) {
+        e.preventDefault();
+        this.props.dispatch(actions.changeStatus(this.props.id));
+    }
 
+    render() {
         return (
-            <div className="collection-item avatar unclickable">
+            <div className={"collection-item avatar unclickable " + (this.props.showedUp ? 'status-ok' : '')}>
                 <div className="datetime-box booking circle">
                     <span className="month-day">{this.props.nbExpected}</span>
                     <span className="year">{l10n.fields.bookings.persons}</span>
                 </div>
 
-                <h4>{this.props.lastName.toUpperCase()} {this.props.firstName}</h4>
-                <p>{moment(this.props.subscribeDate).format('D MMM YYYY à HH:mm')}</p>
+                <a href="#" onClick={this.onChangeStatus.bind(this)}>
+
+                    <h4>{this.props.lastName.toUpperCase()} {this.props.firstName}</h4>
+                    <p>{moment(this.props.subscribeDate).format('D MMM YYYY à HH:mm')}</p>
+                </a>
 
                 <FixedActionButton>
                     {this.props.editLink &&
                     <li>
                         <Link
                             className="btn-floating blue btn-flat"
-                            to={l10n.formatString(routes.BOOKINGS_EDIT, this.props.id)}
+                            to={l10n.formatString(routes.BOOKINGS_EDIT, this.props.eventItem.id, this.props.id)}
                             href="#">
                             <Icon>mode_edit</Icon>
                         </Link>
                     </li>
                     }
-
-                    <li>
-                        <Link
-                            className="btn-floating green btn-flat"
-                            to={l10n.formatString(routes.BOOKINGS_EDIT, this.props.id)}
-                            href="#">
-                            <Icon>done</Icon>
-                        </Link>
-                    </li>
                 </FixedActionButton>
 
 

@@ -34,7 +34,7 @@ class BookingsList extends React.Component {
     componentWillMount() {
         let eventId = this.props.match.params.eventId !== undefined ? this.props.match.params.eventId : null;
         if (eventId) {
-            this.props.dispatch(actions.enterBookingsList(eventId));
+            this.props.dispatch(actions.fetchBookingEvent(eventId));
             this.props.dispatch(actions.fetchBookings(eventId));
         }
     }
@@ -129,9 +129,12 @@ class BookingsList extends React.Component {
 
         return (
             <div className="bookings-page">
-                <FixedNavBar title={l10n.bookings_title} showAddBtn={true} addRoute={l10n.formatString(routes.BOOKINGS_ADD, this.props.currentEvent)}/>
+                <FixedNavBar
+                    title={l10n.bookings_title}
+                    showAddBtn={true}
+                    addRoute={l10n.formatString(routes.BOOKINGS_ADD, this.props.eventItem ? this.props.eventItem.id : '')}/>
 
-                {!this.props.fetchingEvent && this.props.eventItem &&
+                {!this.props.fetchingEvent &&!this.props.fetching && this.props.eventItem &&
                 <div>
                     <h1>
                         {this.props.eventItem.name}
@@ -160,7 +163,7 @@ class BookingsList extends React.Component {
                         </Col>
                         <Col s={4} className="highlight-box">
                             <span className={"number " + this.getOccupancyClass()}>
-                                <CountUp start={0} end={this.props.eventItem.seatsLeft}/>
+                                <CountUp start={0} end={this.props.eventItem.seatsLeft} />
                             </span>
                             <span className="label">{l10n.hightlight_seats_left}</span>
                         </Col>

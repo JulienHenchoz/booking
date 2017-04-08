@@ -13,6 +13,11 @@ h1 {
   }
   margin: 0;
   padding: 20px 10px;
+
+  span {
+    font-size: 0.6em;
+    display: block;
+  }
 }
 
 .hide-on-small-only {
@@ -75,6 +80,7 @@ h4 {
 
 .collection {
   .collection-item {
+    transition: box-shadow 1s;
     padding: 15px 20px;
     h4 {
       margin-top: 0;
@@ -90,6 +96,11 @@ h4 {
     .row {
       margin: 0;
     }
+
+    &.status-ok {
+      box-shadow: inset 5px 0px 0 0 color('green', 'base');
+    }
+
     .collection-image {
       img {
         max-width: 200px;
@@ -223,13 +234,6 @@ nav {
 .progress {
   .determinate {
     transition: width 2s;
-  }
-}
-
-.booking-loader {
-  .preloader-wrapper {
-    position: relative;
-    margin-left: 0;
   }
 }
 

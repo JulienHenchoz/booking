@@ -1,11 +1,6 @@
 import l10n from '../l10n/localization';
 
 export default {
-    subscribeDate: {
-        presence: {
-            message: l10n.validation.required
-        },
-    },
     firstName: {
         presence: {
             message: l10n.validation.required

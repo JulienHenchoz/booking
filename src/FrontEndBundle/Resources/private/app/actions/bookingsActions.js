@@ -21,7 +21,6 @@ export function savingBooking() {
     };
 }
 
-
 export function cancelRemoveBooking() {
     return {
         type: types.CANCEL_REMOVE_BOOKING,
@@ -125,6 +124,56 @@ export function validationError(errors) {
     };
 }
 
+export function changingStatus(bookingId) {
+    return {
+        type: types.CHANGING_BOOKING_STATUS,
+        payload: bookingId
+    };
+}
+
+export function changeStatusError(bookingId) {
+    utils.toastError(l10n.change_booking_status_error);
+    return {
+        type: types.CHANGE_BOOKING_STATUS_ERROR,
+        payload: bookingId
+    };
+}
+
+export function changeStatusSuccess(bookingId, newStatus) {
+    utils.toastSuccess(l10n.change_booking_status_success);
+    return {
+        type: types.CHANGE_BOOKING_STATUS_SUCCESS,
+        payload: {
+            bookingId: bookingId,
+            newStatus: newStatus
+        }
+    };
+}
+
+export function changeStatus(bookingId) {
+    return dispatch => {
+        dispatch(changingStatus());
+        // TODO : Dispatch an error if the item has no id
+        fetch(l10n.formatString(ajaxRoutes.CHANGE_BOOKING_STATUS, bookingId), {
+            method: "POST",
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                if (json.success === true) {
+                    dispatch(changeStatusSuccess(bookingId, json.status));
+                }
+                else {
+                    dispatch(changeStatusError(bookingId));
+                }
+            })
+            .catch(function() {
+                dispatch(changeStatusError(bookingId));
+            });
+    }
+}
+
 export function addBooking(form) {
     return dispatch => {
         dispatch(savingBooking());
@@ -201,7 +250,7 @@ export function updateBooking(id, form) {
     }
 }
 
-export function enterBookingsList(eventId) {
+export function fetchBookingEvent(eventId) {
     return dispatch => {
         dispatch(loadingBookingsEvent());
         fetch(l10n.formatString(ajaxRoutes.EVENT_GET, eventId))

@@ -8,5 +8,5 @@ export const EVENTS_ADD = '/events/add/';
 export const EVENTS_EDIT = '/events/show/{0}';
 
 export const BOOKINGS_LIST = '/bookings/{0}';
-export const BOOKINGS_ADD = '/bookings/{0}/add/';
-export const BOOKINGS_EDIT = '/bookings/show/{0}';
+export const BOOKINGS_ADD = '/bookings/event/{0}/add/';
+export const BOOKINGS_EDIT = '/bookings/event/{0}/show/{1}';

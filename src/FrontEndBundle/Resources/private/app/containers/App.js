@@ -38,7 +38,7 @@ class App extends React.Component {
 
                         <Route exact={true} path={l10n.formatString(routes.BOOKINGS_LIST, ':eventId')} component={BookingsList}/>
                         <Route exact={true} path={l10n.formatString(routes.BOOKINGS_ADD, ':eventId')} component={BookingsForm}/>
-                        <Route exact={true} path={l10n.formatString(routes.BOOKINGS_EDIT, ':bookingId')} component={BookingsForm}/>
+                        <Route exact={true} path={l10n.formatString(routes.BOOKINGS_EDIT, ':eventId', ':bookingId')} component={BookingsForm}/>
 
                     </main>
 

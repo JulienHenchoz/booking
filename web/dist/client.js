@@ -6847,8 +6847,8 @@ var EVENTS_ADD = exports.EVENTS_ADD = '/events/add/';
 var EVENTS_EDIT = exports.EVENTS_EDIT = '/events/show/{0}';
 
 var BOOKINGS_LIST = exports.BOOKINGS_LIST = '/bookings/{0}';
-var BOOKINGS_ADD = exports.BOOKINGS_ADD = '/bookings/{0}/add/';
-var BOOKINGS_EDIT = exports.BOOKINGS_EDIT = '/bookings/show/{0}';
+var BOOKINGS_ADD = exports.BOOKINGS_ADD = '/bookings/event/{0}/add/';
+var BOOKINGS_EDIT = exports.BOOKINGS_EDIT = '/bookings/event/{0}/show/{1}';
 
 /***/ }),
 /* 24 */
@@ -9538,6 +9538,10 @@ var BOOKINGS_GET_ERROR = exports.BOOKINGS_GET_ERROR = 'BOOKINGS_GET_ERROR';
 var BOOKING_GET_ERROR = exports.BOOKING_GET_ERROR = 'BOOKING_GET_ERROR';
 var ENTER_BOOKINGS_LIST = exports.ENTER_BOOKINGS_LIST = 'ENTER_BOOKINGS_LIST';
 var LEAVE_BOOKINGS_LIST = exports.LEAVE_BOOKINGS_LIST = 'LEAVE_BOOKINGS_LIST';
+var CHANGE_BOOKING_STATUS = exports.CHANGE_BOOKING_STATUS = 'CHANGE_BOOKING_STATUS';
+var CHANGE_BOOKING_STATUS_SUCCESS = exports.CHANGE_BOOKING_STATUS_SUCCESS = 'CHANGE_BOOKING_STATUS_SUCCESS';
+var CHANGE_BOOKING_STATUS_ERROR = exports.CHANGE_BOOKING_STATUS_ERROR = 'CHANGE_BOOKING_STATUS_ERROR';
+var CHANGING_BOOKING_STATUS = exports.CHANGING_BOOKING_STATUS = 'CHANGING_BOOKING_STATUS';
 
 /***/ }),
 /* 52 */
@@ -14700,6 +14704,7 @@ var BOOKING_EDIT = exports.BOOKING_EDIT = '/api/bookings/edit/{0}';
 var BOOKINGS_GET = exports.BOOKINGS_GET = '/api/bookings/get';
 var BOOKINGS_GET_BY_EVENT = exports.BOOKINGS_GET_BY_EVENT = '/api/bookings/getByEvent/{0}';
 var BOOKING_GET = exports.BOOKING_GET = '/api/bookings/get/{0}';
+var CHANGE_BOOKING_STATUS = exports.CHANGE_BOOKING_STATUS = '/api/bookings/updateStatus/{0}';
 
 /***/ }),
 /* 103 */
@@ -32034,7 +32039,7 @@ var App = function (_React$Component) {
                         _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.EVENTS_EDIT, ':eventId'), component: _EventsForm2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: _localization2.default.formatString(routes.BOOKINGS_LIST, ':eventId'), component: _BookingsList2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: _localization2.default.formatString(routes.BOOKINGS_ADD, ':eventId'), component: _BookingsForm2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: _localization2.default.formatString(routes.BOOKINGS_EDIT, ':bookingId'), component: _BookingsForm2.default })
+                        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: _localization2.default.formatString(routes.BOOKINGS_EDIT, ':eventId', ':bookingId'), component: _BookingsForm2.default })
                     )
                 )
             );
@@ -33801,6 +33806,9 @@ exports.default = {
     bookings_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des réservations.',
     booking_fetch_error: 'Une erreur est survenue lors de la récupération de la réservation.',
     bookings_event_fetch_error: 'Impossible de récupérer les détails de l\'événement.',
+
+    change_booking_status_error: 'Impossible de changer le statut de la réservation.',
+    change_booking_status_success: 'Statut de la réservation modifié avec succès !',
 
     no_events: 'Aucun événement à afficher pour le moment.',
     no_bookings: 'Aucune réservation pour le moment.',
@@ -57799,6 +57807,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = function (_ref) {
     var title = _ref.title,
+        subtitle = _ref.subtitle,
         icon = _ref.icon,
         showRemoveBtn = _ref.showRemoveBtn,
         onValidate = _ref.onValidate,
@@ -57843,17 +57852,12 @@ exports.default = function (_ref) {
         _react2.default.createElement(
             'h1',
             null,
-            _react2.default.createElement(
-                _reactMaterialize.Icon,
-                { className: 'right medium hide-on-small-only' },
-                icon
-            ),
-            _react2.default.createElement(
-                _reactMaterialize.Icon,
-                { className: 'right small hide-on-large-only' },
-                icon
-            ),
-            title
+            title,
+            subtitle && _react2.default.createElement(
+                'span',
+                null,
+                subtitle
+            )
         )
     );
 };
@@ -58160,10 +58164,14 @@ exports.removeSuccess = removeSuccess;
 exports.removeError = removeError;
 exports.getError = getError;
 exports.validationError = validationError;
+exports.changingStatus = changingStatus;
+exports.changeStatusError = changeStatusError;
+exports.changeStatusSuccess = changeStatusSuccess;
+exports.changeStatus = changeStatus;
 exports.addBooking = addBooking;
 exports.confirmRemoveBooking = confirmRemoveBooking;
 exports.updateBooking = updateBooking;
-exports.enterBookingsList = enterBookingsList;
+exports.fetchBookingEvent = fetchBookingEvent;
 exports.receiveBookingsEvent = receiveBookingsEvent;
 exports.leaveBookingsList = leaveBookingsList;
 exports.fetchBookings = fetchBookings;
@@ -58309,6 +58317,52 @@ function validationError(errors) {
     };
 }
 
+function changingStatus(bookingId) {
+    return {
+        type: types.CHANGING_BOOKING_STATUS,
+        payload: bookingId
+    };
+}
+
+function changeStatusError(bookingId) {
+    utils.toastError(_localization2.default.change_booking_status_error);
+    return {
+        type: types.CHANGE_BOOKING_STATUS_ERROR,
+        payload: bookingId
+    };
+}
+
+function changeStatusSuccess(bookingId, newStatus) {
+    utils.toastSuccess(_localization2.default.change_booking_status_success);
+    return {
+        type: types.CHANGE_BOOKING_STATUS_SUCCESS,
+        payload: {
+            bookingId: bookingId,
+            newStatus: newStatus
+        }
+    };
+}
+
+function changeStatus(bookingId) {
+    return function (dispatch) {
+        dispatch(changingStatus());
+        // TODO : Dispatch an error if the item has no id
+        fetch(_localization2.default.formatString(ajaxRoutes.CHANGE_BOOKING_STATUS, bookingId), {
+            method: "POST"
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            if (json.success === true) {
+                dispatch(changeStatusSuccess(bookingId, json.status));
+            } else {
+                dispatch(changeStatusError(bookingId));
+            }
+        }).catch(function () {
+            dispatch(changeStatusError(bookingId));
+        });
+    };
+}
+
 function addBooking(form) {
     return function (dispatch) {
         dispatch(savingBooking());
@@ -58372,7 +58426,7 @@ function updateBooking(id, form) {
     };
 }
 
-function enterBookingsList(eventId) {
+function fetchBookingEvent(eventId) {
     return function (dispatch) {
         dispatch(loadingBookingsEvent());
         fetch(_localization2.default.formatString(ajaxRoutes.EVENT_GET, eventId)).then(function (response) {
@@ -58496,20 +58550,17 @@ var BookingListItem = function (_React$Component) {
     }
 
     _createClass(BookingListItem, [{
+        key: "onChangeStatus",
+        value: function onChangeStatus(e) {
+            e.preventDefault();
+            this.props.dispatch(actions.changeStatus(this.props.id));
+        }
+    }, {
         key: "render",
         value: function render() {
-            var image = _react2.default.createElement(
-                _reactMaterialize.Icon,
-                { className: "large grey-text" },
-                "booking"
-            );
-            if (this.props.image !== undefined && this.props.image) {
-                image = _react2.default.createElement("img", { className: "circle responsive-img", src: this.props.image });
-            }
-
             return _react2.default.createElement(
                 "div",
-                { className: "collection-item avatar unclickable" },
+                { className: "collection-item avatar unclickable " + (this.props.showedUp ? 'status-ok' : '') },
                 _react2.default.createElement(
                     "div",
                     { className: "datetime-box booking circle" },
@@ -58525,16 +58576,20 @@ var BookingListItem = function (_React$Component) {
                     )
                 ),
                 _react2.default.createElement(
-                    "h4",
-                    null,
-                    this.props.lastName.toUpperCase(),
-                    " ",
-                    this.props.firstName
-                ),
-                _react2.default.createElement(
-                    "p",
-                    null,
-                    (0, _moment2.default)(this.props.subscribeDate).format('D MMM YYYY à HH:mm')
+                    "a",
+                    { href: "#", onClick: this.onChangeStatus.bind(this) },
+                    _react2.default.createElement(
+                        "h4",
+                        null,
+                        this.props.lastName.toUpperCase(),
+                        " ",
+                        this.props.firstName
+                    ),
+                    _react2.default.createElement(
+                        "p",
+                        null,
+                        (0, _moment2.default)(this.props.subscribeDate).format('D MMM YYYY à HH:mm')
+                    )
                 ),
                 _react2.default.createElement(
                     _FixedActionButton2.default,
@@ -58546,28 +58601,12 @@ var BookingListItem = function (_React$Component) {
                             _reactRouterDom.Link,
                             {
                                 className: "btn-floating blue btn-flat",
-                                to: _localization2.default.formatString(routes.BOOKINGS_EDIT, this.props.id),
+                                to: _localization2.default.formatString(routes.BOOKINGS_EDIT, this.props.eventItem.id, this.props.id),
                                 href: "#" },
                             _react2.default.createElement(
                                 _reactMaterialize.Icon,
                                 null,
                                 "mode_edit"
-                            )
-                        )
-                    ),
-                    _react2.default.createElement(
-                        "li",
-                        null,
-                        _react2.default.createElement(
-                            _reactRouterDom.Link,
-                            {
-                                className: "btn-floating green btn-flat",
-                                to: _localization2.default.formatString(routes.BOOKINGS_EDIT, this.props.id),
-                                href: "#" },
-                            _react2.default.createElement(
-                                _reactMaterialize.Icon,
-                                null,
-                                "done"
                             )
                         )
                     )
@@ -58778,7 +58817,7 @@ var BookingForm = function (_React$Component) {
     }, {
         key: "isNew",
         value: function isNew() {
-            return this.props.item.id === undefined;
+            return this.props.item === null || this.props.item.id === undefined;
         }
 
         /**
@@ -58792,11 +58831,18 @@ var BookingForm = function (_React$Component) {
         value: function getTitle() {
             var header = '';
             if (!this.isNew()) {
-                header = _localization2.default.formatString(_localization2.default.editing, this.state.fields.name);
+                header = _localization2.default.formatString(_localization2.default.editing, this.getFullName());
             } else if (!this.props.fetching) {
                 header = _localization2.default.new_booking;
             }
             return header;
+        }
+    }, {
+        key: "getSubtitle",
+        value: function getSubtitle() {
+            if (this.props.eventItem) {
+                return this.props.eventItem.name + ' / ' + (0, _moment2.default)(this.props.eventItem.startDate).format('D MMM YYYY');
+            }
         }
 
         /**
@@ -58831,12 +58877,11 @@ var BookingForm = function (_React$Component) {
             return {
                 firstName: '',
                 lastName: '',
-                nbExpected: 1,
+                nbExpected: '',
                 email: '',
                 phone: '',
-                subscribedToNewsletter: false,
-                showedUp: false,
-                subscribeDate: (0, _moment2.default)()
+                subscribedToNewsletter: '',
+                showedUp: ''
             };
         }
 
@@ -58882,6 +58927,11 @@ var BookingForm = function (_React$Component) {
             if (this.props.match.params.bookingId !== undefined) {
                 this.props.dispatch(actions.fetchBooking(this.props.match.params.bookingId));
             }
+
+            console.log(this.props.eventItem);
+            if (!this.props.eventItem && this.props.match.params.eventId !== undefined) {
+                this.props.dispatch(actions.fetchBookingEvent(this.props.match.params.eventId));
+            }
         }
 
         /**
@@ -58904,12 +58954,23 @@ var BookingForm = function (_React$Component) {
         value: function componentWillReceiveProps(nextProps) {
             // Update only if nextProps comes with a valid item, so the form never displays any "null" value
             if (nextProps.item !== undefined && nextProps.item !== null && !utils.objectIsEmpty(nextProps.item)) {
+                nextProps.item.subscribeDate = (0, _moment2.default)().format('DD.MM.YYYY HH:mm');
+                nextProps.item.event = this.props.eventItem ? this.props.eventItem.id : 0;
                 this.setState({
                     venues: nextProps.venues,
                     fields: nextProps.item,
                     errors: nextProps.errors || this.getEmptyFields()
                 });
             }
+        }
+    }, {
+        key: "getFullName",
+        value: function getFullName() {
+            var fullName = '';
+            if (this.state.fields) {
+                fullName = this.state.fields.lastName.toUpperCase() + ' ' + this.state.fields.firstName;
+            }
+            return fullName;
         }
 
         /**
@@ -58926,15 +58987,16 @@ var BookingForm = function (_React$Component) {
                 this.props.saveSuccess && _react2.default.createElement(_reactRouterDom.Redirect, { to: {
                         pathname: _localization2.default.formatString(routes.BOOKINGS_LIST, this.props.eventItem.id)
                     } }),
-                this.props.fetching && _react2.default.createElement(_Loader2.default, null),
+                this.props.fetching || this.props.fetchingEvent && _react2.default.createElement(_Loader2.default, null),
                 _react2.default.createElement(_ConfirmModal2.default, { title: _localization2.default.delete_booking_title,
-                    content: _localization2.default.formatString(_localization2.default.delete_booking_content, this.props.item.name),
+                    content: _localization2.default.formatString(_localization2.default.delete_booking_content, this.getFullName()),
                     active: this.props.removeModal,
                     dispatch: this.props.dispatch, cancelAction: actions.cancelRemoveBooking,
                     confirmAction: actions.confirmRemoveBooking,
-                    itemId: this.props.item.id ? this.props.item.id : null }),
+                    itemId: this.props.item ? this.props.item.id : null }),
                 _react2.default.createElement(_FormNavBar2.default, {
                     title: this.getTitle(),
+                    subtitle: this.getSubtitle(),
                     icon: "email",
                     showRemoveBtn: !this.isNew(),
                     onValidate: this.onSubmit.bind(this),
@@ -58942,7 +59004,7 @@ var BookingForm = function (_React$Component) {
                 }),
                 _react2.default.createElement(
                     "form",
-                    { id: "booking-form", style: { opacity: this.props.fetching ? 0.3 : 1 },
+                    { id: "booking-form", style: { opacity: this.props.fetching || this.props.fetchingEvent ? 0.3 : 1 },
                         onSubmit: this.onSubmit.bind(this) },
                     _react2.default.createElement(
                         _reactMaterialize.Row,
@@ -58951,7 +59013,9 @@ var BookingForm = function (_React$Component) {
                         this.getTextInput('lastName'),
                         this.getTextInput('nbExpected'),
                         this.getTextInput('email'),
-                        this.getTextInput('phone')
+                        this.getTextInput('phone'),
+                        _react2.default.createElement("input", { type: "hidden", name: "subscribeDate", value: this.state.fields.subscribeDate ? this.state.fields.subscribeDate : '' }),
+                        _react2.default.createElement("input", { type: "hidden", name: "event", value: this.state.fields.event ? this.state.fields.event : 0 })
                     ),
                     _react2.default.createElement(
                         _reactMaterialize.Row,
@@ -58974,7 +59038,8 @@ exports.default = (0, _reactRedux.connect)(function (state) {
         eventItem: state.bookings.eventItem,
         venues: state.venues.items,
         dispatch: state.bookings.dispatch,
-        fetching: state.bookings.fetching || state.venues.fetching,
+        fetching: state.bookings.fetching,
+        fetchingEvent: state.bookings.fetchingEvent,
         errors: state.bookings.formErrors,
         saveSuccess: state.bookings.saveSuccess,
         removeModal: state.bookings.removeModal
@@ -59081,7 +59146,7 @@ var BookingsList = function (_React$Component) {
         value: function componentWillMount() {
             var eventId = this.props.match.params.eventId !== undefined ? this.props.match.params.eventId : null;
             if (eventId) {
-                this.props.dispatch(actions.enterBookingsList(eventId));
+                this.props.dispatch(actions.fetchBookingEvent(eventId));
                 this.props.dispatch(actions.fetchBookings(eventId));
             }
         }
@@ -59187,8 +59252,11 @@ var BookingsList = function (_React$Component) {
             return _react2.default.createElement(
                 "div",
                 { className: "bookings-page" },
-                _react2.default.createElement(_FixedNavBar2.default, { title: _localization2.default.bookings_title, showAddBtn: true, addRoute: _localization2.default.formatString(routes.BOOKINGS_ADD, this.props.currentEvent) }),
-                !this.props.fetchingEvent && this.props.eventItem && _react2.default.createElement(
+                _react2.default.createElement(_FixedNavBar2.default, {
+                    title: _localization2.default.bookings_title,
+                    showAddBtn: true,
+                    addRoute: _localization2.default.formatString(routes.BOOKINGS_ADD, this.props.eventItem ? this.props.eventItem.id : '') }),
+                !this.props.fetchingEvent && !this.props.fetching && this.props.eventItem && _react2.default.createElement(
                     "div",
                     null,
                     _react2.default.createElement(
@@ -59384,6 +59452,14 @@ function bookings() {
             newState.fetching = false;
             newState.formErrors = action.payload;
             break;
+        case types.CHANGE_BOOKING_STATUS_SUCCESS:
+            newState.items = newState.items.map(function (item) {
+                if (item.id === action.payload.bookingId) {
+                    item.showedUp = action.payload.newStatus;
+                }
+                return item;
+            });
+            break;
 
         /**
          * Misc actions
@@ -59423,11 +59499,6 @@ var _localization2 = _interopRequireDefault(_localization);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-    subscribeDate: {
-        presence: {
-            message: _localization2.default.validation.required
-        }
-    },
     firstName: {
         presence: {
             message: _localization2.default.validation.required

@@ -92,6 +92,14 @@ export default function bookings(state = initialState, action) {
             newState.fetching = false;
             newState.formErrors = action.payload;
             break;
+        case types.CHANGE_BOOKING_STATUS_SUCCESS:
+            newState.items = newState.items.map(function(item) {
+                if (item.id === action.payload.bookingId) {
+                    item.showedUp = action.payload.newStatus;
+                }
+                return item;
+            });
+            break;
 
 
         /**
