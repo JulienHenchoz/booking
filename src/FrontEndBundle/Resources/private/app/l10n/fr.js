@@ -40,8 +40,12 @@ export default {
     events_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des événements.',
     event_fetch_error: 'Une erreur est survenue lors de la récupération de l\'événement.',
 
+    bookings_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des réservations.',
+    booking_fetch_error: 'Une erreur est survenue lors de la récupération de la réservation.',
+
 
     no_events: 'Aucun événement à afficher pour le moment.',
+    no_bookings: 'Aucune réservation pour le moment.',
 
     /** Buttons **/
     btn_confirm: 'Confirmer',
@@ -54,6 +58,9 @@ export default {
 
     delete_event_title: 'Supprimer l\'événement',
     delete_event_content: 'Êtes-vous sûr de vouloir supprimer l\'événement "{0}" ?',
+
+    delete_booking_title: 'Supprimer la réservation',
+    delete_booking_content: 'Êtes-vous sûr de vouloir supprimer la réservation "{0}" ?',
 
     /** Entity Fields **/
     fields: {
@@ -71,6 +78,16 @@ export default {
             venue: 'Salle',
             description: 'Description',
             image: 'Lien de l\'image',
+        },
+        bookings: {
+            event: 'Evénement',
+            subscribeDate: 'Date d\'inscription',
+            firstName: 'Prénom',
+            lastName: 'Nom',
+            email: 'E-mail',
+            phone: 'Téléphone',
+            nbExpected: 'Nombre de personnes',
+            subscribedToNewsletter: 'Inscription à la newsletter',
         }
     },
 
@@ -79,6 +96,7 @@ export default {
         required: 'Ce champ est requis.',
         url: 'Ce champ doit être une adresse internet valide.',
         numberGreaterThanZero: 'Ce champ doit être un nombre plus grand que zéro.'
+        email: 'Merci de saisir une adresse e-mail valide.'
     },
 
     tooltips: {

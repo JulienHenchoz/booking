@@ -7,6 +7,6 @@ export const EVENTS_LIST_PAST = '/past-events/';
 export const EVENTS_ADD = '/events/add/';
 export const EVENTS_EDIT = '/events/show/{0}';
 
-export const BOOKINGS_LIST = '/bookings/';
-export const BOOKINGS_ADD = '/bookings/add/';
+export const BOOKINGS_LIST = '/bookings/{0}';
+export const BOOKINGS_ADD = '/bookings/{0}/add/';
 export const BOOKINGS_EDIT = '/bookings/show/{0}';

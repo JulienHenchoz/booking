@@ -33,9 +33,6 @@ export default class MainMenu extends React.Component {
                             </li>
                         </ul>
                     </li>
-
-
-                    <NavLink to={routes.BOOKINGS_LIST} icon="email">{l10n.bookings_title}</NavLink>
                 </SideNav>
             </div>
         );

@@ -6846,8 +6846,8 @@ var EVENTS_LIST_PAST = exports.EVENTS_LIST_PAST = '/past-events/';
 var EVENTS_ADD = exports.EVENTS_ADD = '/events/add/';
 var EVENTS_EDIT = exports.EVENTS_EDIT = '/events/show/{0}';
 
-var BOOKINGS_LIST = exports.BOOKINGS_LIST = '/bookings/';
-var BOOKINGS_ADD = exports.BOOKINGS_ADD = '/bookings/add/';
+var BOOKINGS_LIST = exports.BOOKINGS_LIST = '/bookings/{0}';
+var BOOKINGS_ADD = exports.BOOKINGS_ADD = '/bookings/{0}/add/';
 var BOOKINGS_EDIT = exports.BOOKINGS_EDIT = '/bookings/show/{0}';
 
 /***/ }),
@@ -9512,6 +9512,28 @@ var EVENT_REMOVE_SUCCESS = exports.EVENT_REMOVE_SUCCESS = 'EVENT_REMOVE_SUCCESS'
 var EVENT_REMOVE_ERROR = exports.EVENT_REMOVE_ERROR = 'EVENT_REMOVE_ERROR';
 var EVENTS_GET_ERROR = exports.EVENTS_GET_ERROR = 'EVENTS_GET_ERROR';
 var EVENT_GET_ERROR = exports.EVENT_GET_ERROR = 'EVENT_GET_ERROR';
+
+/** Bookings **/
+var ADD_BOOKING = exports.ADD_BOOKING = 'ADD_BOOKING';
+var EDIT_BOOKING = exports.EDIT_BOOKING = 'EDIT_BOOKING';
+var REMOVE_BOOKING = exports.REMOVE_BOOKING = 'REMOVE_BOOKING';
+var CONFIRM_REMOVE_BOOKING = exports.CONFIRM_REMOVE_BOOKING = 'CONFIRM_REMOVE_BOOKING';
+var CANCEL_REMOVE_BOOKING = exports.CANCEL_REMOVE_BOOKING = 'CANCEL_REMOVE_BOOKING';
+var REMOVING_BOOKING = exports.REMOVING_BOOKING = 'REMOVING_BOOKING';
+var FETCH_BOOKINGS = exports.FETCH_BOOKINGS = 'FETCH_BOOKINGS';
+var FETCH_BOOKING = exports.FETCH_BOOKING = 'FETCH_BOOKING';
+var RECEIVE_BOOKINGS = exports.RECEIVE_BOOKINGS = 'RECEIVE_BOOKINGS';
+var RECEIVE_PAST_BOOKINGS = exports.RECEIVE_PAST_BOOKINGS = 'RECEIVE_PAST_BOOKINGS';
+var RECEIVE_BOOKING = exports.RECEIVE_BOOKING = 'RECEIVE_BOOKING';
+var LOADING_BOOKINGS = exports.LOADING_BOOKINGS = 'LOADING_BOOKINGS';
+var UPDATE_BOOKING = exports.UPDATE_BOOKING = 'UPDATE_BOOKING';
+var SAVING_BOOKING = exports.SAVING_BOOKING = 'SAVING_BOOKING';
+var BOOKING_SAVE_SUCCESS = exports.BOOKING_SAVE_SUCCESS = 'BOOKING_SAVE_SUCCESS';
+var BOOKING_SAVE_ERROR = exports.BOOKING_SAVE_ERROR = 'BOOKING_SAVE_ERROR';
+var BOOKING_REMOVE_SUCCESS = exports.BOOKING_REMOVE_SUCCESS = 'BOOKING_REMOVE_SUCCESS';
+var BOOKING_REMOVE_ERROR = exports.BOOKING_REMOVE_ERROR = 'BOOKING_REMOVE_ERROR';
+var BOOKINGS_GET_ERROR = exports.BOOKINGS_GET_ERROR = 'BOOKINGS_GET_ERROR';
+var BOOKING_GET_ERROR = exports.BOOKING_GET_ERROR = 'BOOKING_GET_ERROR';
 
 /***/ }),
 /* 52 */
@@ -14672,6 +14694,7 @@ var BOOKING_ADD = exports.BOOKING_ADD = '/api/bookings/new/';
 var BOOKING_REMOVE = exports.BOOKING_REMOVE = '/api/bookings/delete/{0}';
 var BOOKING_EDIT = exports.BOOKING_EDIT = '/api/bookings/edit/{0}';
 var BOOKINGS_GET = exports.BOOKINGS_GET = '/api/bookings/get';
+var BOOKINGS_GET_BY_EVENT = exports.BOOKINGS_GET_BY_EVENT = '/api/bookings/getByEvent/{0}';
 var BOOKING_GET = exports.BOOKING_GET = '/api/bookings/get/{0}';
 
 /***/ }),
@@ -31944,6 +31967,14 @@ var _PastEventsList = __webpack_require__(541);
 
 var _PastEventsList2 = _interopRequireDefault(_PastEventsList);
 
+var _BookingsList = __webpack_require__(546);
+
+var _BookingsList2 = _interopRequireDefault(_BookingsList);
+
+var _BookingsForm = __webpack_require__(545);
+
+var _BookingsForm2 = _interopRequireDefault(_BookingsForm);
+
 var _routes = __webpack_require__(23);
 
 var routes = _interopRequireWildcard(_routes);
@@ -31991,7 +32022,10 @@ var App = function (_React$Component) {
                         _react2.default.createElement(_reactRouterDom.Route, { path: routes.EVENTS_LIST, exact: true, component: _EventsList2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: routes.EVENTS_LIST_PAST, exact: true, component: _PastEventsList2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: routes.EVENTS_ADD, exact: true, component: _EventsForm2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.EVENTS_EDIT, ':eventId'), component: _EventsForm2.default })
+                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.EVENTS_EDIT, ':eventId'), component: _EventsForm2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.BOOKINGS_LIST, ':eventId'), component: _BookingsList2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.BOOKINGS_ADD, ':eventId'), component: _BookingsForm2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.BOOKINGS_EDIT, ':bookingId'), component: _BookingsForm2.default })
                     )
                 )
             );
@@ -32989,11 +33023,6 @@ var MainMenu = function (_React$Component) {
                                 )
                             )
                         )
-                    ),
-                    _react2.default.createElement(
-                        _NavLink2.default,
-                        { to: routes.BOOKINGS_LIST, icon: 'email' },
-                        _localization2.default.bookings_title
                     )
                 )
             );
@@ -33700,104 +33729,10 @@ exports.default = (0, _reactRedux.connect)(function (state) {
 
 /***/ }),
 /* 283 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = {
-    save: 'Enregistrer',
-
-    venue_title: 'Salle',
-    venues_title: 'Salles',
-    venue: 'salle',
-    venues: 'salles',
-
-    event_title: 'Événement',
-    events_title: 'Événements',
-    incoming_events_title: 'Événements à venir',
-    past_events_title: 'Événements passés',
-    incoming_events: 'À venir',
-    past_events: 'Passés',
-    event: 'événement',
-    events: 'événements',
-
-    booking_title: 'Réservation',
-    bookings_title: 'Réservations',
-    booking: 'réservation',
-    bookings: 'réservations',
-
-    /** Headers **/
-    editing: 'Edition de "{0}"',
-    new_venue: 'Nouvelle salle',
-    new_event: 'Nouvel événement',
-    new_booking: 'Nouvelle réservation',
-
-    /** Toast messages **/
-    could_not_save_element: 'Impossible de sauver l\'élément !',
-    save_success: 'L\'élément a été sauvegardé avec succès !',
-    save_error: 'Impossible de sauver l\'élément !',
-    remove_success: 'L\'élément a été supprimé avec succès !',
-    remove_error: 'Impossible de supprimer l\'élément !',
-    validation_errors: 'Certains champs sont invalides, merci de vérifier les données et valider à nouveau.',
-
-    venues_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des salles.',
-    venue_fetch_error: 'Une erreur est survenue lors de la récupération de la salle.',
-
-    events_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des événements.',
-    event_fetch_error: 'Une erreur est survenue lors de la récupération de l\'événement.',
-
-    no_events: 'Aucun événement à afficher pour le moment.',
-
-    /** Buttons **/
-    btn_confirm: 'Confirmer',
-    btn_cancel: 'Annuler',
-    venue_select_default: 'Choisissez une salle...',
-
-    /** Modals **/
-    delete_venue_title: 'Supprimer la salle',
-    delete_venue_content: 'Êtes-vous sûr de vouloir supprimer la salle "{0}" ?',
-
-    delete_event_title: 'Supprimer l\'événement',
-    delete_event_content: 'Êtes-vous sûr de vouloir supprimer l\'événement "{0}" ?',
-
-    /** Entity Fields **/
-    fields: {
-        venues: {
-            name: 'Nom',
-            capacity: 'Capacité',
-            address: 'Adresse',
-            phone: 'Téléphone',
-            website: 'Site web',
-            image: 'Lien de l\'image'
-        },
-        events: {
-            name: 'Nom',
-            startDate: 'Date/heure',
-            venue: 'Salle',
-            description: 'Description',
-            image: 'Lien de l\'image'
-        }
-    },
-
-    /** Validation message **/
-    validation: {
-        required: 'Ce champ est requis.',
-        url: 'Ce champ doit être une adresse internet valide.',
-        numberGreaterThanZero: 'Ce champ doit être un nombre plus grand que zéro.'
-    },
-
-    tooltips: {
-        edit: 'Editer',
-        bookings: 'Réservations'
-    },
-
-    time_at: 'à'
-
-};
+throw new Error("Module build failed: SyntaxError: Unexpected token, expected , (99:8)\n\n\u001b[0m \u001b[90m  97 | \u001b[39m        url\u001b[33m:\u001b[39m \u001b[32m'Ce champ doit être une adresse internet valide.'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m  98 | \u001b[39m        numberGreaterThanZero\u001b[33m:\u001b[39m \u001b[32m'Ce champ doit être un nombre plus grand que zéro.'\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  99 | \u001b[39m        email\u001b[33m:\u001b[39m \u001b[32m'Merci de saisir une adresse e-mail valide.'\u001b[39m\n \u001b[90m     | \u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 100 | \u001b[39m    }\u001b[33m,\u001b[39m\n \u001b[90m 101 | \u001b[39m\n \u001b[90m 102 | \u001b[39m    tooltips\u001b[33m:\u001b[39m {\u001b[0m\n");
 
 /***/ }),
 /* 284 */
@@ -33942,11 +33877,16 @@ var _events = __webpack_require__(284);
 
 var _events2 = _interopRequireDefault(_events);
 
+var _bookings = __webpack_require__(547);
+
+var _bookings2 = _interopRequireDefault(_bookings);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var rootReducer = (0, _redux.combineReducers)({
     venues: _venues2.default,
-    events: _events2.default
+    events: _events2.default,
+    bookings: _bookings2.default
 });
 
 exports.default = rootReducer;
@@ -58053,6 +57993,1259 @@ exports.default = function (_ref) {
             )
         )
     );
+};
+
+/***/ }),
+/* 543 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.loadingBookings = loadingBookings;
+exports.savingBooking = savingBooking;
+exports.cancelRemoveBooking = cancelRemoveBooking;
+exports.removingBooking = removingBooking;
+exports.editBooking = editBooking;
+exports.removeBooking = removeBooking;
+exports.receiveBookings = receiveBookings;
+exports.receivePastBookings = receivePastBookings;
+exports.leaveForm = leaveForm;
+exports.receiveBooking = receiveBooking;
+exports.saveSuccess = saveSuccess;
+exports.saveError = saveError;
+exports.removeSuccess = removeSuccess;
+exports.removeError = removeError;
+exports.getError = getError;
+exports.validationError = validationError;
+exports.addBooking = addBooking;
+exports.confirmRemoveBooking = confirmRemoveBooking;
+exports.updateBooking = updateBooking;
+exports.fetchBookings = fetchBookings;
+exports.fetchPastBookings = fetchPastBookings;
+exports.fetchBooking = fetchBooking;
+
+var _actionTypes = __webpack_require__(51);
+
+var types = _interopRequireWildcard(_actionTypes);
+
+var _ajaxRoutes = __webpack_require__(102);
+
+var ajaxRoutes = _interopRequireWildcard(_ajaxRoutes);
+
+var _utils = __webpack_require__(52);
+
+var utils = _interopRequireWildcard(_utils);
+
+var _localization = __webpack_require__(11);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function loadingBookings() {
+    return {
+        type: types.LOADING_BOOKINGS
+    };
+}
+
+function savingBooking() {
+    return {
+        type: types.SAVING_BOOKING
+    };
+}
+
+function cancelRemoveBooking() {
+    return {
+        type: types.CANCEL_REMOVE_BOOKING
+    };
+}
+
+function removingBooking() {
+    return {
+        type: types.REMOVING_BOOKING
+    };
+}
+
+function editBooking(property, value) {
+    return {
+        type: types.EDIT_BOOKING,
+        property: property,
+        payload: value
+    };
+}
+
+function removeBooking(id) {
+    return {
+        type: types.REMOVE_BOOKING,
+        index: id
+    };
+}
+
+function receiveBookings(items) {
+    return {
+        type: types.RECEIVE_BOOKINGS,
+        payload: items
+    };
+}
+
+function receivePastBookings(items) {
+    return {
+        type: types.RECEIVE_PAST_BOOKINGS,
+        payload: items
+    };
+}
+
+function leaveForm() {
+    return {
+        type: types.LEAVE_FORM
+    };
+}
+
+function receiveBooking(item) {
+    return {
+        type: types.RECEIVE_BOOKING,
+        payload: item
+    };
+}
+
+function saveSuccess(item) {
+    utils.toastSuccess(_localization2.default.save_success);
+    return {
+        type: types.BOOKING_SAVE_SUCCESS,
+        payload: item
+    };
+}
+
+function saveError(errors) {
+    utils.toastError(_localization2.default.save_error);
+    return {
+        type: types.BOOKING_SAVE_ERROR,
+        payload: errors
+    };
+}
+
+function removeSuccess(item) {
+    utils.toastSuccess(_localization2.default.remove_success);
+    return {
+        type: types.BOOKING_REMOVE_SUCCESS,
+        payload: item
+    };
+}
+
+function removeError(errors) {
+    utils.toastError(_localization2.default.remove_error);
+    return {
+        type: types.BOOKING_REMOVE_ERROR,
+        payload: errors
+    };
+}
+
+function getError(message) {
+    utils.toastError(message);
+    return {
+        type: types.BOOKINGS_GET_ERROR,
+        payload: message
+    };
+}
+
+function validationError(errors) {
+    utils.toastError(_localization2.default.validation_errors);
+    return {
+        type: types.VALIDATION_ERROR,
+        payload: errors
+    };
+}
+
+function addBooking(form) {
+    return function (dispatch) {
+        dispatch(savingBooking());
+        // TODO : Dispatch an error if the item has no id
+        fetch(ajaxRoutes.BOOKING_ADD, {
+            method: "POST",
+            body: new FormData(form)
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            if (json.success === true) {
+                dispatch(saveSuccess(json.object));
+            } else {
+                dispatch(saveError(json.errors));
+            }
+        }).catch(function () {
+            dispatch(saveError([]));
+        });
+    };
+}
+
+function confirmRemoveBooking(id) {
+    return function (dispatch) {
+        dispatch(removingBooking());
+        // TODO : Dispatch an error if the item has no id
+        fetch(_localization2.default.formatString(ajaxRoutes.BOOKING_REMOVE, id), {
+            method: "DELETE"
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            if (json.success === true) {
+                dispatch(removeSuccess(json.object));
+            } else {
+                dispatch(removeError(json.errors));
+            }
+        }).catch(function () {
+            dispatch(removeError([]));
+        });
+    };
+}
+
+function updateBooking(id, form) {
+    return function (dispatch) {
+        dispatch(savingBooking());
+        // TODO : Dispatch an error if the item has no id
+        fetch(_localization2.default.formatString(ajaxRoutes.BOOKING_EDIT, id), {
+            method: "POST",
+            body: new FormData(form)
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            if (json.success === true) {
+                dispatch(saveSuccess(json.object));
+            } else {
+                dispatch(saveError(json.errors));
+            }
+        }).catch(function (error) {
+            console.error(error);
+            dispatch(saveError([]));
+        });
+    };
+}
+
+function fetchBookings() {
+    return function (dispatch) {
+        dispatch(loadingBookings());
+        fetch(ajaxRoutes.BOOKINGS_GET).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            dispatch(receiveBookings(json));
+        }).catch(function () {
+            dispatch(getError(_localization2.default.bookings_fetch_error));
+        });
+    };
+}
+
+function fetchPastBookings() {
+    return function (dispatch) {
+        dispatch(loadingBookings());
+        fetch(ajaxRoutes.BOOKINGS_GET_PAST).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            dispatch(receivePastBookings(json));
+        }).catch(function () {
+            dispatch(getError(_localization2.default.bookings_fetch_error));
+        });
+    };
+}
+
+function fetchBooking(id) {
+    return function (dispatch) {
+        dispatch(loadingBookings());
+
+        fetch(_localization2.default.formatString(ajaxRoutes.BOOKING_GET, id)).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            dispatch(receiveBooking(json));
+        }).catch(function () {
+            dispatch(getError(_localization2.default.booking_fetch_error));
+        });
+    };
+}
+
+/***/ }),
+/* 544 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactMaterialize = __webpack_require__(14);
+
+var _reactRedux = __webpack_require__(20);
+
+var _reactRouterDom = __webpack_require__(17);
+
+var _routes = __webpack_require__(23);
+
+var routes = _interopRequireWildcard(_routes);
+
+var _localization = __webpack_require__(11);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+var _DateTimeBox = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./DateTimeBox\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
+var _DateTimeBox2 = _interopRequireDefault(_DateTimeBox);
+
+var _FixedActionButton = __webpack_require__(542);
+
+var _FixedActionButton2 = _interopRequireDefault(_FixedActionButton);
+
+var _bookingsActions = __webpack_require__(543);
+
+var actions = _interopRequireWildcard(_bookingsActions);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var propTypes = {
+    dispatch: _react.PropTypes.func.isRequired,
+    name: _react.PropTypes.string.isRequired,
+    address: _react.PropTypes.string,
+    website: _react.PropTypes.string,
+    editLink: _react.PropTypes.bool
+};
+
+var BookingListItem = function (_React$Component) {
+    _inherits(BookingListItem, _React$Component);
+
+    function BookingListItem(props) {
+        _classCallCheck(this, BookingListItem);
+
+        return _possibleConstructorReturn(this, (BookingListItem.__proto__ || Object.getPrototypeOf(BookingListItem)).call(this, props));
+    }
+
+    _createClass(BookingListItem, [{
+        key: "render",
+        value: function render() {
+            var image = _react2.default.createElement(
+                _reactMaterialize.Icon,
+                { className: "large grey-text" },
+                "booking"
+            );
+            if (this.props.image !== undefined && this.props.image) {
+                image = _react2.default.createElement("img", { className: "circle responsive-img", src: this.props.image });
+            }
+
+            var content = _react2.default.createElement("div", null);
+
+            return _react2.default.createElement(
+                "div",
+                { className: "collection-item avatar unclickable" },
+                _react2.default.createElement(_DateTimeBox2.default, { className: "circle", dateTime: this.props.startDate }),
+                _react2.default.createElement(
+                    "h4",
+                    null,
+                    this.props.name
+                ),
+                _react2.default.createElement(
+                    "p",
+                    null,
+                    this.props.venue.name
+                ),
+                _react2.default.createElement(
+                    _FixedActionButton2.default,
+                    null,
+                    this.props.editLink && _react2.default.createElement(
+                        "li",
+                        null,
+                        _react2.default.createElement(
+                            _reactRouterDom.Link,
+                            {
+                                className: "btn-floating blue btn-flat",
+                                to: _localization2.default.formatString(routes.BOOKINGS_EDIT, this.props.id),
+                                href: "#" },
+                            _react2.default.createElement(
+                                _reactMaterialize.Icon,
+                                null,
+                                "mode_edit"
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "li",
+                        null,
+                        _react2.default.createElement(
+                            _reactRouterDom.Link,
+                            {
+                                className: "btn-floating amber btn-flat",
+                                to: _localization2.default.formatString(routes.BOOKINGS_EDIT, this.props.id),
+                                href: "#" },
+                            _react2.default.createElement(
+                                _reactMaterialize.Icon,
+                                null,
+                                "email"
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return BookingListItem;
+}(_react2.default.Component);
+
+BookingListItem.propTypes = propTypes;
+
+exports.default = (0, _reactRedux.connect)(function (store) {
+    return Object.assign({}, store.bookings);
+})(BookingListItem);
+
+/***/ }),
+/* 545 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(20);
+
+var _reactRouterDom = __webpack_require__(17);
+
+var _reactMaterialize = __webpack_require__(14);
+
+var _routes = __webpack_require__(23);
+
+var routes = _interopRequireWildcard(_routes);
+
+var _Loader = __webpack_require__(50);
+
+var _Loader2 = _interopRequireDefault(_Loader);
+
+var _validate = __webpack_require__(270);
+
+var _validate2 = _interopRequireDefault(_validate);
+
+var _booking = __webpack_require__(548);
+
+var _booking2 = _interopRequireDefault(_booking);
+
+var _utils = __webpack_require__(52);
+
+var utils = _interopRequireWildcard(_utils);
+
+var _FormNavBar = __webpack_require__(539);
+
+var _FormNavBar2 = _interopRequireDefault(_FormNavBar);
+
+var _moment = __webpack_require__(0);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _DateTime = __webpack_require__(540);
+
+var _DateTime2 = _interopRequireDefault(_DateTime);
+
+var _bookingsActions = __webpack_require__(543);
+
+var actions = _interopRequireWildcard(_bookingsActions);
+
+var _venuesActions = __webpack_require__(48);
+
+var venuesActions = _interopRequireWildcard(_venuesActions);
+
+var _ConfirmModal = __webpack_require__(100);
+
+var _ConfirmModal2 = _interopRequireDefault(_ConfirmModal);
+
+var _localization = __webpack_require__(11);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Validation rules for received props
+ * @type {{dispatch: *, item: *, fetching: *, errors: *}}
+ */
+var propTypes = {
+    dispatch: _react.PropTypes.func.isRequired,
+    item: _react.PropTypes.object,
+    fetching: _react.PropTypes.bool,
+    errors: _react.PropTypes.object
+};
+
+var BookingForm = function (_React$Component) {
+    _inherits(BookingForm, _React$Component);
+
+    /**
+     * Initialize the state of form fields and errors
+     * @param props
+     */
+    function BookingForm(props) {
+        _classCallCheck(this, BookingForm);
+
+        var _this = _possibleConstructorReturn(this, (BookingForm.__proto__ || Object.getPrototypeOf(BookingForm)).call(this, props));
+
+        _this.state = {
+            dateTimeFormat: 'DD.MM.YYYY HH:mm',
+            defaultDateTime: (0, _moment2.default)({ hour: 20 })
+        };
+        _this.state = Object.assign(_this.state, {
+            fields: _this.getEmptyFields(),
+            errors: _this.getEmptyFields()
+        });
+        return _this;
+    }
+
+    /**
+     * Called when the form is being submitted
+     * @param e
+     */
+
+
+    _createClass(BookingForm, [{
+        key: "onSubmit",
+        value: function onSubmit(e) {
+            e.prbookingDefault();
+            var item = this.props.item;
+
+            // Get any validations errors using validate.js
+            // Use replaceEmptyWithNull because validate.js requires an element with a constraint to be null
+            // to be accepted as "empty". Empty string will trigger validation error.
+            var validationErrors = (0, _validate2.default)(utils.replaceEmptyWithNull(item), _booking2.default, { fullMessages: false });
+
+            if (!validationErrors) {
+                // If validation is OK, decide whether to update or add the current item
+                if (item.id !== undefined) {
+                    // If submitted item already has an ID, send an edit action
+                    this.props.dispatch(actions.updateBooking(item.id, document.getElementById('booking-form')));
+                } else {
+                    // Else send an Add action
+                    this.props.dispatch(actions.addBooking(document.getElementById('booking-form')));
+                }
+            } else {
+                // If there were validation errors, copy them to the state so they can be displayed in the form
+                var newState = Object.assign({}, this.state);
+                newState.errors = utils.getErrors(validationErrors);
+                this.setState(newState);
+                this.props.dispatch(actions.validationError(newState.errors));
+            }
+        }
+
+        /**
+         * Dispatch an action to open the "remove" modal box
+         * @param e
+         */
+
+    }, {
+        key: "onRemove",
+        value: function onRemove(e) {
+            e.prbookingDefault();
+            this.props.dispatch(actions.removeBooking(this.props.item.id));
+        }
+
+        /**
+         * Dispatch an action when a field is changed, to update the global state
+         * @param e
+         */
+
+    }, {
+        key: "onChange",
+        value: function onChange(e) {
+            var newState = Object.assign({}, this.state);
+            newState.fields[e.target.name] = e.target.value;
+            this.setState(newState);
+            this.props.dispatch(actions.editBooking(e.target.name, e.target.value));
+        }
+    }, {
+        key: "onVenueSelectChange",
+        value: function onVenueSelectChange(e) {
+            var venueId = e.target.value;
+            var venue = this.props.venues.filter(function (venue) {
+                return venue.id == venueId;
+            });
+            if (venue.length) {
+                this.onChange({
+                    target: {
+                        name: 'venue',
+                        value: venue[0]
+                    }
+                });
+            }
+        }
+
+        /**
+         * Update the start date
+         * @param newDate
+         */
+
+    }, {
+        key: "onStartDateChange",
+        value: function onStartDateChange(newDate) {
+            var fieldName = 'startDate';
+            var newState = Object.assign({}, this.state);
+            newState.fields[fieldName] = newDate;
+            this.setState(newState);
+            this.props.dispatch(actions.editBooking(fieldName, newDate));
+        }
+
+        /**
+         * Validate single fields every time we focus out of them
+         * @param e
+         */
+
+    }, {
+        key: "onBlur",
+        value: function onBlur(e) {
+            // Empty string will be seen as validation error, so empty values must be null for validation
+            var value = e.target.value ? e.target.value : null;
+            var newState = Object.assign({}, this.state);
+            var errors = _validate2.default.single(value, _booking2.default[e.target.name]);
+            this.state.errors[e.target.name] = errors && errors.length ? errors[0] : '';
+            this.setState(newState);
+        }
+
+        /**
+         * Returns true if the current form is creating a new record, false if we're editing
+         * @returns {boolean}
+         */
+
+    }, {
+        key: "isNew",
+        value: function isNew() {
+            return this.props.item.id === undefined;
+        }
+
+        /**
+         * Returns the title that should be used in the navbar.
+         * If we're currently fetching something, title should be empty.
+         * @returns {string}
+         */
+
+    }, {
+        key: "getTitle",
+        value: function getTitle() {
+            var header = '';
+            if (!this.isNew()) {
+                header = _localization2.default.formatString(_localization2.default.editing, this.state.fields.name);
+            } else if (!this.props.fetching) {
+                header = _localization2.default.new_booking;
+            }
+            return header;
+        }
+
+        /**
+         * Returns a text input for the given form field
+         * @param fieldName
+         * @param type
+         * @returns {XML}
+         */
+
+    }, {
+        key: "getTextInput",
+        value: function getTextInput(fieldName) {
+            var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+            return _react2.default.createElement(_reactMaterialize.Input, { type: type, className: "active", s: 12,
+                name: fieldName,
+                error: this.state.errors[fieldName] ? this.state.errors[fieldName] : '',
+                onChange: this.onChange.bind(this),
+                onBlur: this.onBlur.bind(this),
+                label: _localization2.default.fields.bookings[fieldName],
+                value: this.state.fields[fieldName] ? this.state.fields[fieldName] : '' });
+        }
+    }, {
+        key: "getVenueSelect",
+        value: function getVenueSelect() {
+            // Display the list
+            if (this.props.venues !== undefined) {
+                var itemList = this.props.venues.map(function (venue) {
+                    return _react2.default.createElement(
+                        "option",
+                        { key: venue.id, value: venue.id },
+                        venue.name
+                    );
+                });
+
+                return _react2.default.createElement(
+                    _reactMaterialize.Input,
+                    {
+                        s: 12,
+                        type: "select",
+                        name: "venue",
+                        error: this.state.errors['venue.id'] ? this.state.errors['venue.id'] : '',
+                        value: this.state.fields.venue ? this.state.fields.venue.id : '',
+                        onChange: this.onVenueSelectChange.bind(this),
+                        label: _localization2.default.fields.bookings.venue },
+                    _react2.default.createElement(
+                        "option",
+                        { value: "", disabled: true },
+                        _localization2.default.venue_select_default
+                    ),
+                    itemList
+                );
+            }
+        }
+
+        /**
+         * Initial state for the form fields and errors
+         * @returns {{name: string, capacity: string, address: string, phone: string, website: string, image: string}}
+         */
+
+    }, {
+        key: "getEmptyFields",
+        value: function getEmptyFields() {
+            return {
+                name: '',
+                startDate: (0, _moment2.default)({ hour: 20 }),
+                description: '',
+                image: '',
+                venue: ''
+            };
+        }
+
+        /**
+         * Force Materialize lib to update the text fields, so the labels and fields do not overlap
+         */
+
+    }, {
+        key: "updateMaterializeFields",
+        value: function updateMaterializeFields() {
+            if (Materialize.updateTextFields !== undefined) {
+                Materialize.updateTextFields();
+            }
+        }
+
+        /**
+         * After component has been mounted, make sure the Materialize fields are up to date.
+         */
+
+    }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            this.updateMaterializeFields();
+        }
+
+        /**
+         * After component has been updated, make sure the Materialize fields are up to date.
+         */
+
+    }, {
+        key: "componentDidUpdate",
+        value: function componentDidUpdate() {
+            this.updateMaterializeFields();
+        }
+
+        /**
+         * When the component is loading, fetch the bookingId we're supposed to display in the route
+         */
+
+    }, {
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            if (this.props.match.params.bookingId !== undefined) {
+                this.props.dispatch(actions.fetchBooking(this.props.match.params.bookingId));
+            }
+
+            // If we don't have any loaded venues, fetch them to populate our venues list
+            if (this.props.venues === undefined || this.props.venues.length === 0) {
+                this.props.dispatch(venuesActions.fetchVenues());
+            }
+        }
+
+        /**
+         * Dispatch an even whenever the component is destroyed
+         */
+
+    }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+            this.props.dispatch(actions.leaveForm());
+        }
+
+        /**
+         * When receiving new props, update current state to get new field values and errors
+         * @param nextProps
+         */
+
+    }, {
+        key: "componentWillReceiveProps",
+        value: function componentWillReceiveProps(nextProps) {
+            // Update only if nextProps comes with a valid item, so the form never displays any "null" value
+            if (nextProps.item !== undefined && nextProps.item !== null && !utils.objectIsEmpty(nextProps.item)) {
+                this.setState({
+                    venues: nextProps.venues,
+                    fields: nextProps.item,
+                    errors: nextProps.errors || this.getEmptyFields()
+                });
+            }
+        }
+
+        /**
+         * General render function
+         * @returns {XML}
+         */
+
+    }, {
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                null,
+                this.props.saveSuccess && _react2.default.createElement(_reactRouterDom.Redirect, { to: {
+                        pathname: routes.BOOKINGS_LIST
+                    } }),
+                this.props.fetching && _react2.default.createElement(_Loader2.default, null),
+                _react2.default.createElement(_ConfirmModal2.default, { title: _localization2.default.delete_booking_title,
+                    content: _localization2.default.formatString(_localization2.default.delete_booking_content, this.props.item.name),
+                    active: this.props.removeModal,
+                    dispatch: this.props.dispatch, cancelAction: actions.cancelRemoveBooking,
+                    confirmAction: actions.confirmRemoveBooking,
+                    itemId: this.props.item.id ? this.props.item.id : null }),
+                _react2.default.createElement(_FormNavBar2.default, {
+                    title: this.getTitle(),
+                    icon: "booking",
+                    showRemoveBtn: !this.isNew(),
+                    onValidate: this.onSubmit.bind(this),
+                    onRemove: this.onRemove.bind(this)
+                }),
+                _react2.default.createElement(
+                    "form",
+                    { id: "booking-form", style: { opacity: this.props.fetching ? 0.3 : 1 },
+                        onSubmit: this.onSubmit.bind(this) },
+                    _react2.default.createElement(
+                        _reactMaterialize.Row,
+                        null,
+                        this.getTextInput('name'),
+                        this.getVenueSelect(),
+                        _react2.default.createElement(_DateTime2.default, {
+                            fieldName: "startDate",
+                            value: this.state.fields.startDate ? this.state.fields.startDate : this.state.defaultDateTime,
+                            onChange: this.onStartDateChange.bind(this),
+                            error: this.state.errors.startDate,
+                            label: _localization2.default.fields.bookings.startDate
+                        }),
+                        this.getTextInput('description', 'textarea'),
+                        this.getTextInput('image')
+                    ),
+                    _react2.default.createElement(
+                        _reactMaterialize.Row,
+                        null,
+                        _react2.default.createElement("input", { type: "submit", className: "hide" })
+                    )
+                )
+            );
+        }
+    }]);
+
+    return BookingForm;
+}(_react2.default.Component);
+
+BookingForm.propTypes = propTypes;
+
+exports.default = (0, _reactRedux.connect)(function (state) {
+    return Object.assign({}, {
+        item: state.bookings.item,
+        venues: state.venues.items,
+        dispatch: state.bookings.dispatch,
+        fetching: state.bookings.fetching || state.venues.fetching,
+        errors: state.bookings.formErrors,
+        saveSuccess: state.bookings.saveSuccess,
+        removeModal: state.bookings.removeModal
+    });
+})(BookingForm);
+
+/***/ }),
+/* 546 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(20);
+
+var _reactMaterialize = __webpack_require__(14);
+
+var _reactCssTransition = __webpack_require__(224);
+
+var _Loader = __webpack_require__(50);
+
+var _Loader2 = _interopRequireDefault(_Loader);
+
+var _Reload = __webpack_require__(101);
+
+var _Reload2 = _interopRequireDefault(_Reload);
+
+var _reactRouterDom = __webpack_require__(17);
+
+var _localization = __webpack_require__(11);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+var _routes = __webpack_require__(23);
+
+var routes = _interopRequireWildcard(_routes);
+
+var _bookingsActions = __webpack_require__(543);
+
+var actions = _interopRequireWildcard(_bookingsActions);
+
+var _BookingListItem = __webpack_require__(544);
+
+var _BookingListItem2 = _interopRequireDefault(_BookingListItem);
+
+var _FixedNavBar = __webpack_require__(49);
+
+var _FixedNavBar2 = _interopRequireDefault(_FixedNavBar);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var propTypes = {
+    dispatch: _react.PropTypes.func.isRequired,
+    items: _react.PropTypes.array,
+    fetching: _react.PropTypes.bool,
+    error: _react.PropTypes.string,
+    active: _react.PropTypes.bool
+};
+
+var BookingsList = function (_React$Component) {
+    _inherits(BookingsList, _React$Component);
+
+    function BookingsList(props) {
+        _classCallCheck(this, BookingsList);
+
+        return _possibleConstructorReturn(this, (BookingsList.__proto__ || Object.getPrototypeOf(BookingsList)).call(this, props));
+    }
+
+    /**
+     * When the component is loaded, automatically fetch bookings via AJAX
+     */
+
+
+    _createClass(BookingsList, [{
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            this.fetchBookings();
+        }
+
+        /**
+         * Force reload of the current list
+         * @param e
+         */
+
+    }, {
+        key: "onReload",
+        value: function onReload(e) {
+            e.prbookingDefault();
+            this.fetchBookings();
+        }
+
+        /**
+         * Fetch bookings list via ajax
+         */
+
+    }, {
+        key: "fetchBookings",
+        value: function fetchBookings() {
+            this.props.dispatch(actions.fetchBookings());
+        }
+
+        /**
+         * If AJAX returned no data, display a message + a reload button
+         * @returns {XML}
+         */
+
+    }, {
+        key: "getEmptyMessage",
+        value: function getEmptyMessage() {
+            if (this.isListEmpty() && !this.props.fetching) {
+                return _react2.default.createElement(_Reload2.default, { onClick: this.onReload.bind(this), error: _localization2.default.no_bookings });
+            }
+        }
+
+        /**
+         * Returns true if the items list is empty or undefined, else false
+         * @returns {boolean}
+         */
+
+    }, {
+        key: "isListEmpty",
+        value: function isListEmpty() {
+            return this.props.items === undefined || this.props.items === null || this.props.items.length === 0;
+        }
+
+        /**
+         * General render method. Builds the list of bookings to display
+         * @returns {XML}
+         */
+
+    }, {
+        key: "render",
+        value: function render() {
+            // Display the list
+            var itemList = this.props.items.map(function (booking) {
+                return _react2.default.createElement(_BookingListItem2.default, _extends({ editLink: true, key: booking.id }, booking));
+            });
+            var body = _react2.default.createElement(
+                _reactMaterialize.Collection,
+                null,
+                itemList
+            );
+
+            return _react2.default.createElement(
+                "div",
+                null,
+                _react2.default.createElement(_FixedNavBar2.default, { title: _localization2.default.incoming_bookings_title, showAddBtn: true, addRoute: routes.BOOKINGS_ADD }),
+                this.props.fetching && _react2.default.createElement(_Loader2.default, null),
+                this.props.error && !this.props.fetching && _react2.default.createElement(_Reload2.default, { onClick: this.onReload.bind(this), error: this.props.error }),
+                !this.props.fetching && this.props.items.length === 0 && !this.props.error && _react2.default.createElement(_Reload2.default, { onClick: this.onReload.bind(this), error: _localization2.default.no_bookings }),
+                !this.props.fetching && !this.props.error && body
+            );
+        }
+    }]);
+
+    return BookingsList;
+}(_react2.default.Component);
+
+BookingsList.propTypes = propTypes;
+
+exports.default = (0, _reactRedux.connect)(function (state) {
+    return Object.assign({}, state.bookings);
+})(BookingsList);
+
+/***/ }),
+/* 547 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = bookings;
+
+var _actionTypes = __webpack_require__(51);
+
+var types = _interopRequireWildcard(_actionTypes);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var initialState = {
+    items: [],
+    pastItems: [],
+    item: {},
+    fetching: false,
+    error: null,
+    removeModal: false,
+    formErrors: {}
+};
+
+function bookings() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+    var action = arguments[1];
+
+    var newState = Object.assign({}, state);
+
+    switch (action.type) {
+        /**
+         * Get actions
+         */
+        case types.BOOKING_GET_ERROR:
+        case types.BOOKINGS_GET_ERROR:
+            newState.fetching = false;
+            newState.error = action.payload;
+            break;
+        case types.RECEIVE_BOOKING:
+            newState.item = action.payload;
+            newState.fetching = false;
+            newState.error = null;
+            break;
+        case types.RECEIVE_BOOKINGS:
+            newState.items = action.payload;
+            newState.fetching = false;
+            newState.error = null;
+            break;
+        case types.RECEIVE_PAST_BOOKINGS:
+            newState.pastItems = action.payload;
+            newState.fetching = false;
+            newState.error = null;
+            break;
+        case types.LOADING_BOOKINGS:
+            newState.fetching = true;
+            break;
+
+        /**
+         * Remove actions
+         */
+        case types.REMOVE_BOOKING:
+            newState.removeModal = true;
+            break;
+        case types.CANCEL_REMOVE_BOOKING:
+            newState.removeModal = false;
+            break;
+        case types.REMOVING_BOOKING:
+            newState.removeModal = false;
+            newState.fetching = true;
+            break;
+        case types.BOOKING_REMOVE_SUCCESS:
+            newState.fetching = false;
+            newState.saveSuccess = true;
+            newState.item = {};
+            newState.formErrors = {};
+            newState.error = null;
+            break;
+        case types.BOOKING_REMOVE_ERROR:
+            newState.fetching = false;
+            break;
+
+        /**
+         * Add/Edit actions
+         */
+        case types.EDIT_BOOKING:
+            newState.formErrors = {};
+            newState.item[action.property] = action.payload;
+            break;
+        case types.SAVING_BOOKING:
+            newState.fetching = true;
+            break;
+        case types.BOOKING_SAVE_SUCCESS:
+            newState.fetching = false;
+            newState.saveSuccess = true;
+            newState.item = action.payload;
+            newState.formErrors = {};
+            newState.error = null;
+            break;
+        case types.BOOKING_SAVE_ERROR:
+            newState.fetching = false;
+            newState.formErrors = action.payload;
+            break;
+
+        /**
+         * Misc actions
+         */
+        case types.LEAVE_FORM:
+            newState.item = {};
+            newState.saveSuccess = null;
+            newState.removeModal = null;
+            newState.formErrors = {};
+            break;
+    }
+
+    return newState;
+}
+
+/***/ }),
+/* 548 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _localization = __webpack_require__(11);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    subscribeDate: {
+        presence: {
+            message: _localization2.default.validation.required
+        }
+    },
+    firstName: {
+        presence: {
+            message: _localization2.default.validation.required
+        }
+    },
+    lastName: {
+        presence: {
+            message: _localization2.default.validation.required
+        }
+    },
+    email: {
+        presence: {
+            message: _localization2.default.validation.required
+        },
+        email: {
+            message: _localization2.default.validation.email
+        }
+    },
+    nbExpected: {
+        presence: {
+            message: _localization2.default.validation.required
+        },
+        numericality: {
+            onlyInteger: true,
+            greaterThan: 0,
+            message: _localization2.default.validation.numberGreaterThanZero
+        }
+    },
+    'event.id': {
+        presence: {
+            message: _localization2.default.validation.required
+        },
+        numericality: {
+            onlyInteger: true,
+            greaterThan: 0,
+            message: _localization2.default.validation.numberGreaterThanZero
+        }
+    }
 };
 
 /***/ })

@@ -15,4 +15,5 @@ export const BOOKING_ADD = '/api/bookings/new/';
 export const BOOKING_REMOVE = '/api/bookings/delete/{0}';
 export const BOOKING_EDIT = '/api/bookings/edit/{0}';
 export const BOOKINGS_GET = '/api/bookings/get';
+export const BOOKINGS_GET_BY_EVENT = '/api/bookings/getByEvent/{0}';
 export const BOOKING_GET = '/api/bookings/get/{0}';

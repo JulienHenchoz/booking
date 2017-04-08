@@ -10,6 +10,10 @@ import EventsForm from "../components/events/EventsForm";
 import EventsList from "../components/events/EventsList";
 import PastEventsList from "../components/events/PastEventsList";
 
+import BookingsList from "../components/bookings/BookingsList";
+import BookingsForm from "../components/bookings/BookingsForm";
+
+
 import * as routes from '../constants/routes';
 import l10n from '../l10n/localization';
 
@@ -29,6 +33,11 @@ class App extends React.Component {
                         <Route path={routes.EVENTS_LIST_PAST} exact={true} component={PastEventsList}/>
                         <Route path={routes.EVENTS_ADD} exact={true} component={EventsForm}/>
                         <Route path={l10n.formatString(routes.EVENTS_EDIT, ':eventId')} component={EventsForm}/>
+
+                        <Route path={l10n.formatString(routes.BOOKINGS_LIST, ':eventId')} component={BookingsList}/>
+                        <Route path={l10n.formatString(routes.BOOKINGS_ADD, ':eventId')} component={BookingsForm}/>
+                        <Route path={l10n.formatString(routes.BOOKINGS_EDIT, ':bookingId')} component={BookingsForm}/>
+
                     </main>
 
                 </div>
