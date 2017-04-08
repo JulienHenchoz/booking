@@ -17,6 +17,7 @@
     "gulp-util": "^3.0.8",
     "moment": "^2.18.1",
     "react": "^15.4.2",
+    "react-countup": "^2.0.3",
     "react-css-transition": "^0.7.4",
     "react-datetime": "^2.8.8",
     "react-dom": "^15.4.2",

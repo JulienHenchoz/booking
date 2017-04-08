@@ -9,6 +9,12 @@ export function loadingBookings() {
     };
 }
 
+export function loadingBookingsEvent() {
+    return {
+        type: types.LOADING_BOOKINGS_EVENT
+    };
+}
+
 export function savingBooking() {
     return {
         type: types.SAVING_BOOKING
@@ -195,34 +201,46 @@ export function updateBooking(id, form) {
     }
 }
 
+export function enterBookingsList(eventId) {
+    return dispatch => {
+        dispatch(loadingBookingsEvent());
+        fetch(l10n.formatString(ajaxRoutes.EVENT_GET, eventId))
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                dispatch(receiveBookingsEvent(json));
+            })
+            .catch(function(e) {
+                dispatch(getError(l10n.bookings_event_fetch_error));
+            });
+    }
+}
 
-export function fetchBookings() {
+export function receiveBookingsEvent(item) {
+    return {
+        type: types.RECEIVE_BOOKINGS_EVENT,
+        payload: item
+    };
+}
+
+export function leaveBookingsList() {
+    return {
+        type: types.LEAVE_BOOKINGS_LIST,
+    };
+}
+
+export function fetchBookings(eventId) {
     return dispatch => {
         dispatch(loadingBookings());
-        fetch(ajaxRoutes.BOOKINGS_GET)
+        fetch(l10n.formatString(ajaxRoutes.BOOKINGS_GET_BY_EVENT, eventId))
             .then(response => {
                 return response.json();
             })
             .then(json => {
                 dispatch(receiveBookings(json));
             })
-            .catch(function() {
-                dispatch(getError(l10n.bookings_fetch_error));
-            });
-    }
-}
-
-export function fetchPastBookings() {
-    return dispatch => {
-        dispatch(loadingBookings());
-        fetch(ajaxRoutes.BOOKINGS_GET_PAST)
-            .then(response => {
-                return response.json();
-            })
-            .then(json => {
-                dispatch(receivePastBookings(json));
-            })
-            .catch(function() {
+            .catch(function(e) {
                 dispatch(getError(l10n.bookings_fetch_error));
             });
     }

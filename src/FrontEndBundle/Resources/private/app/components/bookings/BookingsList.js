@@ -7,7 +7,8 @@ import Reload from '../utils/Reload'
 import {Link} from 'react-router-dom';
 import l10n from "../../l10n/localization";
 import * as routes from '../../constants/routes';
-
+import moment from 'moment';
+import CountUp from 'react-countup';
 
 import * as actions from '../../actions/bookingsActions';
 
@@ -31,7 +32,15 @@ class BookingsList extends React.Component {
      * When the component is loaded, automatically fetch bookings via AJAX
      */
     componentWillMount() {
-        this.fetchBookings();
+        let eventId = this.props.match.params.eventId !== undefined ? this.props.match.params.eventId : null;
+        if (eventId) {
+            this.props.dispatch(actions.enterBookingsList(eventId));
+            this.props.dispatch(actions.fetchBookings(eventId));
+        }
+    }
+
+    componentWillUnmount() {
+        this.props.dispatch(actions.leaveBookingsList());
     }
 
     /**
@@ -39,15 +48,15 @@ class BookingsList extends React.Component {
      * @param e
      */
     onReload(e) {
-        e.prbookingDefault();
-        this.fetchBookings();
+        e.preventDefault();
+        this.fetchBookings(this.props.currentEvent);
     }
 
     /**
      * Fetch bookings list via ajax
      */
     fetchBookings() {
-        this.props.dispatch(actions.fetchBookings());
+        this.props.dispatch(actions.fetchBookings(this.props.currentEvent));
     }
 
     /**
@@ -57,7 +66,7 @@ class BookingsList extends React.Component {
     getEmptyMessage() {
         if (this.isListEmpty() && !this.props.fetching) {
             return (
-                <Reload onClick={this.onReload.bind(this)} error={l10n.no_bookings} />
+                <Reload onClick={this.onReload.bind(this)} error={l10n.no_bookings}/>
             );
         }
     }
@@ -70,6 +79,30 @@ class BookingsList extends React.Component {
         return (this.props.items === undefined
         || this.props.items === null
         || this.props.items.length === 0);
+    }
+
+    getOccupancyClass() {
+        if (this.props.eventItem.occupancyRate === 2) {
+            return 'red-text';
+        }
+        else if (this.props.eventItem.occupancyRate === 1) {
+            return 'orange-text';
+        }
+        else {
+            return 'green-text';
+        }
+    }
+
+    getProgressBarClass() {
+        if (this.props.eventItem.occupancyRate === 2) {
+            return 'green';
+        }
+        else if (this.props.eventItem.occupancyRate === 1) {
+            return 'orange';
+        }
+        else {
+            return 'red';
+        }
     }
 
     /**
@@ -89,18 +122,55 @@ class BookingsList extends React.Component {
 
         return (
             <div>
-                <FixedNavBar title={l10n.incoming_bookings_title} showAddBtn={true} addRoute={routes.BOOKINGS_ADD} />
+                <FixedNavBar title={l10n.bookings_title} showAddBtn={true} addRoute={routes.BOOKINGS_ADD}/>
+
+                {!this.props.fetchingEvent && this.props.eventItem &&
+                <div>
+                    <h1>
+                        {this.props.eventItem.name}
+                        <small className="right">
+                            {moment(this.props.eventItem.startDate).format('D MMM YYYY')}
+                        </small>
+                    </h1>
+
+                    <div className="progress grey lighten-3">
+                        <div className={"determinate " + this.getProgressBarClass()}
+                             style={{width: this.props.fetching ? 0 : this.props.eventItem.occupancyPercentage + "%"}}></div>
+                    </div>
+
+                    <Row>
+                        <Col s={4} className="highlight-box">
+                            <span className="number">
+                                <CountUp start={0} end={this.props.eventItem.bookingsCount}/>
+                            </span>
+                            <span className="label">{l10n.highlight_bookings}</span>
+                        </Col>
+                        <Col s={4} className="highlight-box">
+                            <span className="number">
+                                <CountUp start={0} end={this.props.eventItem.peopleCount}/>
+                            </span>
+                            <span className="label">{l10n.highlight_people}</span>
+                        </Col>
+                        <Col s={4} className="highlight-box">
+                            <span className={"number " + this.getOccupancyClass()}>
+                                <CountUp start={0} end={this.props.eventItem.seatsLeft}/>
+                            </span>
+                            <span className="label">{l10n.hightlight_seats_left}</span>
+                        </Col>
+                    </Row>
+                </div>
+                }
 
                 {this.props.fetching &&
                     <Loader />
                 }
 
                 {this.props.error && !this.props.fetching &&
-                    <Reload onClick={this.onReload.bind(this)} error={this.props.error} />
+                <Reload onClick={this.onReload.bind(this)} error={this.props.error}/>
                 }
 
                 {!this.props.fetching && this.props.items.length === 0 && !this.props.error &&
-                    <Reload onClick={this.onReload.bind(this)} error={l10n.no_bookings} />
+                <Reload onClick={this.onReload.bind(this)} error={l10n.no_bookings}/>
                 }
 
                 {!this.props.fetching && !this.props.error &&

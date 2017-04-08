@@ -130,7 +130,7 @@ class Event
     }
 
     /**
-     * @return mixed
+     * @return Venue
      */
     public function getVenue()
     {
@@ -196,6 +196,52 @@ class Event
             $bookingsCount = $this->getBookings()->count();
         }
         return $bookingsCount;
+    }
+
+    /**
+     * @Groups({"public", "authenticated"})
+     */
+    public function getPeopleCount() {
+        $peopleCount = 0;
+        if ($this->getBookings()) {
+            /** @var Booking $booking */
+            foreach ($this->getBookings() as $booking) {
+                $peopleCount += $booking->getNbExpected();
+            }
+        }
+        return $peopleCount;
+    }
+
+    /**
+     * @Groups({"public", "authenticated"})
+     */
+    public function getSeatsLeft() {
+        $peoplesCount = $this->getPeopleCount();
+        $totalSeats = $this->getVenue()->getCapacity();
+        return $totalSeats - $peoplesCount;
+    }
+
+    /**
+     * @Groups({"public", "authenticated"})
+     */
+    public function getOccupancyRate(){
+        $occupancyPercentage = $this->getOccupancyPercentage();
+        if ($occupancyPercentage > 90) {
+            return 2;
+        }
+        else if ($occupancyPercentage > 60) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    /**
+     * @Groups({"public", "authenticated"})
+     */
+    public function getOccupancyPercentage() {
+        return (int)($this->getPeopleCount() * 100 / $this->getVenue()->getCapacity());
     }
 
     /**

@@ -32,10 +32,14 @@ class VenueListItem extends React.Component {
             image = <img className="circle responsive-img" src={this.props.image}/>;
         }
         return (
-            <div className="collection-item avatar unclickable">
+            <div className="collection-item avatar">
                 {image}
-                <h4>{this.props.name}</h4>
-                <p>{this.props.address}</p>
+                <Link
+                    to={l10n.formatString(routes.VENUES_EDIT, this.props.id)}
+                    href="#">
+                    <h4>{this.props.name}</h4>
+                    <p>{this.props.address}</p>
+                </Link>
 
                 <FixedActionButton>
                     <li>

@@ -42,7 +42,7 @@ export default {
 
     bookings_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des réservations.',
     booking_fetch_error: 'Une erreur est survenue lors de la récupération de la réservation.',
-
+    bookings_event_fetch_error: 'Impossible de récupérer les détails de l\'événement.',
 
     no_events: 'Aucun événement à afficher pour le moment.',
     no_bookings: 'Aucune réservation pour le moment.',
@@ -88,6 +88,7 @@ export default {
             phone: 'Téléphone',
             nbExpected: 'Nombre de personnes',
             subscribedToNewsletter: 'Inscription à la newsletter',
+            persons: 'pers.',
         }
     },
 
@@ -95,7 +96,7 @@ export default {
     validation: {
         required: 'Ce champ est requis.',
         url: 'Ce champ doit être une adresse internet valide.',
-        numberGreaterThanZero: 'Ce champ doit être un nombre plus grand que zéro.'
+        numberGreaterThanZero: 'Ce champ doit être un nombre plus grand que zéro.',
         email: 'Merci de saisir une adresse e-mail valide.'
     },
 
@@ -104,6 +105,11 @@ export default {
         bookings: 'Réservations'
     },
 
+    subscribed_on: 'Inscrit le',
     time_at: 'à',
+
+    highlight_bookings: 'réservations',
+    highlight_people: 'personnes',
+    hightlight_seats_left: 'places restantes'
 
 };

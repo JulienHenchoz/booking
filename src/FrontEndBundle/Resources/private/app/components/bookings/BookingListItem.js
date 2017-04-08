@@ -5,16 +5,16 @@ import {CollectionItem, Icon} from 'react-materialize';
 import {Link} from 'react-router-dom';
 import * as routes from '../../constants/routes';
 import l10n from '../../l10n/localization';
-import DateTimeBox from './DateTimeBox';
 import FixedActionButton from '../menu/FixedActionButton';
 import * as actions from '../../actions/bookingsActions';
+import moment from 'moment';
 
 const propTypes = {
     dispatch: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired,
-    address: PropTypes.string,
-    website: PropTypes.string,
-    editLink: PropTypes.bool
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    nbExpected: PropTypes.number.isRequired,
+    email: PropTypes.string.isRequired,
 };
 
 class BookingListItem extends React.Component {
@@ -28,19 +28,15 @@ class BookingListItem extends React.Component {
             image = <img className="circle responsive-img" src={this.props.image}/>;
         }
 
-        let content = (
-            <div>
-
-            </div>
-        );
-
         return (
             <div className="collection-item avatar unclickable">
+                <div className="datetime-box booking circle">
+                    <span className="month-day">{this.props.nbExpected}</span>
+                    <span className="year">{l10n.fields.bookings.persons}</span>
+                </div>
 
-                <DateTimeBox className="circle" dateTime={this.props.startDate}/>
-
-                <h4>{this.props.name}</h4>
-                <p>{this.props.venue.name}</p>
+                <h4>{this.props.lastName.toUpperCase()} {this.props.firstName}</h4>
+                <p>{moment(this.props.subscribeDate).format('D MMM YYYY à HH:mm')}</p>
 
                 <FixedActionButton>
                     {this.props.editLink &&
@@ -56,10 +52,10 @@ class BookingListItem extends React.Component {
 
                     <li>
                         <Link
-                            className="btn-floating amber btn-flat"
+                            className="btn-floating green btn-flat"
                             to={l10n.formatString(routes.BOOKINGS_EDIT, this.props.id)}
                             href="#">
-                            <Icon>email</Icon>
+                            <Icon>done</Icon>
                         </Link>
                     </li>
                 </FixedActionButton>

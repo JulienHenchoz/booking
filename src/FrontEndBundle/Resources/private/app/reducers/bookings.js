@@ -2,10 +2,11 @@ import * as types from '../constants/actionTypes';
 
 const initialState = {
     items: [],
-    pastItems: [],
     item: {},
     fetching: false,
     error: null,
+    currentEvent: null,
+    eventItem: null,
     removeModal: false,
     formErrors: {}
 };
@@ -19,7 +20,9 @@ export default function bookings(state = initialState, action) {
          */
         case types.BOOKING_GET_ERROR:
         case types.BOOKINGS_GET_ERROR:
+        case types.BOOKINGS_EVENT_GET_ERROR:
             newState.fetching = false;
+            newState.fetchingEvent = false;
             newState.error = action.payload;
             break;
         case types.RECEIVE_BOOKING:
@@ -32,15 +35,17 @@ export default function bookings(state = initialState, action) {
             newState.fetching = false;
             newState.error = null;
             break;
-        case types.RECEIVE_PAST_BOOKINGS:
-            newState.pastItems = action.payload;
-            newState.fetching = false;
+        case types.RECEIVE_BOOKINGS_EVENT:
+            newState.eventItem = action.payload;
+            newState.fetchingEvent = false;
             newState.error = null;
             break;
         case types.LOADING_BOOKINGS:
             newState.fetching = true;
             break;
-
+        case types.LOADING_BOOKINGS_EVENT:
+            newState.fetchingEvent = true;
+            break;
 
         /**
          * Remove actions
@@ -92,6 +97,12 @@ export default function bookings(state = initialState, action) {
         /**
          * Misc actions
          */
+        case types.ENTER_BOOKINGS_LIST:
+            newState.currentEvent = action.payload;
+            break;
+        case types.LEAVE_BOOKINGS_LIST:
+            newState.currentEvent = null;
+            break;
         case types.LEAVE_FORM:
             newState.item = {};
             newState.saveSuccess = null;

@@ -30,7 +30,7 @@ class Booking
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="subscribe_date", type="datetime")
+     * @ORM\Column(name="subscribe_date", type="datetime", nullable=true)
      * @Groups({"public", "authenticated"})
      * @Assert\Date()
      * @Assert\NotBlank()
@@ -41,7 +41,7 @@ class Booking
      * @var string
      *
      * @Assert\NotBlank()
-     * @ORM\Column(name="first_name", type="string")
+     * @ORM\Column(name="first_name", type="string", nullable=true)
      * @Groups({"public", "authenticated"})
      */
     private $firstName;
@@ -50,7 +50,7 @@ class Booking
      * @var string
      *
      * @Assert\NotBlank()
-     * @ORM\Column(name="last_name", type="string")
+     * @ORM\Column(name="last_name", type="string", nullable=true)
      * @Groups({"public", "authenticated"})
      */
     private $lastName;
@@ -63,7 +63,7 @@ class Booking
      *     message = "The email '{{ value }}' is not a valid email.",
      *     checkMX = true
      * )
-     * @ORM\Column(name="email", type="string")
+     * @ORM\Column(name="email", type="string", nullable=true)
      * @Groups({"public", "authenticated"})
      */
     private $email;
@@ -90,14 +90,6 @@ class Booking
     private $nbExpected;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="approved", type="boolean", nullable=true)
-     * @Groups({"public", "authenticated"})
-     */
-    private $approved = false;
-
-    /**
      *
      * @ORM\ManyToOne(targetEntity="Event")
      * @ORM\JoinColumn(name="event_id", referencedColumnName="id")
@@ -109,18 +101,18 @@ class Booking
     /**
      * @var bool
      *
-     * @ORM\Column(name="cancelled", type="boolean", nullable=true)
-     * @Groups({"public", "authenticated"})
-     */
-    private $cancelled = false;
-
-    /**
-     * @var bool
-     *
      * @ORM\Column(name="subscribed_to_newsletter", type="boolean", nullable=true)
      * @Groups({"public", "authenticated"})
      */
     private $subscribedToNewsletter = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="showed_up", type="boolean", nullable=true)
+     * @Groups({"public", "authenticated"})
+     */
+    private $showedUp = false;
 
     /**
      * @return int
@@ -235,22 +227,6 @@ class Booking
     }
 
     /**
-     * @return bool
-     */
-    public function isApproved()
-    {
-        return $this->approved;
-    }
-
-    /**
-     * @param bool $approved
-     */
-    public function setApproved($approved)
-    {
-        $this->approved = $approved;
-    }
-
-    /**
      * @return mixed
      */
     public function getEvent()
@@ -264,22 +240,6 @@ class Booking
     public function setEvent($event)
     {
         $this->event = $event;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isCancelled()
-    {
-        return $this->cancelled;
-    }
-
-    /**
-     * @param bool $cancelled
-     */
-    public function setCancelled($cancelled)
-    {
-        $this->cancelled = $cancelled;
     }
 
     /**
@@ -310,6 +270,23 @@ class Booking
     {
         $this->subscribedToNewsletter = $subscribedToNewsletter;
     }
+
+    /**
+     * @return bool
+     */
+    public function isShowedUp(): bool
+    {
+        return $this->showedUp;
+    }
+
+    /**
+     * @param bool $showedUp
+     */
+    public function setShowedUp(bool $showedUp)
+    {
+        $this->showedUp = $showedUp;
+    }
+
 
 
 }

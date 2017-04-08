@@ -28,19 +28,17 @@ class EventListItem extends React.Component {
             image = <img className="circle responsive-img" src={this.props.image}/>;
         }
 
-        let content = (
-            <div>
-
-            </div>
-        );
-
         return (
-            <div className="collection-item avatar unclickable">
+            <div className="collection-item avatar">
 
                 <DateTimeBox className="circle" dateTime={this.props.startDate}/>
 
-                <h4>{this.props.name}</h4>
-                <p>{this.props.venue.name}</p>
+                <Link
+                    to={l10n.formatString(routes.BOOKINGS_LIST, this.props.id)}
+                    href="#">
+                    <h4>{this.props.name}</h4>
+                    <p>{this.props.venue.name}</p>
+                </Link>
 
                 <FixedActionButton>
                     {this.props.editLink &&
@@ -57,7 +55,7 @@ class EventListItem extends React.Component {
                     <li>
                         <Link
                             className="btn-floating amber btn-flat"
-                            to={l10n.formatString(routes.EVENTS_EDIT, this.props.id)}
+                            to={l10n.formatString(routes.BOOKINGS_LIST, this.props.id)}
                             href="#">
                             <Icon>email</Icon>
                         </Link>

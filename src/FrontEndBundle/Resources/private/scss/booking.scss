@@ -186,10 +186,49 @@ nav {
   }
 }
 
+.datetime-box.booking {
+  width: 75px !important;
+  height: 60px !important;
+  left: 1px !important;
+  span {
+    font-size: 10px;
+    &.month-day {
+      font-size: 2.2em;
+    }
+  }
+}
+
 .side-nav .collapsible-header, .side-nav.fixed .collapsible-header {
   padding: 0 32px;
 }
 
 #action-buttons {
   margin-top: -1px;
+}
+
+.highlight-box {
+  text-align: center;
+  padding: 20px !important;
+  .number {
+    font-size: 3em;
+    display: block;
+    line-height: 1em;
+    font-weight: bold;
+  }
+  .label {
+    font-size: 11px;
+  }
+}
+
+.progress {
+  .determinate {
+    transition: width 2s;
+  }
+}
+
+.booking-loader {
+  .preloader-wrapper {
+    position: relative;
+    margin-left: 0;
+  }
 }

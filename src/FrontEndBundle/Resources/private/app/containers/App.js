@@ -2,6 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {HashRouter as Router, Route} from 'react-router-dom';
 import MainMenu from "../components/menu/MainMenu";
+import moment from "moment";
 
 import VenuesForm from "../components/venues/VenueForm";
 import VenuesList from "../components/venues/VenuesList";
@@ -19,6 +20,7 @@ import l10n from '../l10n/localization';
 
 class App extends React.Component {
     render() {
+        moment.locale('fr');
         return (
             <Router>
                 <div>
@@ -34,9 +36,9 @@ class App extends React.Component {
                         <Route path={routes.EVENTS_ADD} exact={true} component={EventsForm}/>
                         <Route path={l10n.formatString(routes.EVENTS_EDIT, ':eventId')} component={EventsForm}/>
 
-                        <Route path={l10n.formatString(routes.BOOKINGS_LIST, ':eventId')} component={BookingsList}/>
-                        <Route path={l10n.formatString(routes.BOOKINGS_ADD, ':eventId')} component={BookingsForm}/>
-                        <Route path={l10n.formatString(routes.BOOKINGS_EDIT, ':bookingId')} component={BookingsForm}/>
+                        <Route exact={true} path={l10n.formatString(routes.BOOKINGS_LIST, ':eventId')} component={BookingsList}/>
+                        <Route exact={true} path={l10n.formatString(routes.BOOKINGS_ADD, ':eventId')} component={BookingsForm}/>
+                        <Route exact={true} path={l10n.formatString(routes.BOOKINGS_EDIT, ':bookingId')} component={BookingsForm}/>
 
                     </main>
 

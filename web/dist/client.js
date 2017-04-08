@@ -9523,9 +9523,11 @@ var REMOVING_BOOKING = exports.REMOVING_BOOKING = 'REMOVING_BOOKING';
 var FETCH_BOOKINGS = exports.FETCH_BOOKINGS = 'FETCH_BOOKINGS';
 var FETCH_BOOKING = exports.FETCH_BOOKING = 'FETCH_BOOKING';
 var RECEIVE_BOOKINGS = exports.RECEIVE_BOOKINGS = 'RECEIVE_BOOKINGS';
+var RECEIVE_BOOKINGS_EVENT = exports.RECEIVE_BOOKINGS_EVENT = 'RECEIVE_BOOKINGS_EVENT';
 var RECEIVE_PAST_BOOKINGS = exports.RECEIVE_PAST_BOOKINGS = 'RECEIVE_PAST_BOOKINGS';
 var RECEIVE_BOOKING = exports.RECEIVE_BOOKING = 'RECEIVE_BOOKING';
 var LOADING_BOOKINGS = exports.LOADING_BOOKINGS = 'LOADING_BOOKINGS';
+var LOADING_BOOKINGS_EVENT = exports.LOADING_BOOKINGS_EVENT = 'LOADING_BOOKINGS_EVENT';
 var UPDATE_BOOKING = exports.UPDATE_BOOKING = 'UPDATE_BOOKING';
 var SAVING_BOOKING = exports.SAVING_BOOKING = 'SAVING_BOOKING';
 var BOOKING_SAVE_SUCCESS = exports.BOOKING_SAVE_SUCCESS = 'BOOKING_SAVE_SUCCESS';
@@ -9534,6 +9536,8 @@ var BOOKING_REMOVE_SUCCESS = exports.BOOKING_REMOVE_SUCCESS = 'BOOKING_REMOVE_SU
 var BOOKING_REMOVE_ERROR = exports.BOOKING_REMOVE_ERROR = 'BOOKING_REMOVE_ERROR';
 var BOOKINGS_GET_ERROR = exports.BOOKINGS_GET_ERROR = 'BOOKINGS_GET_ERROR';
 var BOOKING_GET_ERROR = exports.BOOKING_GET_ERROR = 'BOOKING_GET_ERROR';
+var ENTER_BOOKINGS_LIST = exports.ENTER_BOOKINGS_LIST = 'ENTER_BOOKINGS_LIST';
+var LEAVE_BOOKINGS_LIST = exports.LEAVE_BOOKINGS_LIST = 'LEAVE_BOOKINGS_LIST';
 
 /***/ }),
 /* 52 */
@@ -31947,6 +31951,10 @@ var _MainMenu = __webpack_require__(278);
 
 var _MainMenu2 = _interopRequireDefault(_MainMenu);
 
+var _moment = __webpack_require__(0);
+
+var _moment2 = _interopRequireDefault(_moment);
+
 var _VenueForm = __webpack_require__(280);
 
 var _VenueForm2 = _interopRequireDefault(_VenueForm);
@@ -32005,6 +32013,7 @@ var App = function (_React$Component) {
     _createClass(App, [{
         key: "render",
         value: function render() {
+            _moment2.default.locale('fr');
             return _react2.default.createElement(
                 _reactRouterDom.HashRouter,
                 null,
@@ -32023,9 +32032,9 @@ var App = function (_React$Component) {
                         _react2.default.createElement(_reactRouterDom.Route, { path: routes.EVENTS_LIST_PAST, exact: true, component: _PastEventsList2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: routes.EVENTS_ADD, exact: true, component: _EventsForm2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.EVENTS_EDIT, ':eventId'), component: _EventsForm2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.BOOKINGS_LIST, ':eventId'), component: _BookingsList2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.BOOKINGS_ADD, ':eventId'), component: _BookingsForm2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.BOOKINGS_EDIT, ':bookingId'), component: _BookingsForm2.default })
+                        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: _localization2.default.formatString(routes.BOOKINGS_LIST, ':eventId'), component: _BookingsList2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: _localization2.default.formatString(routes.BOOKINGS_ADD, ':eventId'), component: _BookingsForm2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: _localization2.default.formatString(routes.BOOKINGS_EDIT, ':bookingId'), component: _BookingsForm2.default })
                     )
                 )
             );
@@ -32192,21 +32201,25 @@ var EventListItem = function (_React$Component) {
                 image = _react2.default.createElement("img", { className: "circle responsive-img", src: this.props.image });
             }
 
-            var content = _react2.default.createElement("div", null);
-
             return _react2.default.createElement(
                 "div",
-                { className: "collection-item avatar unclickable" },
+                { className: "collection-item avatar" },
                 _react2.default.createElement(_DateTimeBox2.default, { className: "circle", dateTime: this.props.startDate }),
                 _react2.default.createElement(
-                    "h4",
-                    null,
-                    this.props.name
-                ),
-                _react2.default.createElement(
-                    "p",
-                    null,
-                    this.props.venue.name
+                    _reactRouterDom.Link,
+                    {
+                        to: _localization2.default.formatString(routes.BOOKINGS_LIST, this.props.id),
+                        href: "#" },
+                    _react2.default.createElement(
+                        "h4",
+                        null,
+                        this.props.name
+                    ),
+                    _react2.default.createElement(
+                        "p",
+                        null,
+                        this.props.venue.name
+                    )
                 ),
                 _react2.default.createElement(
                     _FixedActionButton2.default,
@@ -32234,7 +32247,7 @@ var EventListItem = function (_React$Component) {
                             _reactRouterDom.Link,
                             {
                                 className: "btn-floating amber btn-flat",
-                                to: _localization2.default.formatString(routes.EVENTS_EDIT, this.props.id),
+                                to: _localization2.default.formatString(routes.BOOKINGS_LIST, this.props.id),
                                 href: "#" },
                             _react2.default.createElement(
                                 _reactMaterialize.Icon,
@@ -33551,17 +33564,23 @@ var VenueListItem = function (_React$Component) {
             }
             return _react2.default.createElement(
                 "div",
-                { className: "collection-item avatar unclickable" },
+                { className: "collection-item avatar" },
                 image,
                 _react2.default.createElement(
-                    "h4",
-                    null,
-                    this.props.name
-                ),
-                _react2.default.createElement(
-                    "p",
-                    null,
-                    this.props.address
+                    _reactRouterDom.Link,
+                    {
+                        to: _localization2.default.formatString(routes.VENUES_EDIT, this.props.id),
+                        href: "#" },
+                    _react2.default.createElement(
+                        "h4",
+                        null,
+                        this.props.name
+                    ),
+                    _react2.default.createElement(
+                        "p",
+                        null,
+                        this.props.address
+                    )
                 ),
                 _react2.default.createElement(
                     _FixedActionButton2.default,
@@ -33729,10 +33748,129 @@ exports.default = (0, _reactRedux.connect)(function (state) {
 
 /***/ }),
 /* 283 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-throw new Error("Module build failed: SyntaxError: Unexpected token, expected , (99:8)\n\n\u001b[0m \u001b[90m  97 | \u001b[39m        url\u001b[33m:\u001b[39m \u001b[32m'Ce champ doit être une adresse internet valide.'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m  98 | \u001b[39m        numberGreaterThanZero\u001b[33m:\u001b[39m \u001b[32m'Ce champ doit être un nombre plus grand que zéro.'\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  99 | \u001b[39m        email\u001b[33m:\u001b[39m \u001b[32m'Merci de saisir une adresse e-mail valide.'\u001b[39m\n \u001b[90m     | \u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 100 | \u001b[39m    }\u001b[33m,\u001b[39m\n \u001b[90m 101 | \u001b[39m\n \u001b[90m 102 | \u001b[39m    tooltips\u001b[33m:\u001b[39m {\u001b[0m\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    save: 'Enregistrer',
+
+    venue_title: 'Salle',
+    venues_title: 'Salles',
+    venue: 'salle',
+    venues: 'salles',
+
+    event_title: 'Événement',
+    events_title: 'Événements',
+    incoming_events_title: 'Événements à venir',
+    past_events_title: 'Événements passés',
+    incoming_events: 'À venir',
+    past_events: 'Passés',
+    event: 'événement',
+    events: 'événements',
+
+    booking_title: 'Réservation',
+    bookings_title: 'Réservations',
+    booking: 'réservation',
+    bookings: 'réservations',
+
+    /** Headers **/
+    editing: 'Edition de "{0}"',
+    new_venue: 'Nouvelle salle',
+    new_event: 'Nouvel événement',
+    new_booking: 'Nouvelle réservation',
+
+    /** Toast messages **/
+    could_not_save_element: 'Impossible de sauver l\'élément !',
+    save_success: 'L\'élément a été sauvegardé avec succès !',
+    save_error: 'Impossible de sauver l\'élément !',
+    remove_success: 'L\'élément a été supprimé avec succès !',
+    remove_error: 'Impossible de supprimer l\'élément !',
+    validation_errors: 'Certains champs sont invalides, merci de vérifier les données et valider à nouveau.',
+
+    venues_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des salles.',
+    venue_fetch_error: 'Une erreur est survenue lors de la récupération de la salle.',
+
+    events_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des événements.',
+    event_fetch_error: 'Une erreur est survenue lors de la récupération de l\'événement.',
+
+    bookings_fetch_error: 'Une erreur est survenue lors de la récupération de la liste des réservations.',
+    booking_fetch_error: 'Une erreur est survenue lors de la récupération de la réservation.',
+    bookings_event_fetch_error: 'Impossible de récupérer les détails de l\'événement.',
+
+    no_events: 'Aucun événement à afficher pour le moment.',
+    no_bookings: 'Aucune réservation pour le moment.',
+
+    /** Buttons **/
+    btn_confirm: 'Confirmer',
+    btn_cancel: 'Annuler',
+    venue_select_default: 'Choisissez une salle...',
+
+    /** Modals **/
+    delete_venue_title: 'Supprimer la salle',
+    delete_venue_content: 'Êtes-vous sûr de vouloir supprimer la salle "{0}" ?',
+
+    delete_event_title: 'Supprimer l\'événement',
+    delete_event_content: 'Êtes-vous sûr de vouloir supprimer l\'événement "{0}" ?',
+
+    delete_booking_title: 'Supprimer la réservation',
+    delete_booking_content: 'Êtes-vous sûr de vouloir supprimer la réservation "{0}" ?',
+
+    /** Entity Fields **/
+    fields: {
+        venues: {
+            name: 'Nom',
+            capacity: 'Capacité',
+            address: 'Adresse',
+            phone: 'Téléphone',
+            website: 'Site web',
+            image: 'Lien de l\'image'
+        },
+        events: {
+            name: 'Nom',
+            startDate: 'Date/heure',
+            venue: 'Salle',
+            description: 'Description',
+            image: 'Lien de l\'image'
+        },
+        bookings: {
+            event: 'Evénement',
+            subscribeDate: 'Date d\'inscription',
+            firstName: 'Prénom',
+            lastName: 'Nom',
+            email: 'E-mail',
+            phone: 'Téléphone',
+            nbExpected: 'Nombre de personnes',
+            subscribedToNewsletter: 'Inscription à la newsletter',
+            persons: 'pers.'
+        }
+    },
+
+    /** Validation message **/
+    validation: {
+        required: 'Ce champ est requis.',
+        url: 'Ce champ doit être une adresse internet valide.',
+        numberGreaterThanZero: 'Ce champ doit être un nombre plus grand que zéro.',
+        email: 'Merci de saisir une adresse e-mail valide.'
+    },
+
+    tooltips: {
+        edit: 'Editer',
+        bookings: 'Réservations'
+    },
+
+    subscribed_on: 'Inscrit le',
+    time_at: 'à',
+
+    highlight_bookings: 'réservations',
+    highlight_people: 'personnes',
+    hightlight_seats_left: 'places restantes'
+
+};
 
 /***/ }),
 /* 284 */
@@ -58006,6 +58144,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.loadingBookings = loadingBookings;
+exports.loadingBookingsEvent = loadingBookingsEvent;
 exports.savingBooking = savingBooking;
 exports.cancelRemoveBooking = cancelRemoveBooking;
 exports.removingBooking = removingBooking;
@@ -58024,8 +58163,10 @@ exports.validationError = validationError;
 exports.addBooking = addBooking;
 exports.confirmRemoveBooking = confirmRemoveBooking;
 exports.updateBooking = updateBooking;
+exports.enterBookingsList = enterBookingsList;
+exports.receiveBookingsEvent = receiveBookingsEvent;
+exports.leaveBookingsList = leaveBookingsList;
 exports.fetchBookings = fetchBookings;
-exports.fetchPastBookings = fetchPastBookings;
 exports.fetchBooking = fetchBooking;
 
 var _actionTypes = __webpack_require__(51);
@@ -58051,6 +58192,12 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function loadingBookings() {
     return {
         type: types.LOADING_BOOKINGS
+    };
+}
+
+function loadingBookingsEvent() {
+    return {
+        type: types.LOADING_BOOKINGS_EVENT
     };
 }
 
@@ -58225,27 +58372,40 @@ function updateBooking(id, form) {
     };
 }
 
-function fetchBookings() {
+function enterBookingsList(eventId) {
     return function (dispatch) {
-        dispatch(loadingBookings());
-        fetch(ajaxRoutes.BOOKINGS_GET).then(function (response) {
+        dispatch(loadingBookingsEvent());
+        fetch(_localization2.default.formatString(ajaxRoutes.EVENT_GET, eventId)).then(function (response) {
             return response.json();
         }).then(function (json) {
-            dispatch(receiveBookings(json));
-        }).catch(function () {
-            dispatch(getError(_localization2.default.bookings_fetch_error));
+            dispatch(receiveBookingsEvent(json));
+        }).catch(function (e) {
+            dispatch(getError(_localization2.default.bookings_event_fetch_error));
         });
     };
 }
 
-function fetchPastBookings() {
+function receiveBookingsEvent(item) {
+    return {
+        type: types.RECEIVE_BOOKINGS_EVENT,
+        payload: item
+    };
+}
+
+function leaveBookingsList() {
+    return {
+        type: types.LEAVE_BOOKINGS_LIST
+    };
+}
+
+function fetchBookings(eventId) {
     return function (dispatch) {
         dispatch(loadingBookings());
-        fetch(ajaxRoutes.BOOKINGS_GET_PAST).then(function (response) {
+        fetch(_localization2.default.formatString(ajaxRoutes.BOOKINGS_GET_BY_EVENT, eventId)).then(function (response) {
             return response.json();
         }).then(function (json) {
-            dispatch(receivePastBookings(json));
-        }).catch(function () {
+            dispatch(receiveBookings(json));
+        }).catch(function (e) {
             dispatch(getError(_localization2.default.bookings_fetch_error));
         });
     };
@@ -58296,10 +58456,6 @@ var _localization = __webpack_require__(11);
 
 var _localization2 = _interopRequireDefault(_localization);
 
-var _DateTimeBox = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./DateTimeBox\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-
-var _DateTimeBox2 = _interopRequireDefault(_DateTimeBox);
-
 var _FixedActionButton = __webpack_require__(542);
 
 var _FixedActionButton2 = _interopRequireDefault(_FixedActionButton);
@@ -58307,6 +58463,10 @@ var _FixedActionButton2 = _interopRequireDefault(_FixedActionButton);
 var _bookingsActions = __webpack_require__(543);
 
 var actions = _interopRequireWildcard(_bookingsActions);
+
+var _moment = __webpack_require__(0);
+
+var _moment2 = _interopRequireDefault(_moment);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -58320,10 +58480,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var propTypes = {
     dispatch: _react.PropTypes.func.isRequired,
-    name: _react.PropTypes.string.isRequired,
-    address: _react.PropTypes.string,
-    website: _react.PropTypes.string,
-    editLink: _react.PropTypes.bool
+    firstName: _react.PropTypes.string.isRequired,
+    lastName: _react.PropTypes.string.isRequired,
+    nbExpected: _react.PropTypes.number.isRequired,
+    email: _react.PropTypes.string.isRequired
 };
 
 var BookingListItem = function (_React$Component) {
@@ -58347,21 +58507,34 @@ var BookingListItem = function (_React$Component) {
                 image = _react2.default.createElement("img", { className: "circle responsive-img", src: this.props.image });
             }
 
-            var content = _react2.default.createElement("div", null);
-
             return _react2.default.createElement(
                 "div",
                 { className: "collection-item avatar unclickable" },
-                _react2.default.createElement(_DateTimeBox2.default, { className: "circle", dateTime: this.props.startDate }),
+                _react2.default.createElement(
+                    "div",
+                    { className: "datetime-box booking circle" },
+                    _react2.default.createElement(
+                        "span",
+                        { className: "month-day" },
+                        this.props.nbExpected
+                    ),
+                    _react2.default.createElement(
+                        "span",
+                        { className: "year" },
+                        _localization2.default.fields.bookings.persons
+                    )
+                ),
                 _react2.default.createElement(
                     "h4",
                     null,
-                    this.props.name
+                    this.props.lastName.toUpperCase(),
+                    " ",
+                    this.props.firstName
                 ),
                 _react2.default.createElement(
                     "p",
                     null,
-                    this.props.venue.name
+                    (0, _moment2.default)(this.props.subscribeDate).format('D MMM YYYY à HH:mm')
                 ),
                 _react2.default.createElement(
                     _FixedActionButton2.default,
@@ -58388,13 +58561,13 @@ var BookingListItem = function (_React$Component) {
                         _react2.default.createElement(
                             _reactRouterDom.Link,
                             {
-                                className: "btn-floating amber btn-flat",
+                                className: "btn-floating green btn-flat",
                                 to: _localization2.default.formatString(routes.BOOKINGS_EDIT, this.props.id),
                                 href: "#" },
                             _react2.default.createElement(
                                 _reactMaterialize.Icon,
                                 null,
-                                "email"
+                                "done"
                             )
                         )
                     )
@@ -58928,6 +59101,14 @@ var _routes = __webpack_require__(23);
 
 var routes = _interopRequireWildcard(_routes);
 
+var _moment = __webpack_require__(0);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _reactCountup = __webpack_require__(550);
+
+var _reactCountup2 = _interopRequireDefault(_reactCountup);
+
 var _bookingsActions = __webpack_require__(543);
 
 var actions = _interopRequireWildcard(_bookingsActions);
@@ -58975,7 +59156,16 @@ var BookingsList = function (_React$Component) {
     _createClass(BookingsList, [{
         key: "componentWillMount",
         value: function componentWillMount() {
-            this.fetchBookings();
+            var eventId = this.props.match.params.eventId !== undefined ? this.props.match.params.eventId : null;
+            if (eventId) {
+                this.props.dispatch(actions.enterBookingsList(eventId));
+                this.props.dispatch(actions.fetchBookings(eventId));
+            }
+        }
+    }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+            this.props.dispatch(actions.leaveBookingsList());
         }
 
         /**
@@ -58986,8 +59176,8 @@ var BookingsList = function (_React$Component) {
     }, {
         key: "onReload",
         value: function onReload(e) {
-            e.prbookingDefault();
-            this.fetchBookings();
+            e.preventDefault();
+            this.fetchBookings(this.props.currentEvent);
         }
 
         /**
@@ -58997,7 +59187,7 @@ var BookingsList = function (_React$Component) {
     }, {
         key: "fetchBookings",
         value: function fetchBookings() {
-            this.props.dispatch(actions.fetchBookings());
+            this.props.dispatch(actions.fetchBookings(this.props.currentEvent));
         }
 
         /**
@@ -59023,6 +59213,28 @@ var BookingsList = function (_React$Component) {
         value: function isListEmpty() {
             return this.props.items === undefined || this.props.items === null || this.props.items.length === 0;
         }
+    }, {
+        key: "getOccupancyClass",
+        value: function getOccupancyClass() {
+            if (this.props.eventItem.occupancyRate === 2) {
+                return 'red-text';
+            } else if (this.props.eventItem.occupancyRate === 1) {
+                return 'orange-text';
+            } else {
+                return 'green-text';
+            }
+        }
+    }, {
+        key: "getProgressBarClass",
+        value: function getProgressBarClass() {
+            if (this.props.eventItem.occupancyRate === 2) {
+                return 'green';
+            } else if (this.props.eventItem.occupancyRate === 1) {
+                return 'orange';
+            } else {
+                return 'red';
+            }
+        }
 
         /**
          * General render method. Builds the list of bookings to display
@@ -59045,7 +59257,73 @@ var BookingsList = function (_React$Component) {
             return _react2.default.createElement(
                 "div",
                 null,
-                _react2.default.createElement(_FixedNavBar2.default, { title: _localization2.default.incoming_bookings_title, showAddBtn: true, addRoute: routes.BOOKINGS_ADD }),
+                _react2.default.createElement(_FixedNavBar2.default, { title: _localization2.default.bookings_title, showAddBtn: true, addRoute: routes.BOOKINGS_ADD }),
+                !this.props.fetchingEvent && this.props.eventItem && _react2.default.createElement(
+                    "div",
+                    null,
+                    _react2.default.createElement(
+                        "h1",
+                        null,
+                        this.props.eventItem.name,
+                        _react2.default.createElement(
+                            "small",
+                            { className: "right" },
+                            (0, _moment2.default)(this.props.eventItem.startDate).format('D MMM YYYY')
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "progress grey lighten-3" },
+                        _react2.default.createElement("div", { className: "determinate " + this.getProgressBarClass(),
+                            style: { width: this.props.fetching ? 0 : this.props.eventItem.occupancyPercentage + "%" } })
+                    ),
+                    _react2.default.createElement(
+                        _reactMaterialize.Row,
+                        null,
+                        _react2.default.createElement(
+                            _reactMaterialize.Col,
+                            { s: 4, className: "highlight-box" },
+                            _react2.default.createElement(
+                                "span",
+                                { className: "number" },
+                                _react2.default.createElement(_reactCountup2.default, { start: 0, end: this.props.eventItem.bookingsCount })
+                            ),
+                            _react2.default.createElement(
+                                "span",
+                                { className: "label" },
+                                _localization2.default.highlight_bookings
+                            )
+                        ),
+                        _react2.default.createElement(
+                            _reactMaterialize.Col,
+                            { s: 4, className: "highlight-box" },
+                            _react2.default.createElement(
+                                "span",
+                                { className: "number" },
+                                _react2.default.createElement(_reactCountup2.default, { start: 0, end: this.props.eventItem.peopleCount })
+                            ),
+                            _react2.default.createElement(
+                                "span",
+                                { className: "label" },
+                                _localization2.default.highlight_people
+                            )
+                        ),
+                        _react2.default.createElement(
+                            _reactMaterialize.Col,
+                            { s: 4, className: "highlight-box" },
+                            _react2.default.createElement(
+                                "span",
+                                { className: "number " + this.getOccupancyClass() },
+                                _react2.default.createElement(_reactCountup2.default, { start: 0, end: this.props.eventItem.seatsLeft })
+                            ),
+                            _react2.default.createElement(
+                                "span",
+                                { className: "label" },
+                                _localization2.default.hightlight_seats_left
+                            )
+                        )
+                    )
+                ),
                 this.props.fetching && _react2.default.createElement(_Loader2.default, null),
                 this.props.error && !this.props.fetching && _react2.default.createElement(_Reload2.default, { onClick: this.onReload.bind(this), error: this.props.error }),
                 !this.props.fetching && this.props.items.length === 0 && !this.props.error && _react2.default.createElement(_Reload2.default, { onClick: this.onReload.bind(this), error: _localization2.default.no_bookings }),
@@ -59083,10 +59361,11 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 var initialState = {
     items: [],
-    pastItems: [],
     item: {},
     fetching: false,
     error: null,
+    currentEvent: null,
+    eventItem: null,
     removeModal: false,
     formErrors: {}
 };
@@ -59103,7 +59382,9 @@ function bookings() {
          */
         case types.BOOKING_GET_ERROR:
         case types.BOOKINGS_GET_ERROR:
+        case types.BOOKINGS_EVENT_GET_ERROR:
             newState.fetching = false;
+            newState.fetchingEvent = false;
             newState.error = action.payload;
             break;
         case types.RECEIVE_BOOKING:
@@ -59116,13 +59397,16 @@ function bookings() {
             newState.fetching = false;
             newState.error = null;
             break;
-        case types.RECEIVE_PAST_BOOKINGS:
-            newState.pastItems = action.payload;
-            newState.fetching = false;
+        case types.RECEIVE_BOOKINGS_EVENT:
+            newState.eventItem = action.payload;
+            newState.fetchingEvent = false;
             newState.error = null;
             break;
         case types.LOADING_BOOKINGS:
             newState.fetching = true;
+            break;
+        case types.LOADING_BOOKINGS_EVENT:
+            newState.fetchingEvent = true;
             break;
 
         /**
@@ -59174,6 +59458,12 @@ function bookings() {
         /**
          * Misc actions
          */
+        case types.ENTER_BOOKINGS_LIST:
+            newState.currentEvent = action.payload;
+            break;
+        case types.LEAVE_BOOKINGS_LIST:
+            newState.currentEvent = null;
+            break;
         case types.LEAVE_FORM:
             newState.item = {};
             newState.saveSuccess = null;
@@ -59247,6 +59537,164 @@ exports.default = {
         }
     }
 };
+
+/***/ }),
+/* 549 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;!function(a,t){ true?!(__WEBPACK_AMD_DEFINE_FACTORY__ = (t),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)):"object"==typeof exports?module.exports=t(require,exports,module):a.CountUp=t()}(this,function(a,t,n){var e=function(a,t,n,e,r,i){for(var o=0,s=["webkit","moz","ms","o"],m=0;m<s.length&&!window.requestAnimationFrame;++m)window.requestAnimationFrame=window[s[m]+"RequestAnimationFrame"],window.cancelAnimationFrame=window[s[m]+"CancelAnimationFrame"]||window[s[m]+"CancelRequestAnimationFrame"];window.requestAnimationFrame||(window.requestAnimationFrame=function(a,t){var n=(new Date).getTime(),e=Math.max(0,16-(n-o)),r=window.setTimeout(function(){a(n+e)},e);return o=n+e,r}),window.cancelAnimationFrame||(window.cancelAnimationFrame=function(a){clearTimeout(a)});var u=this;if(u.options={useEasing:!0,useGrouping:!0,separator:",",decimal:".",easingFn:null,formattingFn:null,prefix:"",suffix:""},i&&"object"==typeof i)for(var l in u.options)i.hasOwnProperty(l)&&(u.options[l]=i[l]);""===u.options.separator&&(u.options.useGrouping=!1),u.version=function(){return"1.8.2"},u.d="string"==typeof a?document.getElementById(a):a,u.startVal=Number(t),u.endVal=Number(n),u.countDown=u.startVal>u.endVal,u.frameVal=u.startVal,u.decimals=Math.max(0,e||0),u.dec=Math.pow(10,u.decimals),u.duration=1e3*Number(r)||2e3,u.formatNumber=function(a){a=a.toFixed(u.decimals),a+="";var t,n,e,r;if(t=a.split("."),n=t[0],e=t.length>1?u.options.decimal+t[1]:"",r=/(\d+)(\d{3})/,u.options.useGrouping)for(;r.test(n);)n=n.replace(r,"$1"+u.options.separator+"$2");return u.options.prefix+n+e+u.options.suffix},u.easeOutExpo=function(a,t,n,e){return n*(-Math.pow(2,-10*a/e)+1)*1024/1023+t},u.easingFn=u.options.easingFn?u.options.easingFn:u.easeOutExpo,u.formattingFn=u.options.formattingFn?u.options.formattingFn:u.formatNumber,u.printValue=function(a){var t=u.formattingFn(a);"INPUT"===u.d.tagName?this.d.value=t:"text"===u.d.tagName||"tspan"===u.d.tagName?this.d.textContent=t:this.d.innerHTML=t},u.count=function(a){u.startTime||(u.startTime=a),u.timestamp=a;var t=a-u.startTime;u.remaining=u.duration-t,u.options.useEasing?u.countDown?u.frameVal=u.startVal-u.easingFn(t,0,u.startVal-u.endVal,u.duration):u.frameVal=u.easingFn(t,u.startVal,u.endVal-u.startVal,u.duration):u.countDown?u.frameVal=u.startVal-(u.startVal-u.endVal)*(t/u.duration):u.frameVal=u.startVal+(u.endVal-u.startVal)*(t/u.duration),u.countDown?u.frameVal=u.frameVal<u.endVal?u.endVal:u.frameVal:u.frameVal=u.frameVal>u.endVal?u.endVal:u.frameVal,u.frameVal=Math.round(u.frameVal*u.dec)/u.dec,u.printValue(u.frameVal),t<u.duration?u.rAF=requestAnimationFrame(u.count):u.callback&&u.callback()},u.start=function(a){return u.callback=a,u.rAF=requestAnimationFrame(u.count),!1},u.pauseResume=function(){u.paused?(u.paused=!1,delete u.startTime,u.duration=u.remaining,u.startVal=u.frameVal,requestAnimationFrame(u.count)):(u.paused=!0,cancelAnimationFrame(u.rAF))},u.reset=function(){u.paused=!1,delete u.startTime,u.startVal=t,cancelAnimationFrame(u.rAF),u.printValue(u.startVal)},u.update=function(a){cancelAnimationFrame(u.rAF),u.paused=!1,delete u.startTime,u.startVal=u.frameVal,u.endVal=Number(a),u.countDown=u.startVal>u.endVal,u.rAF=requestAnimationFrame(u.count)},u.printValue(u.startVal)};return e});
+
+/***/ }),
+/* 550 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.startAnimation = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _countup = __webpack_require__(549);
+
+var _countup2 = _interopRequireDefault(_countup);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var startAnimation = exports.startAnimation = function startAnimation(component) {
+  if (component && component.spanElement) {
+    var _component$props = component.props,
+        _decimal = _component$props.decimal,
+        _decimals = _component$props.decimals,
+        _duration = _component$props.duration,
+        _easingFn = _component$props.easingFn,
+        _end = _component$props.end,
+        _onComplete = _component$props.onComplete,
+        _onStart = _component$props.onStart,
+        _prefix = _component$props.prefix,
+        _separator = _component$props.separator,
+        _start = _component$props.start,
+        _suffix = _component$props.suffix,
+        _useEasing = _component$props.useEasing,
+        _useGrouping = _component$props.useGrouping;
+
+
+    var countupInstance = new _countup2.default(component.spanElement, _start, _end, _decimals, _duration, {
+      decimal: _decimal,
+      easingFn: _easingFn,
+      separator: _separator,
+      prefix: _prefix,
+      suffix: _suffix,
+      useEasing: _useEasing,
+      useGrouping: _useGrouping
+    });
+
+    if (typeof _onStart === 'function') {
+      _onStart();
+    }
+
+    countupInstance.start(_onComplete);
+  } else {
+    throw new Error('You need to pass the CountUp component as an argument!\neg. this.myCountUp.startAnimation(this.myCountUp);');
+  }
+};
+
+/**
+ * Component
+ */
+
+var CountUp = function (_Component) {
+  _inherits(CountUp, _Component);
+
+  function CountUp() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, CountUp);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = CountUp.__proto__ || Object.getPrototypeOf(CountUp)).call.apply(_ref, [this].concat(args))), _this), _this.spanElement = null, _this.refSpan = function (span) {
+      _this.spanElement = span;
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(CountUp, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      startAnimation(this);
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps) {
+      var hasCertainPropsChanged = this.props.duration !== nextProps.duration || this.props.end !== nextProps.end || this.props.start !== nextProps.start;
+
+      return nextProps.redraw || hasCertainPropsChanged;
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      startAnimation(this);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          className = _props.className,
+          start = _props.start,
+          style = _props.style;
+
+
+      return _react2.default.createElement(
+        'span',
+        { className: className, style: style, ref: this.refSpan },
+        start
+      );
+    }
+  }]);
+
+  return CountUp;
+}(_react.Component);
+
+CountUp.defaultProps = {
+  className: undefined,
+  decimal: '.',
+  decimals: 0,
+  duration: 3,
+  easingFn: undefined,
+  end: 100,
+  onComplete: undefined,
+  onStart: undefined,
+  prefix: '',
+  separator: ',',
+  start: 0,
+  suffix: '',
+  redraw: false,
+  style: undefined,
+  useEasing: true,
+  useGrouping: false
+};
+exports.default = CountUp;
 
 /***/ })
 /******/ ]);
