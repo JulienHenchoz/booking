@@ -73,21 +73,61 @@ h4 {
   }
 }
 
-.collection-item {
-  &.unclickable a {
-    cursor: default;
-  }
-  .row {
-    margin: 0;
-  }
-  .collection-image {
-    img {
-      max-width: 200px;
-      width: 100%;
+.collection {
+  .collection-item {
+    padding: 15px 20px;
+    h4 {
+      margin-top: 0;
+      margin-bottom: 5px;
+      font-size: 1.8em;
     }
-  }
-  p {
-    color: #222;
+    &.unclickable a {
+      cursor: default;
+    }
+    &.avatar {
+      min-height: 77px;
+    }
+    .row {
+      margin: 0;
+    }
+    .collection-image {
+      img {
+        max-width: 200px;
+        width: 100%;
+      }
+    }
+
+    .secondary-content {
+      position: relative !important;
+      right: 0 !important;
+      .fixed-action-btn {
+        position: absolute;
+        right: 0;
+        ul {
+          top: 0;
+          right: 30px;
+          li {
+            margin-top: 12px;
+          }
+        }
+      }
+      a + a {
+        margin-left: 10px !important;
+      }
+    }
+
+    &.avatar {
+      .datetime-box.circle {
+        text-align: center;
+        width: 55px;
+          height: 55px;
+        left: 9px;
+      }
+    }
+
+    p {
+      color: #222;
+    }
   }
 }
 
@@ -136,12 +176,13 @@ nav {
 }
 
 .datetime-box span {
+  color: $primary-color;
   display: block;
   font-size: 12px;
-  line-height: 0.4em;
+  line-height: 1.2em;
   &.month-day {
-    font-size: 2.5em;
-    line-height: 1.2em;
+    font-size: 2em;
+    line-height: 0.9em;
   }
 }
 

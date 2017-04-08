@@ -79,7 +79,7 @@ class PastEventsList extends React.Component {
     render() {
         // Display the list
         const itemList = this.props.pastItems.map(function (event) {
-            return (<EventListItem editLink={false} key={event.id} {...event} />);
+            return (<EventListItem editLink={true} key={event.id} {...event} />);
         });
         let body = (
             <Collection>

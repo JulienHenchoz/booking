@@ -24,7 +24,7 @@ const FixedNavBar = ({title, align, children, icon = null, showAddBtn = false, a
 
                             <ul id="menu-trigger" className="left">
                                 <li>
-                                    <a data-activates="sidenav_0" href="#" onClick={(e) => {this.preventDefault(); }}>
+                                    <a href="#" onClick={(e) => {e.preventDefault(); $('#menu-trigger-btn').click(); }}>
                                         <Icon>menu</Icon>
                                     </a>
                                 </li>

@@ -9372,8 +9372,8 @@ var FixedNavBar = function FixedNavBar(_ref) {
                                 null,
                                 _react2.default.createElement(
                                     'a',
-                                    { 'data-activates': 'sidenav_0', href: '#', onClick: function onClick(e) {
-                                            undefined.preventDefault();
+                                    { href: '#', onClick: function onClick(e) {
+                                            e.preventDefault();$('#menu-trigger-btn').click();
                                         } },
                                     _react2.default.createElement(
                                         _reactMaterialize.Icon,
@@ -32111,6 +32111,10 @@ var _DateTimeBox = __webpack_require__(537);
 
 var _DateTimeBox2 = _interopRequireDefault(_DateTimeBox);
 
+var _FixedActionButton = __webpack_require__(542);
+
+var _FixedActionButton2 = _interopRequireDefault(_FixedActionButton);
+
 var _eventsActions = __webpack_require__(62);
 
 var actions = _interopRequireWildcard(_eventsActions);
@@ -32154,42 +32158,57 @@ var EventListItem = function (_React$Component) {
                 image = _react2.default.createElement("img", { className: "circle responsive-img", src: this.props.image });
             }
 
-            var content = _react2.default.createElement(
-                _reactMaterialize.Row,
-                { className: "valign-wrapper" },
-                _react2.default.createElement(
-                    _reactMaterialize.Col,
-                    { s: 3, l: 2, className: "collection-image center-align valign" },
-                    _react2.default.createElement(_DateTimeBox2.default, { dateTime: this.props.startDate })
-                ),
-                _react2.default.createElement(
-                    _reactMaterialize.Col,
-                    { s: 9, l: 10 },
-                    _react2.default.createElement(
-                        "h4",
-                        null,
-                        this.props.name
-                    ),
-                    _react2.default.createElement(
-                        "p",
-                        null,
-                        this.props.venue.name
-                    )
-                )
-            );
+            var content = _react2.default.createElement("div", null);
 
             return _react2.default.createElement(
                 "div",
-                { className: "collection-item " + (!this.props.editLink ? 'unclickable' : '') },
-                this.props.editLink && _react2.default.createElement(
-                    _reactRouterDom.Link,
-                    { to: _localization2.default.formatString(routes.EVENTS_EDIT, this.props.id), href: "#" },
-                    content
+                { className: "collection-item avatar unclickable" },
+                _react2.default.createElement(_DateTimeBox2.default, { className: "circle", dateTime: this.props.startDate }),
+                _react2.default.createElement(
+                    "h4",
+                    null,
+                    this.props.name
                 ),
-                !this.props.editLink && _react2.default.createElement(
-                    "a",
-                    { href: "javascript:;" },
-                    content
+                _react2.default.createElement(
+                    "p",
+                    null,
+                    this.props.venue.name
+                ),
+                _react2.default.createElement(
+                    _FixedActionButton2.default,
+                    null,
+                    this.props.editLink && _react2.default.createElement(
+                        "li",
+                        null,
+                        _react2.default.createElement(
+                            _reactRouterDom.Link,
+                            {
+                                className: "btn-floating blue btn-flat",
+                                to: _localization2.default.formatString(routes.EVENTS_EDIT, this.props.id),
+                                href: "#" },
+                            _react2.default.createElement(
+                                _reactMaterialize.Icon,
+                                null,
+                                "mode_edit"
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "li",
+                        null,
+                        _react2.default.createElement(
+                            _reactRouterDom.Link,
+                            {
+                                className: "btn-floating amber btn-flat",
+                                to: _localization2.default.formatString(routes.EVENTS_EDIT, this.props.id),
+                                href: "#" },
+                            _react2.default.createElement(
+                                _reactMaterialize.Icon,
+                                null,
+                                "email"
+                            )
+                        )
+                    )
                 )
             );
         }
@@ -32915,7 +32934,7 @@ var MainMenu = function (_React$Component) {
                     _reactMaterialize.SideNav,
                     { options: { draggable: true, closeOnClick: true }, trigger: _react2.default.createElement(
                             'div',
-                            { className: 'hide' },
+                            { id: 'menu-trigger-btn', className: 'hide' },
                             _react2.default.createElement(
                                 _reactMaterialize.Icon,
                                 null,
@@ -33447,6 +33466,10 @@ var _localization = __webpack_require__(11);
 
 var _localization2 = _interopRequireDefault(_localization);
 
+var _FixedActionButton = __webpack_require__(542);
+
+var _FixedActionButton2 = _interopRequireDefault(_FixedActionButton);
+
 var _venuesActions = __webpack_require__(48);
 
 var actions = _interopRequireWildcard(_venuesActions);
@@ -33485,12 +33508,12 @@ var VenueListItem = function (_React$Component) {
                 null,
                 _react2.default.createElement(
                     _reactMaterialize.Icon,
-                    { className: "large grey-text hide-on-small-only" },
+                    { className: "large hide-on-small-only circle" },
                     "business"
                 ),
                 _react2.default.createElement(
                     _reactMaterialize.Icon,
-                    { className: "medium grey-text hide-on-large-only" },
+                    { className: "medium hide-on-large-only circle" },
                     "business"
                 )
             );
@@ -33498,28 +33521,36 @@ var VenueListItem = function (_React$Component) {
                 image = _react2.default.createElement("img", { className: "circle responsive-img", src: this.props.image });
             }
             return _react2.default.createElement(
-                _reactRouterDom.Link,
-                { to: _localization2.default.formatString(routes.VENUES_EDIT, this.props.id), className: "collection-item", href: "#" },
+                "div",
+                { className: "collection-item avatar unclickable" },
+                image,
                 _react2.default.createElement(
-                    _reactMaterialize.Row,
+                    "h4",
+                    null,
+                    this.props.name
+                ),
+                _react2.default.createElement(
+                    "p",
+                    null,
+                    this.props.address
+                ),
+                _react2.default.createElement(
+                    _FixedActionButton2.default,
                     null,
                     _react2.default.createElement(
-                        _reactMaterialize.Col,
-                        { s: 3, l: 2, className: "collection-image center-align" },
-                        image
-                    ),
-                    _react2.default.createElement(
-                        _reactMaterialize.Col,
-                        { s: 9, l: 10 },
+                        "li",
+                        null,
                         _react2.default.createElement(
-                            "h4",
-                            null,
-                            this.props.name
-                        ),
-                        _react2.default.createElement(
-                            "p",
-                            null,
-                            this.props.address
+                            _reactRouterDom.Link,
+                            {
+                                className: "btn-floating blue btn-flat",
+                                to: _localization2.default.formatString(routes.VENUES_EDIT, this.props.id),
+                                href: "#" },
+                            _react2.default.createElement(
+                                _reactMaterialize.Icon,
+                                null,
+                                "mode_edit"
+                            )
                         )
                     )
                 )
@@ -33757,6 +33788,11 @@ exports.default = {
         required: 'Ce champ est requis.',
         url: 'Ce champ doit être une adresse internet valide.',
         numberGreaterThanZero: 'Ce champ doit être un nombre plus grand que zéro.'
+    },
+
+    tooltips: {
+        edit: 'Editer',
+        bookings: 'Réservations'
     },
 
     time_at: 'à'
@@ -57636,10 +57672,11 @@ var _moment2 = _interopRequireDefault(_moment);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = function (_ref) {
-    var dateTime = _ref.dateTime;
+    var dateTime = _ref.dateTime,
+        className = _ref.className;
     return _react2.default.createElement(
         "div",
-        { className: "datetime-box" },
+        { className: "datetime-box " + className },
         _react2.default.createElement(
             "span",
             { className: "month" },
@@ -57939,7 +57976,7 @@ var PastEventsList = function (_React$Component) {
         value: function render() {
             // Display the list
             var itemList = this.props.pastItems.map(function (event) {
-                return _react2.default.createElement(_EventListItem2.default, _extends({ editLink: false, key: event.id }, event));
+                return _react2.default.createElement(_EventListItem2.default, _extends({ editLink: true, key: event.id }, event));
             });
             var body = _react2.default.createElement(
                 _reactMaterialize.Collection,
@@ -57966,6 +58003,57 @@ PastEventsList.propTypes = propTypes;
 exports.default = (0, _reactRedux.connect)(function (state) {
     return Object.assign({}, state.events);
 })(PastEventsList);
+
+/***/ }),
+/* 542 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouterDom = __webpack_require__(17);
+
+var _reactMaterialize = __webpack_require__(14);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (_ref) {
+    var children = _ref.children;
+
+
+    return _react2.default.createElement(
+        'div',
+        { className: 'secondary-content' },
+        _react2.default.createElement(
+            'div',
+            { className: 'fixed-action-btn horizontal' },
+            _react2.default.createElement(
+                'a',
+                { href: '#', onClick: function onClick(e) {
+                        e.preventDefault();
+                    } },
+                _react2.default.createElement(
+                    _reactMaterialize.Icon,
+                    { className: 'small grey-text' },
+                    'more_horiz'
+                )
+            ),
+            _react2.default.createElement(
+                'ul',
+                null,
+                children
+            )
+        )
+    );
+};
 
 /***/ })
 /******/ ]);

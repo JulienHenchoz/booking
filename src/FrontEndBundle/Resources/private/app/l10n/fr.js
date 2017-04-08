@@ -81,6 +81,11 @@ export default {
         numberGreaterThanZero: 'Ce champ doit être un nombre plus grand que zéro.'
     },
 
+    tooltips: {
+        edit: 'Editer',
+        bookings: 'Réservations'
+    },
+
     time_at: 'à',
 
 };

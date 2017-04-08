@@ -9,7 +9,7 @@ export default class MainMenu extends React.Component {
     render() {
         return (
             <div>
-                <SideNav options={{ draggable: true, closeOnClick: true }} trigger={ <div className="hide"><Icon>menu</Icon></div> }>
+                <SideNav options={{ draggable: true, closeOnClick: true }} trigger={ <div id="menu-trigger-btn" className="hide"><Icon>menu</Icon></div> }>
 
                     <SideNavItem userView
                         user={{

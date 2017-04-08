@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 import * as routes from '../../constants/routes';
 import l10n from '../../l10n/localization';
 import DateTimeBox from './DateTimeBox';
-
+import FixedActionButton from '../menu/FixedActionButton';
 import * as actions from '../../actions/eventsActions';
 
 const propTypes = {
@@ -29,31 +29,42 @@ class EventListItem extends React.Component {
         }
 
         let content = (
-            <Row className="valign-wrapper">
-                <Col s={3} l={2} className="collection-image center-align valign">
-                    <DateTimeBox dateTime={this.props.startDate}/>
-                </Col>
-                <Col s={9} l={10}>
-                    <h4>{this.props.name}</h4>
-                    <p>{this.props.venue.name}</p>
-                </Col>
-            </Row>
+            <div>
+
+            </div>
         );
 
         return (
-            <div className={"collection-item " + (!this.props.editLink ? 'unclickable' : '')}>
-                {this.props.editLink &&
-                <Link to={l10n.formatString(routes.EVENTS_EDIT, this.props.id)} href="#">
-                    {content}
-                </Link>
-                }
+            <div className="collection-item avatar unclickable">
 
-                {!this.props.editLink &&
-                <a href="javascript:;">
-                    {content}
-                </a>
+                <DateTimeBox className="circle" dateTime={this.props.startDate}/>
 
-                }
+                <h4>{this.props.name}</h4>
+                <p>{this.props.venue.name}</p>
+
+                <FixedActionButton>
+                    {this.props.editLink &&
+                    <li>
+                        <Link
+                            className="btn-floating blue btn-flat"
+                            to={l10n.formatString(routes.EVENTS_EDIT, this.props.id)}
+                            href="#">
+                            <Icon>mode_edit</Icon>
+                        </Link>
+                    </li>
+                    }
+
+                    <li>
+                        <Link
+                            className="btn-floating amber btn-flat"
+                            to={l10n.formatString(routes.EVENTS_EDIT, this.props.id)}
+                            href="#">
+                            <Icon>email</Icon>
+                        </Link>
+                    </li>
+                </FixedActionButton>
+
+
             </div>
         );
     }

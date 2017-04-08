@@ -6832,18 +6832,41 @@ h4 {
 .side-nav .collapsible-body > ul > li > a {
   padding-left: 50px; }
 
-.collection-item.unclickable a {
-  cursor: default; }
-
-.collection-item .row {
-  margin: 0; }
-
-.collection-item .collection-image img {
-  max-width: 200px;
-  width: 100%; }
-
-.collection-item p {
-  color: #222; }
+.collection .collection-item {
+  padding: 15px 20px; }
+  .collection .collection-item h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.8em; }
+  .collection .collection-item.unclickable a {
+    cursor: default; }
+  .collection .collection-item.avatar {
+    min-height: 77px; }
+  .collection .collection-item .row {
+    margin: 0; }
+  .collection .collection-item .collection-image img {
+    max-width: 200px;
+    width: 100%; }
+  .collection .collection-item .secondary-content {
+    position: relative !important;
+    right: 0 !important; }
+    .collection .collection-item .secondary-content .fixed-action-btn {
+      position: absolute;
+      right: 0; }
+      .collection .collection-item .secondary-content .fixed-action-btn ul {
+        top: 0;
+        right: 30px; }
+        .collection .collection-item .secondary-content .fixed-action-btn ul li {
+          margin-top: 12px; }
+    .collection .collection-item .secondary-content a + a {
+      margin-left: 10px !important; }
+  .collection .collection-item.avatar .datetime-box.circle {
+    text-align: center;
+    width: 55px;
+    height: 55px;
+    left: 9px; }
+  .collection .collection-item p {
+    color: #222; }
 
 ul.collection {
   margin-top: 0; }
@@ -6881,12 +6904,13 @@ nav {
   padding: 5px; }
 
 .datetime-box span {
+  color: #2196F3;
   display: block;
   font-size: 12px;
-  line-height: 0.4em; }
+  line-height: 1.2em; }
   .datetime-box span.month-day {
-    font-size: 2.5em;
-    line-height: 1.2em; }
+    font-size: 2em;
+    line-height: 0.9em; }
 
 .side-nav .collapsible-header, .side-nav.fixed .collapsible-header {
   padding: 0 32px; }
