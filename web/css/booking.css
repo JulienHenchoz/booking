@@ -6944,3 +6944,6 @@ nav {
 .booking-loader .preloader-wrapper {
   position: relative;
   margin-left: 0; }
+
+.bookings-page .reload-block {
+  height: auto; }

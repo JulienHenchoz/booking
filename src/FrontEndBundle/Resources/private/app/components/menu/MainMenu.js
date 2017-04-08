@@ -16,7 +16,6 @@ export default class MainMenu extends React.Component {
                             background: '/img/background.png',
                         }} />
 
-                    <NavLink to={routes.VENUES_LIST} icon="business">{l10n.venues_title}</NavLink>
 
                     <li className="no-padding">
                         <ul className="collapsible collapsible-accordion">
@@ -33,6 +32,8 @@ export default class MainMenu extends React.Component {
                             </li>
                         </ul>
                     </li>
+
+                    <NavLink to={routes.VENUES_LIST} icon="business">{l10n.venues_title}</NavLink>
                 </SideNav>
             </div>
         );

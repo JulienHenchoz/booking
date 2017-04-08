@@ -114,15 +114,22 @@ class BookingsList extends React.Component {
         const itemList = this.props.items.map(function (booking) {
             return (<BookingListItem editLink={true} key={booking.id} {...booking} />);
         });
-        let body = (
-            <Collection>
-                {itemList}
-            </Collection>
-        );
+        let body = '';
+        if (itemList.length) {
+            body = (
+                <div>
+                    {itemList.length &&
+                    <Collection>
+                        {itemList}
+                    </Collection>
+                    }
+                </div>
+            );
+        }
 
         return (
-            <div>
-                <FixedNavBar title={l10n.bookings_title} showAddBtn={true} addRoute={routes.BOOKINGS_ADD}/>
+            <div className="bookings-page">
+                <FixedNavBar title={l10n.bookings_title} showAddBtn={true} addRoute={l10n.formatString(routes.BOOKINGS_ADD, this.props.currentEvent)}/>
 
                 {!this.props.fetchingEvent && this.props.eventItem &&
                 <div>
@@ -162,7 +169,7 @@ class BookingsList extends React.Component {
                 }
 
                 {this.props.fetching &&
-                    <Loader />
+                <Loader />
                 }
 
                 {this.props.error && !this.props.fetching &&

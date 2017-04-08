@@ -10,7 +10,6 @@ import * as utils from '../../utils/utils';
 import FormNavBar from '../menu/FormNavBar';
 
 import moment from 'moment';
-import DateTime from '../fields/DateTime';
 import * as actions from '../../actions/bookingsActions';
 import * as venuesActions from '../../actions/venuesActions';
 import ConfirmModal from "../utils/ConfirmModal";
@@ -35,10 +34,7 @@ class BookingForm extends React.Component {
      */
     constructor(props) {
         super(props);
-        this.state = {
-            dateTimeFormat: 'DD.MM.YYYY HH:mm',
-            defaultDateTime: moment({hour: 20}),
-        };
+        this.state = {};
         this.state = Object.assign(this.state, {
             fields: this.getEmptyFields(),
             errors: this.getEmptyFields(),
@@ -50,7 +46,7 @@ class BookingForm extends React.Component {
      * @param e
      */
     onSubmit(e) {
-        e.prbookingDefault();
+        e.preventDefault();
         let item = this.props.item;
 
         // Get any validations errors using validate.js
@@ -87,7 +83,7 @@ class BookingForm extends React.Component {
      * @param e
      */
     onRemove(e) {
-        e.prbookingDefault();
+        e.preventDefault();
         this.props.dispatch(actions.removeBooking(this.props.item.id));
     }
 
@@ -100,33 +96,6 @@ class BookingForm extends React.Component {
         newState.fields[e.target.name] = e.target.value;
         this.setState(newState);
         this.props.dispatch(actions.editBooking(e.target.name, e.target.value));
-    }
-
-    onVenueSelectChange(e) {
-        let venueId = e.target.value;
-        let venue = this.props.venues.filter(function (venue) {
-            return venue.id == venueId;
-        });
-        if (venue.length) {
-            this.onChange({
-               target: {
-                   name: 'venue',
-                   value: venue[0],
-               }
-            });
-        }
-    }
-
-    /**
-     * Update the start date
-     * @param newDate
-     */
-    onStartDateChange(newDate) {
-        let fieldName = 'startDate';
-        let newState = Object.assign({}, this.state);
-        newState.fields[fieldName] = newDate;
-        this.setState(newState);
-        this.props.dispatch(actions.editBooking(fieldName, newDate));
     }
 
     /**
@@ -184,40 +153,20 @@ class BookingForm extends React.Component {
         )
     }
 
-    getVenueSelect() {
-        // Display the list
-        if (this.props.venues !== undefined) {
-            const itemList = this.props.venues.map(function (venue) {
-                return (<option key={venue.id} value={venue.id}>{venue.name}</option>);
-            });
-
-            return (
-                <Input
-                    s={12}
-                    type='select'
-                    name="venue"
-                    error={this.state.errors['venue.id'] ? this.state.errors['venue.id'] : ''}
-                    value={this.state.fields.venue ? this.state.fields.venue.id : ''}
-                    onChange={this.onVenueSelectChange.bind(this)}
-                    label={l10n.fields.bookings.venue}>
-                    <option value="" disabled>{l10n.venue_select_default}</option>
-                    {itemList}
-                </Input>
-            );
-        }
-    }
-
     /**
      * Initial state for the form fields and errors
-     * @returns {{name: string, capacity: string, address: string, phone: string, website: string, image: string}}
+     * @returns {{firstName: string, lastName: string, nbExpected: number, email: string, phone: string, subscribedToNewsletter: boolean, showedUp: boolean, subscribeDate}}
      */
     getEmptyFields() {
         return {
-            name: '',
-            startDate: moment({hour: 20}),
-            description: '',
-            image: '',
-            venue: ''
+            firstName: '',
+            lastName: '',
+            nbExpected: 1,
+            email: '',
+            phone: '',
+            subscribedToNewsletter: false,
+            showedUp: false,
+            subscribeDate: moment(),
         };
     }
 
@@ -250,11 +199,6 @@ class BookingForm extends React.Component {
     componentWillMount() {
         if (this.props.match.params.bookingId !== undefined) {
             this.props.dispatch(actions.fetchBooking(this.props.match.params.bookingId));
-        }
-
-        // If we don't have any loaded venues, fetch them to populate our venues list
-        if (this.props.venues === undefined || this.props.venues.length === 0) {
-            this.props.dispatch(venuesActions.fetchVenues());
         }
     }
 
@@ -289,7 +233,7 @@ class BookingForm extends React.Component {
             <div>
                 {this.props.saveSuccess &&
                     <Redirect to={{
-                        pathname: routes.BOOKINGS_LIST
+                        pathname: l10n.formatString(routes.BOOKINGS_LIST, this.props.eventItem.id)
                     }}/>
                 }
                 {this.props.fetching &&
@@ -305,7 +249,7 @@ class BookingForm extends React.Component {
 
                 <FormNavBar
                     title={this.getTitle()}
-                    icon="booking"
+                    icon="email"
                     showRemoveBtn={!this.isNew()}
                     onValidate={this.onSubmit.bind(this)}
                     onRemove={this.onRemove.bind(this)}
@@ -314,19 +258,12 @@ class BookingForm extends React.Component {
                 <form id="booking-form" style={{opacity: this.props.fetching ? 0.3 : 1}}
                       onSubmit={this.onSubmit.bind(this)}>
                     <Row>
-                        {this.getTextInput('name')}
-                        {this.getVenueSelect()}
+                        {this.getTextInput('firstName')}
+                        {this.getTextInput('lastName')}
+                        {this.getTextInput('nbExpected')}
+                        {this.getTextInput('email')}
+                        {this.getTextInput('phone')}
 
-                        <DateTime
-                            fieldName="startDate"
-                            value={this.state.fields.startDate ? this.state.fields.startDate : this.state.defaultDateTime}
-                            onChange={this.onStartDateChange.bind(this)}
-                            error={this.state.errors.startDate}
-                            label={l10n.fields.bookings.startDate}
-                        />
-
-                        {this.getTextInput('description', 'textarea')}
-                        {this.getTextInput('image')}
                     </Row>
                     <Row>
                         <input type="submit" className="hide"/>
@@ -343,6 +280,7 @@ BookingForm.propTypes = propTypes;
 export default connect((state) => {
     return Object.assign({}, {
         item: state.bookings.item,
+        eventItem: state.bookings.eventItem,
         venues: state.venues.items,
         dispatch: state.bookings.dispatch,
         fetching: state.bookings.fetching || state.venues.fetching,

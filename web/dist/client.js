@@ -32993,11 +32993,6 @@ var MainMenu = function (_React$Component) {
                             background: '/img/background.png'
                         } }),
                     _react2.default.createElement(
-                        _NavLink2.default,
-                        { to: routes.VENUES_LIST, icon: 'business' },
-                        _localization2.default.venues_title
-                    ),
-                    _react2.default.createElement(
                         'li',
                         { className: 'no-padding' },
                         _react2.default.createElement(
@@ -33036,6 +33031,11 @@ var MainMenu = function (_React$Component) {
                                 )
                             )
                         )
+                    ),
+                    _react2.default.createElement(
+                        _NavLink2.default,
+                        { to: routes.VENUES_LIST, icon: 'business' },
+                        _localization2.default.venues_title
                     )
                 )
             );
@@ -58636,10 +58636,6 @@ var _moment = __webpack_require__(0);
 
 var _moment2 = _interopRequireDefault(_moment);
 
-var _DateTime = __webpack_require__(540);
-
-var _DateTime2 = _interopRequireDefault(_DateTime);
-
 var _bookingsActions = __webpack_require__(543);
 
 var actions = _interopRequireWildcard(_bookingsActions);
@@ -58689,10 +58685,7 @@ var BookingForm = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (BookingForm.__proto__ || Object.getPrototypeOf(BookingForm)).call(this, props));
 
-        _this.state = {
-            dateTimeFormat: 'DD.MM.YYYY HH:mm',
-            defaultDateTime: (0, _moment2.default)({ hour: 20 })
-        };
+        _this.state = {};
         _this.state = Object.assign(_this.state, {
             fields: _this.getEmptyFields(),
             errors: _this.getEmptyFields()
@@ -58709,7 +58702,7 @@ var BookingForm = function (_React$Component) {
     _createClass(BookingForm, [{
         key: "onSubmit",
         value: function onSubmit(e) {
-            e.prbookingDefault();
+            e.preventDefault();
             var item = this.props.item;
 
             // Get any validations errors using validate.js
@@ -58743,7 +58736,7 @@ var BookingForm = function (_React$Component) {
     }, {
         key: "onRemove",
         value: function onRemove(e) {
-            e.prbookingDefault();
+            e.preventDefault();
             this.props.dispatch(actions.removeBooking(this.props.item.id));
         }
 
@@ -58759,37 +58752,6 @@ var BookingForm = function (_React$Component) {
             newState.fields[e.target.name] = e.target.value;
             this.setState(newState);
             this.props.dispatch(actions.editBooking(e.target.name, e.target.value));
-        }
-    }, {
-        key: "onVenueSelectChange",
-        value: function onVenueSelectChange(e) {
-            var venueId = e.target.value;
-            var venue = this.props.venues.filter(function (venue) {
-                return venue.id == venueId;
-            });
-            if (venue.length) {
-                this.onChange({
-                    target: {
-                        name: 'venue',
-                        value: venue[0]
-                    }
-                });
-            }
-        }
-
-        /**
-         * Update the start date
-         * @param newDate
-         */
-
-    }, {
-        key: "onStartDateChange",
-        value: function onStartDateChange(newDate) {
-            var fieldName = 'startDate';
-            var newState = Object.assign({}, this.state);
-            newState.fields[fieldName] = newDate;
-            this.setState(newState);
-            this.props.dispatch(actions.editBooking(fieldName, newDate));
         }
 
         /**
@@ -58857,53 +58819,24 @@ var BookingForm = function (_React$Component) {
                 label: _localization2.default.fields.bookings[fieldName],
                 value: this.state.fields[fieldName] ? this.state.fields[fieldName] : '' });
         }
-    }, {
-        key: "getVenueSelect",
-        value: function getVenueSelect() {
-            // Display the list
-            if (this.props.venues !== undefined) {
-                var itemList = this.props.venues.map(function (venue) {
-                    return _react2.default.createElement(
-                        "option",
-                        { key: venue.id, value: venue.id },
-                        venue.name
-                    );
-                });
-
-                return _react2.default.createElement(
-                    _reactMaterialize.Input,
-                    {
-                        s: 12,
-                        type: "select",
-                        name: "venue",
-                        error: this.state.errors['venue.id'] ? this.state.errors['venue.id'] : '',
-                        value: this.state.fields.venue ? this.state.fields.venue.id : '',
-                        onChange: this.onVenueSelectChange.bind(this),
-                        label: _localization2.default.fields.bookings.venue },
-                    _react2.default.createElement(
-                        "option",
-                        { value: "", disabled: true },
-                        _localization2.default.venue_select_default
-                    ),
-                    itemList
-                );
-            }
-        }
 
         /**
          * Initial state for the form fields and errors
-         * @returns {{name: string, capacity: string, address: string, phone: string, website: string, image: string}}
+         * @returns {{firstName: string, lastName: string, nbExpected: number, email: string, phone: string, subscribedToNewsletter: boolean, showedUp: boolean, subscribeDate}}
          */
 
     }, {
         key: "getEmptyFields",
         value: function getEmptyFields() {
             return {
-                name: '',
-                startDate: (0, _moment2.default)({ hour: 20 }),
-                description: '',
-                image: '',
-                venue: ''
+                firstName: '',
+                lastName: '',
+                nbExpected: 1,
+                email: '',
+                phone: '',
+                subscribedToNewsletter: false,
+                showedUp: false,
+                subscribeDate: (0, _moment2.default)()
             };
         }
 
@@ -58949,11 +58882,6 @@ var BookingForm = function (_React$Component) {
             if (this.props.match.params.bookingId !== undefined) {
                 this.props.dispatch(actions.fetchBooking(this.props.match.params.bookingId));
             }
-
-            // If we don't have any loaded venues, fetch them to populate our venues list
-            if (this.props.venues === undefined || this.props.venues.length === 0) {
-                this.props.dispatch(venuesActions.fetchVenues());
-            }
         }
 
         /**
@@ -58996,7 +58924,7 @@ var BookingForm = function (_React$Component) {
                 "div",
                 null,
                 this.props.saveSuccess && _react2.default.createElement(_reactRouterDom.Redirect, { to: {
-                        pathname: routes.BOOKINGS_LIST
+                        pathname: _localization2.default.formatString(routes.BOOKINGS_LIST, this.props.eventItem.id)
                     } }),
                 this.props.fetching && _react2.default.createElement(_Loader2.default, null),
                 _react2.default.createElement(_ConfirmModal2.default, { title: _localization2.default.delete_booking_title,
@@ -59007,7 +58935,7 @@ var BookingForm = function (_React$Component) {
                     itemId: this.props.item.id ? this.props.item.id : null }),
                 _react2.default.createElement(_FormNavBar2.default, {
                     title: this.getTitle(),
-                    icon: "booking",
+                    icon: "email",
                     showRemoveBtn: !this.isNew(),
                     onValidate: this.onSubmit.bind(this),
                     onRemove: this.onRemove.bind(this)
@@ -59019,17 +58947,11 @@ var BookingForm = function (_React$Component) {
                     _react2.default.createElement(
                         _reactMaterialize.Row,
                         null,
-                        this.getTextInput('name'),
-                        this.getVenueSelect(),
-                        _react2.default.createElement(_DateTime2.default, {
-                            fieldName: "startDate",
-                            value: this.state.fields.startDate ? this.state.fields.startDate : this.state.defaultDateTime,
-                            onChange: this.onStartDateChange.bind(this),
-                            error: this.state.errors.startDate,
-                            label: _localization2.default.fields.bookings.startDate
-                        }),
-                        this.getTextInput('description', 'textarea'),
-                        this.getTextInput('image')
+                        this.getTextInput('firstName'),
+                        this.getTextInput('lastName'),
+                        this.getTextInput('nbExpected'),
+                        this.getTextInput('email'),
+                        this.getTextInput('phone')
                     ),
                     _react2.default.createElement(
                         _reactMaterialize.Row,
@@ -59049,6 +58971,7 @@ BookingForm.propTypes = propTypes;
 exports.default = (0, _reactRedux.connect)(function (state) {
     return Object.assign({}, {
         item: state.bookings.item,
+        eventItem: state.bookings.eventItem,
         venues: state.venues.items,
         dispatch: state.bookings.dispatch,
         fetching: state.bookings.fetching || state.venues.fetching,
@@ -59248,16 +59171,23 @@ var BookingsList = function (_React$Component) {
             var itemList = this.props.items.map(function (booking) {
                 return _react2.default.createElement(_BookingListItem2.default, _extends({ editLink: true, key: booking.id }, booking));
             });
-            var body = _react2.default.createElement(
-                _reactMaterialize.Collection,
-                null,
-                itemList
-            );
+            var body = '';
+            if (itemList.length) {
+                body = _react2.default.createElement(
+                    "div",
+                    null,
+                    itemList.length && _react2.default.createElement(
+                        _reactMaterialize.Collection,
+                        null,
+                        itemList
+                    )
+                );
+            }
 
             return _react2.default.createElement(
                 "div",
-                null,
-                _react2.default.createElement(_FixedNavBar2.default, { title: _localization2.default.bookings_title, showAddBtn: true, addRoute: routes.BOOKINGS_ADD }),
+                { className: "bookings-page" },
+                _react2.default.createElement(_FixedNavBar2.default, { title: _localization2.default.bookings_title, showAddBtn: true, addRoute: _localization2.default.formatString(routes.BOOKINGS_ADD, this.props.currentEvent) }),
                 !this.props.fetchingEvent && this.props.eventItem && _react2.default.createElement(
                     "div",
                     null,
@@ -59517,16 +59447,6 @@ exports.default = {
         }
     },
     nbExpected: {
-        presence: {
-            message: _localization2.default.validation.required
-        },
-        numericality: {
-            onlyInteger: true,
-            greaterThan: 0,
-            message: _localization2.default.validation.numberGreaterThanZero
-        }
-    },
-    'event.id': {
         presence: {
             message: _localization2.default.validation.required
         },
