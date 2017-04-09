@@ -134,7 +134,7 @@ class BookingsList extends React.Component {
                     showAddBtn={true}
                     addRoute={l10n.formatString(routes.BOOKINGS_ADD, this.props.eventItem ? this.props.eventItem.id : '')}/>
 
-                {!this.props.fetchingEvent &&!this.props.fetching && this.props.eventItem &&
+                {!this.props.fetchingEvent && this.props.eventItem &&
                 <div>
                     <h1>
                         {this.props.eventItem.name}

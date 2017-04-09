@@ -6945,7 +6945,7 @@ nav {
     font-size: 11px; }
 
 .progress .determinate {
-  transition: width 2s; }
+  transition: width 3s; }
 
 .bookings-page .reload-block {
   height: auto; }

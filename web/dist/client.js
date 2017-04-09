@@ -59282,7 +59282,7 @@ var BookingsList = function (_React$Component) {
                     title: _localization2.default.bookings_title,
                     showAddBtn: true,
                     addRoute: _localization2.default.formatString(routes.BOOKINGS_ADD, this.props.eventItem ? this.props.eventItem.id : '') }),
-                !this.props.fetchingEvent && !this.props.fetching && this.props.eventItem && _react2.default.createElement(
+                !this.props.fetchingEvent && this.props.eventItem && _react2.default.createElement(
                     "div",
                     null,
                     _react2.default.createElement(
