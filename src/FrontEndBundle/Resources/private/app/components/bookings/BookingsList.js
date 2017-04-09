@@ -1,14 +1,13 @@
 import React, {PropTypes} from "react"
 import {connect} from "react-redux"
-import {Collection, Icon, Button, Row, Col} from 'react-materialize';
+import {Collection, Row} from 'react-materialize';
 import {CSSTransition, transit} from "react-css-transition";
 import Loader from '../utils/Loader'
 import Reload from '../utils/Reload'
-import {Link} from 'react-router-dom';
 import l10n from "../../l10n/localization";
 import * as routes from '../../constants/routes';
 import moment from 'moment';
-import CountUp from 'react-countup';
+import HighlightBox from '../utils/HighlightBox';
 
 import * as actions from '../../actions/bookingsActions';
 
@@ -149,24 +148,9 @@ class BookingsList extends React.Component {
                     </div>
 
                     <Row>
-                        <Col s={4} className="highlight-box">
-                            <span className="number">
-                                <CountUp start={0} end={this.props.eventItem.bookingsCount}/>
-                            </span>
-                            <span className="label">{l10n.highlight_bookings}</span>
-                        </Col>
-                        <Col s={4} className="highlight-box">
-                            <span className="number">
-                                <CountUp start={0} end={this.props.eventItem.peopleCount}/>
-                            </span>
-                            <span className="label">{l10n.highlight_people}</span>
-                        </Col>
-                        <Col s={4} className="highlight-box">
-                            <span className={"number " + this.getOccupancyClass()}>
-                                <CountUp start={0} end={this.props.eventItem.seatsLeft} />
-                            </span>
-                            <span className="label">{l10n.hightlight_seats_left}</span>
-                        </Col>
+                        <HighlightBox value={this.props.eventItem.bookingsCount} label={l10n.highlight_bookings} />
+                        <HighlightBox value={this.props.eventItem.peopleCount} label={l10n.highlight_people} />
+                        <HighlightBox colorClassName={this.getOccupancyClass()} value={this.props.eventItem.seatsLeft} label={l10n.hightlight_seats_left} />
                     </Row>
                 </div>
                 }

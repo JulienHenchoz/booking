@@ -9,6 +9,7 @@ import VenuesList from "../components/venues/VenuesList";
 
 import EventsForm from "../components/events/EventsForm";
 import EventsList from "../components/events/EventsList";
+import Dashboard from "../components/dashboard/Dashboard";
 import PastEventsList from "../components/events/PastEventsList";
 
 import BookingsList from "../components/bookings/BookingsList";
@@ -26,7 +27,8 @@ class App extends React.Component {
                 <div>
                     <MainMenu />
                     <main>
-                        <Route path="/" exact={true} component={VenuesList}/>
+
+                        <Route path="/" exact={true} component={Dashboard}/>
                         <Route path={routes.VENUES_LIST} exact={true} component={VenuesList}/>
                         <Route path={routes.VENUES_ADD} exact={true} component={VenuesForm}/>
                         <Route path={l10n.formatString(routes.VENUES_EDIT, ':venueId')} component={VenuesForm}/>
@@ -36,10 +38,12 @@ class App extends React.Component {
                         <Route path={routes.EVENTS_ADD} exact={true} component={EventsForm}/>
                         <Route path={l10n.formatString(routes.EVENTS_EDIT, ':eventId')} component={EventsForm}/>
 
-                        <Route exact={true} path={l10n.formatString(routes.BOOKINGS_LIST, ':eventId')} component={BookingsList}/>
-                        <Route exact={true} path={l10n.formatString(routes.BOOKINGS_ADD, ':eventId')} component={BookingsForm}/>
-                        <Route exact={true} path={l10n.formatString(routes.BOOKINGS_EDIT, ':eventId', ':bookingId')} component={BookingsForm}/>
-
+                        <Route exact={true} path={l10n.formatString(routes.BOOKINGS_LIST, ':eventId')}
+                               component={BookingsList}/>
+                        <Route exact={true} path={l10n.formatString(routes.BOOKINGS_ADD, ':eventId')}
+                               component={BookingsForm}/>
+                        <Route exact={true} path={l10n.formatString(routes.BOOKINGS_EDIT, ':eventId', ':bookingId')}
+                               component={BookingsForm}/>
                     </main>
 
                 </div>

@@ -8,7 +8,7 @@ class Loader extends React.Component {
 
     render() {
         return (
-            <Preloader size='big'/>
+            <Preloader className="global" size='big'/>
 
         );
     }

@@ -2305,7 +2305,7 @@ td, th {
       min-height: 84px;
       padding-left: 72px;
       position: relative; }
-      .collection .collection-item.avatar .circle {
+      .collection .collection-item.avatar > .circle {
         position: absolute;
         width: 42px;
         height: 42px;
@@ -6836,7 +6836,7 @@ h4 {
   padding-left: 50px; }
 
 .collection .collection-item {
-  transition: box-shadow 1s;
+  transition: box-shadow 0.3s, opacity 0.3s;
   padding: 15px 20px; }
   .collection .collection-item h4 {
     margin-top: 0;
@@ -6853,19 +6853,21 @@ h4 {
   .collection .collection-item .collection-image img {
     max-width: 200px;
     width: 100%; }
-  .collection .collection-item .secondary-content {
+  .collection .collection-item .secondary-content:not(.loading) {
     position: relative !important;
     right: 0 !important; }
-    .collection .collection-item .secondary-content .fixed-action-btn {
-      position: absolute;
-      right: 0; }
-      .collection .collection-item .secondary-content .fixed-action-btn ul {
-        top: 0;
-        right: 30px; }
-        .collection .collection-item .secondary-content .fixed-action-btn ul li {
-          margin-top: 12px; }
-    .collection .collection-item .secondary-content a + a {
-      margin-left: 10px !important; }
+  .collection .collection-item .secondary-content .preloader-wrapper {
+    top: 8px; }
+  .collection .collection-item .secondary-content .fixed-action-btn {
+    position: absolute;
+    right: 0; }
+    .collection .collection-item .secondary-content .fixed-action-btn ul {
+      top: 0;
+      right: 30px; }
+      .collection .collection-item .secondary-content .fixed-action-btn ul li {
+        margin-top: 12px; }
+  .collection .collection-item .secondary-content a + a {
+    margin-left: 10px !important; }
   .collection .collection-item.avatar .datetime-box.circle {
     text-align: center;
     width: 55px;
@@ -6877,14 +6879,14 @@ h4 {
 ul.collection {
   margin-top: 0; }
 
-.preloader-wrapper {
+.preloader-wrapper.global {
   position: absolute;
   left: 50%;
   top: 50%;
   margin-top: 32px;
   margin-left: -32px; }
   @media (min-width: 767px) {
-    .preloader-wrapper {
+    .preloader-wrapper.global {
       margin-left: 120px; } }
 
 nav {
@@ -6945,7 +6947,7 @@ nav {
     font-size: 11px; }
 
 .progress .determinate {
-  transition: width 3s; }
+  transition: width 4s; }
 
 .bookings-page .reload-block {
   height: auto; }
@@ -6963,3 +6965,17 @@ nav {
 .fadein-leave.fadein-leave-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in; }
+
+.slidein-enter {
+  transform: translateX(100%); }
+
+.slidein-enter.slidein-enter-active {
+  transform: translateX(0);
+  transition: transform 2s; }
+
+.slidein-leave {
+  transform: translateX(0); }
+
+.slidein-leave.slidein-leave-active {
+  transform: translateX(100%);
+  transition: transform 2s; }

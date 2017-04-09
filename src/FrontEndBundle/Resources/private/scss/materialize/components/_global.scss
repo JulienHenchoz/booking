@@ -507,7 +507,7 @@ td, th{
       padding-left: 72px;
       position: relative;
 
-      .circle {
+      & > .circle {
         position: absolute;
         width: 42px;
         height: 42px;

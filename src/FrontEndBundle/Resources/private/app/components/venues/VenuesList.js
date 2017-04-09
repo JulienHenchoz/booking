@@ -7,7 +7,6 @@ import Reload from '../utils/Reload'
 import {Link} from 'react-router-dom';
 import l10n from "../../l10n/localization";
 import * as routes from '../../constants/routes';
-import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import * as actions from '../../actions/venuesActions';
 
@@ -58,23 +57,19 @@ class VenuesList extends React.Component {
             return (<VenueListItem key={venue.id} {...venue} />);
         });
         let body = (
-
             <Collection>
                 {itemList}
             </Collection>
+
         );
 
         return (
             <div>
                 <FixedNavBar title={l10n.venues_title} showAddBtn={true} addRoute={routes.VENUES_ADD}/>
 
-                <CSSTransitionGroup
-                    transitionName="fadein"
-                    transitionEnterTimeout={200}
-                    transitionLeaveTimeout={0}>
                 {this.props.fetching &&
 
-                    <Loader />
+                <Loader />
                 }
 
                 {this.props.error && !this.prop.fetching &&
@@ -84,7 +79,6 @@ class VenuesList extends React.Component {
                 {!this.props.fetching && this.state.finishedRefresh && !this.props.error &&
                 body
                 }
-                </CSSTransitionGroup>
             </div>
         )
     }

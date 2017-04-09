@@ -8,6 +8,8 @@ import l10n from '../../l10n/localization';
 import FixedActionButton from '../menu/FixedActionButton';
 import * as actions from '../../actions/bookingsActions';
 import moment from 'moment';
+import {Preloader} from 'react-materialize';
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 const propTypes = {
     dispatch: PropTypes.func.isRequired,
@@ -29,7 +31,7 @@ class BookingListItem extends React.Component {
 
     render() {
         return (
-            <div className={"collection-item avatar unclickable " + (this.props.showedUp ? 'status-ok' : '')}>
+            <li style={{ opacity: this.props.changingStatus ? 0.3 : 1 }} className={"collection-item avatar unclickable " + (this.props.showedUp ? 'status-ok' : '')}>
                 <div className="datetime-box booking circle">
                     <span className="month-day">{this.props.nbExpected}</span>
                     <span className="year">{l10n.fields.bookings.persons}</span>
@@ -41,6 +43,14 @@ class BookingListItem extends React.Component {
                     <p>{moment(this.props.subscribeDate).format('D MMM YYYY à HH:mm')}</p>
                 </a>
 
+
+                {this.props.changingStatus &&
+                <div className="secondary-content loading">
+                    <Preloader size='small'/>
+                </div>
+                }
+
+                {!this.props.changingStatus &&
                 <FixedActionButton>
                     {this.props.editLink &&
                     <li>
@@ -53,9 +63,9 @@ class BookingListItem extends React.Component {
                     </li>
                     }
                 </FixedActionButton>
+                }
 
-
-            </div>
+            </li>
         );
     }
 }

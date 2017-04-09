@@ -80,7 +80,7 @@ h4 {
 
 .collection {
   .collection-item {
-    transition: box-shadow 1s;
+    transition: box-shadow 0.3s, opacity 0.3s;
     padding: 15px 20px;
     h4 {
       margin-top: 0;
@@ -109,8 +109,14 @@ h4 {
     }
 
     .secondary-content {
+      &:not(.loading) {
       position: relative !important;
       right: 0 !important;
+      }
+      .preloader-wrapper {
+        top: 8px;
+      }
+
       .fixed-action-btn {
         position: absolute;
         right: 0;
@@ -146,7 +152,7 @@ ul.collection {
   margin-top: 0;
 }
 
-.preloader-wrapper {
+.preloader-wrapper.global {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -233,7 +239,7 @@ nav {
 
 .progress {
   .determinate {
-    transition: width 3s;
+    transition: width 4s;
   }
 }
 
@@ -259,4 +265,23 @@ nav {
 .fadein-leave.fadein-leave-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
+}
+
+
+.slidein-enter {
+  transform: translateX(100%);
+}
+
+.slidein-enter.slidein-enter-active {
+  transform: translateX(0);
+  transition: transform 2s;
+}
+
+.slidein-leave {
+  transform: translateX(0);
+}
+
+.slidein-leave.slidein-leave-active {
+  transform: translateX(100%);
+  transition: transform 2s;
 }

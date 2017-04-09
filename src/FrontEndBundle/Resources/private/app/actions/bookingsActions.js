@@ -127,7 +127,9 @@ export function validationError(errors) {
 export function changingStatus(bookingId) {
     return {
         type: types.CHANGING_BOOKING_STATUS,
-        payload: bookingId
+        payload: {
+            bookingId: bookingId
+        }
     };
 }
 
@@ -135,12 +137,14 @@ export function changeStatusError(bookingId) {
     utils.toastError(l10n.change_booking_status_error);
     return {
         type: types.CHANGE_BOOKING_STATUS_ERROR,
-        payload: bookingId
+        payload: {
+            bookingId: bookingId
+        }
     };
 }
 
 export function changeStatusSuccess(bookingId, newStatus) {
-    utils.toastSuccess(l10n.change_booking_status_success);
+    //utils.toastSuccess(l10n.change_booking_status_success);
     return {
         type: types.CHANGE_BOOKING_STATUS_SUCCESS,
         payload: {
@@ -152,7 +156,7 @@ export function changeStatusSuccess(bookingId, newStatus) {
 
 export function changeStatus(bookingId) {
     return dispatch => {
-        dispatch(changingStatus());
+        dispatch(changingStatus(bookingId));
         // TODO : Dispatch an error if the item has no id
         fetch(l10n.formatString(ajaxRoutes.CHANGE_BOOKING_STATUS, bookingId), {
             method: "POST",
