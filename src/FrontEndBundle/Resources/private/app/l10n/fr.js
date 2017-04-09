@@ -10,8 +10,8 @@ export default {
     events_title: 'Événements',
     incoming_events_title: 'Événements à venir',
     past_events_title: 'Événements passés',
-    incoming_events: 'À venir',
-    past_events: 'Passés',
+    incoming_events: 'Événements à venir',
+    past_events: 'Événements passés',
     event: 'événement',
     events: 'événements',
 
@@ -46,6 +46,8 @@ export default {
 
     change_booking_status_error: 'Impossible de changer le statut de la réservation.',
     change_booking_status_success: 'Statut de la réservation modifié avec succès !',
+
+    dashboard_fetch_error: 'Impossible de récupérer les données du dashboard !',
 
     no_events: 'Aucun événement à afficher pour le moment.',
     no_bookings: 'Aucune réservation pour le moment.',
@@ -116,4 +118,9 @@ export default {
     hightlight_seats_left: 'places restantes',
 
     dashboard: 'Dashboard',
+    dashboard_incoming_events: 'spectacles à venir',
+    dashboard_total_bookings: 'réservations au total',
+    dashboard_expected_people: 'personnes attendues',
+    dashboard_average_filling: 'remplissage moyen',
+    dashboard_latest_bookings: 'Dernières réservations',
 };

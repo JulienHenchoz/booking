@@ -10,6 +10,8 @@ import * as routes from '../../constants/routes';
 import moment from 'moment';
 import FixedNavBar from '../menu/FixedNavBar';
 import HighlightBox from '../utils/HighlightBox';
+import * as actions from '../../actions/dashboardActions';
+import BookingListItem from './BookingListItem';
 
 const propTypes = {
     dispatch: PropTypes.func.isRequired,
@@ -27,32 +29,88 @@ class Dashboard extends React.Component {
      * When the component is loaded, automatically fetch events via AJAX
      */
     componentWillMount() {
+        this.props.dispatch(actions.fetchDashboard());
+    }
+
+    onReload(e) {
+        e.preventDefault();
+        actions.fetchDashboard();
     }
 
     render() {
+        let latestBookings = '';
+
+        if (this.props.data && this.props.data.latestBookings) {
+            // Display the list
+            const itemList = this.props.data.latestBookings.map(function (booking) {
+                return (<BookingListItem editLink={false} key={booking.id} {...booking} />);
+            });
+            if (itemList.length) {
+                latestBookings = (
+                    <div>
+                        {itemList.length &&
+                        <Collection>
+                            {itemList}
+                        </Collection>
+                        }
+                    </div>
+                );
+            }
+        }
+
         return (
             <div className="dashboard">
                 <FixedNavBar
                     title={l10n.dashboard}
                     showAddBtn={false}/>
 
-                <Row>
-                    <HighlightBox colSize={6} value={5} label="spectacles à venir" />
-                    <HighlightBox colSize={6} value={18} label="réservations au total" />
-                    <HighlightBox colSize={6} value={62} label="personnes attendues" />
-                    <HighlightBox colSize={6} value={44} suffix="%" label="remplissage moyen" />
-                </Row>
+                {this.props.fetching &&
+                <Loader/>
+                }
 
+                {this.props.error && !this.props.fetching &&
+                <Reload onClick={this.onReload.bind(this)} error={this.props.error}/>
+                }
 
-                <Row>
-                    <Col s={12}>
-                        <h5>Dernières réservations</h5>
-                    </Col>
-                </Row>
-                <Collection>
-                    <li className="collection-item avatar">
-                    </li>
-                </Collection>
+                {!this.props.fetching && !this.props.error && this.props.data &&
+                <div>
+                    <Row>
+                        <HighlightBox
+                            colSize={6}
+                            value={this.props.data.incomingEvents ? this.props.data.incomingEvents : 0}
+                            label={l10n.dashboard_incoming_events}
+                        />
+                        <HighlightBox
+                            colSize={6}
+                            value={this.props.data.totalBookings}
+                            label={l10n.dashboard_total_bookings}
+                        />
+                        <HighlightBox
+                            colSize={6}
+                            value={this.props.data.totalPersons}
+                            label={l10n.dashboard_expected_people}
+                        />
+                        <HighlightBox
+                            colSize={6}
+                            value={this.props.data.averageFillingPercentage}
+                            label={l10n.dashboard_average_filling}
+                        />
+                    </Row>
+
+                    {latestBookings &&
+                    <div>
+                        <Row>
+                            <Col s={12}>
+                                <h3>{l10n.dashboard_latest_bookings}</h3>
+                            </Col>
+                            {latestBookings}
+
+                        </Row>
+                    </div>
+                    }
+                </div>
+                }
+
             </div>
         );
     }

@@ -18,6 +18,19 @@ import BookingsForm from "../components/bookings/BookingsForm";
 
 import * as routes from '../constants/routes';
 import l10n from '../l10n/localization';
+import {Redirect} from 'react-router-dom';
+
+const RedirectToDashboard = () => {
+    return (
+        <Redirect to={{
+            pathname: routes.DASHBOARD
+        }}
+
+        />
+    );
+};
+
+
 
 class App extends React.Component {
     render() {
@@ -28,7 +41,8 @@ class App extends React.Component {
                     <MainMenu />
                     <main>
 
-                        <Route path="/" exact={true} component={Dashboard}/>
+                        <Route path="/" exact={true} component={RedirectToDashboard}/>
+                        <Route path={routes.DASHBOARD} exact={true} component={Dashboard}/>
                         <Route path={routes.VENUES_LIST} exact={true} component={VenuesList}/>
                         <Route path={routes.VENUES_ADD} exact={true} component={VenuesForm}/>
                         <Route path={l10n.formatString(routes.VENUES_EDIT, ':venueId')} component={VenuesForm}/>

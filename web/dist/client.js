@@ -6044,7 +6044,7 @@ var BOOKINGS_LIST = exports.BOOKINGS_LIST = '/bookings/{0}';
 var BOOKINGS_ADD = exports.BOOKINGS_ADD = '/bookings/event/{0}/add/';
 var BOOKINGS_EDIT = exports.BOOKINGS_EDIT = '/bookings/event/{0}/show/{1}';
 
-var DASHBOARD = exports.DASHBOARD = '/';
+var DASHBOARD = exports.DASHBOARD = '/dashboard/';
 
 /***/ }),
 /* 17 */
@@ -8166,6 +8166,10 @@ var CHANGE_BOOKING_STATUS = exports.CHANGE_BOOKING_STATUS = 'CHANGE_BOOKING_STAT
 var CHANGE_BOOKING_STATUS_SUCCESS = exports.CHANGE_BOOKING_STATUS_SUCCESS = 'CHANGE_BOOKING_STATUS_SUCCESS';
 var CHANGE_BOOKING_STATUS_ERROR = exports.CHANGE_BOOKING_STATUS_ERROR = 'CHANGE_BOOKING_STATUS_ERROR';
 var CHANGING_BOOKING_STATUS = exports.CHANGING_BOOKING_STATUS = 'CHANGING_BOOKING_STATUS';
+
+var LOADING_DASHBOARD = exports.LOADING_DASHBOARD = 'LOADING_DASHBOARD';
+var DASHBOARD_GET_ERROR = exports.DASHBOARD_GET_ERROR = 'DASHBOARD_LOADING_ERROR';
+var RECEIVE_DASHBOARD = exports.RECEIVE_DASHBOARD = 'RECEIVE_DASHBOARD';
 
 /***/ }),
 /* 35 */
@@ -12221,6 +12225,8 @@ var BOOKINGS_GET = exports.BOOKINGS_GET = '/api/bookings/get';
 var BOOKINGS_GET_BY_EVENT = exports.BOOKINGS_GET_BY_EVENT = '/api/bookings/getByEvent/{0}';
 var BOOKING_GET = exports.BOOKING_GET = '/api/bookings/get/{0}';
 var CHANGE_BOOKING_STATUS = exports.CHANGE_BOOKING_STATUS = '/api/bookings/updateStatus/{0}';
+
+var DASHBOARD_GET = exports.DASHBOARD_GET = '/api/dashboard/get/';
 
 /***/ }),
 /* 70 */
@@ -32966,6 +32972,14 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var RedirectToDashboard = function RedirectToDashboard() {
+    return _react2.default.createElement(_reactRouterDom.Redirect, { to: {
+            pathname: routes.DASHBOARD
+        }
+
+    });
+};
+
 var App = function (_React$Component) {
     _inherits(App, _React$Component);
 
@@ -32989,7 +33003,8 @@ var App = function (_React$Component) {
                     _react2.default.createElement(
                         "main",
                         null,
-                        _react2.default.createElement(_reactRouterDom.Route, { path: "/", exact: true, component: _Dashboard2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: "/", exact: true, component: RedirectToDashboard }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: routes.DASHBOARD, exact: true, component: _Dashboard2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: routes.VENUES_LIST, exact: true, component: _VenuesList2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: routes.VENUES_ADD, exact: true, component: _VenueForm2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: _localization2.default.formatString(routes.VENUES_EDIT, ':venueId'), component: _VenueForm2.default }),
@@ -33584,7 +33599,7 @@ var BookingForm = function (_React$Component) {
         key: "getFullName",
         value: function getFullName() {
             var fullName = '';
-            if (this.state.fields) {
+            if (this.state.fields && this.state.fields.lastName && this.state.fields.firstName) {
                 fullName = this.state.fields.lastName.toUpperCase() + ' ' + this.state.fields.firstName;
             }
             return fullName;
@@ -34912,44 +34927,14 @@ var MainMenu = function (_React$Component) {
                         _localization2.default.dashboard
                     ),
                     _react2.default.createElement(
-                        'li',
-                        { className: 'no-padding' },
-                        _react2.default.createElement(
-                            'ul',
-                            { className: 'collapsible collapsible-accordion' },
-                            _react2.default.createElement(
-                                'li',
-                                null,
-                                _react2.default.createElement(
-                                    'a',
-                                    { className: 'collapsible-header' },
-                                    _localization2.default.events_title,
-                                    _react2.default.createElement(
-                                        'i',
-                                        { className: 'material-icons' },
-                                        'event'
-                                    )
-                                ),
-                                _react2.default.createElement(
-                                    'div',
-                                    { className: 'collapsible-body' },
-                                    _react2.default.createElement(
-                                        'ul',
-                                        null,
-                                        _react2.default.createElement(
-                                            _NavLink2.default,
-                                            { to: routes.EVENTS_LIST, icon: 'fast_forward' },
-                                            _localization2.default.incoming_events
-                                        ),
-                                        _react2.default.createElement(
-                                            _NavLink2.default,
-                                            { to: routes.EVENTS_LIST_PAST, icon: 'history' },
-                                            _localization2.default.past_events
-                                        )
-                                    )
-                                )
-                            )
-                        )
+                        _NavLink2.default,
+                        { to: routes.EVENTS_LIST, icon: 'event' },
+                        _localization2.default.incoming_events
+                    ),
+                    _react2.default.createElement(
+                        _NavLink2.default,
+                        { to: routes.EVENTS_LIST_PAST, icon: 'history' },
+                        _localization2.default.past_events
                     ),
                     _react2.default.createElement(
                         _NavLink2.default,
@@ -34991,15 +34976,16 @@ var NavLink = function NavLink(_ref) {
     var to = _ref.to,
         _children = _ref.children,
         icon = _ref.icon,
-        collapsible = _ref.collapsible;
+        collapsible = _ref.collapsible,
+        index = _ref.index;
     return _react2.default.createElement(_reactRouterDom.Route, { path: to, children: function children(_ref2) {
             var match = _ref2.match;
             return _react2.default.createElement(
                 'li',
-                { role: 'presentation', className: match ? 'active' : '' },
+                { role: 'presentation', className: match && !index ? 'active' : '' },
                 _react2.default.createElement(
-                    _reactRouterDom.Link,
-                    { to: to, className: collapsible ? 'collapsible-header' : '' },
+                    _reactRouterDom.NavLink,
+                    { exact: true, to: to, className: collapsible ? 'collapsible-header' : '' },
                     _react2.default.createElement(
                         'i',
                         { className: 'material-icons' },
@@ -35695,8 +35681,8 @@ exports.default = {
     events_title: 'Événements',
     incoming_events_title: 'Événements à venir',
     past_events_title: 'Événements passés',
-    incoming_events: 'À venir',
-    past_events: 'Passés',
+    incoming_events: 'Événements à venir',
+    past_events: 'Événements passés',
     event: 'événement',
     events: 'événements',
 
@@ -35731,6 +35717,8 @@ exports.default = {
 
     change_booking_status_error: 'Impossible de changer le statut de la réservation.',
     change_booking_status_success: 'Statut de la réservation modifié avec succès !',
+
+    dashboard_fetch_error: 'Impossible de récupérer les données du dashboard !',
 
     no_events: 'Aucun événement à afficher pour le moment.',
     no_bookings: 'Aucune réservation pour le moment.',
@@ -35800,7 +35788,12 @@ exports.default = {
     highlight_people: 'personnes',
     hightlight_seats_left: 'places restantes',
 
-    dashboard: 'Dashboard'
+    dashboard: 'Dashboard',
+    dashboard_incoming_events: 'spectacles à venir',
+    dashboard_total_bookings: 'réservations au total',
+    dashboard_expected_people: 'personnes attendues',
+    dashboard_average_filling: 'remplissage moyen',
+    dashboard_latest_bookings: 'Dernières réservations'
 };
 
 /***/ }),
@@ -36109,12 +36102,17 @@ var _bookings = __webpack_require__(296);
 
 var _bookings2 = _interopRequireDefault(_bookings);
 
+var _dashboard = __webpack_require__(563);
+
+var _dashboard2 = _interopRequireDefault(_dashboard);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var rootReducer = (0, _redux.combineReducers)({
     venues: _venues2.default,
     events: _events2.default,
-    bookings: _bookings2.default
+    bookings: _bookings2.default,
+    dashboard: _dashboard2.default
 });
 
 exports.default = rootReducer;
@@ -60323,6 +60321,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(1);
@@ -60365,6 +60365,14 @@ var _HighlightBox = __webpack_require__(560);
 
 var _HighlightBox2 = _interopRequireDefault(_HighlightBox);
 
+var _dashboardActions = __webpack_require__(561);
+
+var actions = _interopRequireWildcard(_dashboardActions);
+
+var _BookingListItem = __webpack_require__(562);
+
+var _BookingListItem2 = _interopRequireDefault(_BookingListItem);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -60398,41 +60406,91 @@ var Dashboard = function (_React$Component) {
 
     _createClass(Dashboard, [{
         key: "componentWillMount",
-        value: function componentWillMount() {}
+        value: function componentWillMount() {
+            this.props.dispatch(actions.fetchDashboard());
+        }
+    }, {
+        key: "onReload",
+        value: function onReload(e) {
+            e.preventDefault();
+            actions.fetchDashboard();
+        }
     }, {
         key: "render",
         value: function render() {
+            var latestBookings = '';
+
+            if (this.props.data && this.props.data.latestBookings) {
+                // Display the list
+                var itemList = this.props.data.latestBookings.map(function (booking) {
+                    return _react2.default.createElement(_BookingListItem2.default, _extends({ editLink: false, key: booking.id }, booking));
+                });
+                if (itemList.length) {
+                    latestBookings = _react2.default.createElement(
+                        "div",
+                        null,
+                        itemList.length && _react2.default.createElement(
+                            _reactMaterialize.Collection,
+                            null,
+                            itemList
+                        )
+                    );
+                }
+            }
+
             return _react2.default.createElement(
                 "div",
                 { className: "dashboard" },
                 _react2.default.createElement(_FixedNavBar2.default, {
                     title: _localization2.default.dashboard,
                     showAddBtn: false }),
-                _react2.default.createElement(
-                    _reactMaterialize.Row,
-                    null,
-                    _react2.default.createElement(_HighlightBox2.default, { colSize: 6, value: 5, label: "spectacles \xE0 venir" }),
-                    _react2.default.createElement(_HighlightBox2.default, { colSize: 6, value: 18, label: "r\xE9servations au total" }),
-                    _react2.default.createElement(_HighlightBox2.default, { colSize: 6, value: 62, label: "personnes attendues" }),
-                    _react2.default.createElement(_HighlightBox2.default, { colSize: 6, value: 44, suffix: "%", label: "remplissage moyen" })
-                ),
-                _react2.default.createElement(
-                    _reactMaterialize.Row,
+                this.props.fetching && _react2.default.createElement(_Loader2.default, null),
+                this.props.error && !this.props.fetching && _react2.default.createElement(_Reload2.default, { onClick: this.onReload.bind(this), error: this.props.error }),
+                !this.props.fetching && !this.props.error && this.props.data && _react2.default.createElement(
+                    "div",
                     null,
                     _react2.default.createElement(
-                        _reactMaterialize.Col,
-                        { s: 12 },
+                        _reactMaterialize.Row,
+                        null,
+                        _react2.default.createElement(_HighlightBox2.default, {
+                            colSize: 6,
+                            value: this.props.data.incomingEvents ? this.props.data.incomingEvents : 0,
+                            label: _localization2.default.dashboard_incoming_events
+                        }),
+                        _react2.default.createElement(_HighlightBox2.default, {
+                            colSize: 6,
+                            value: this.props.data.totalBookings,
+                            label: _localization2.default.dashboard_total_bookings
+                        }),
+                        _react2.default.createElement(_HighlightBox2.default, {
+                            colSize: 6,
+                            value: this.props.data.totalPersons,
+                            label: _localization2.default.dashboard_expected_people
+                        }),
+                        _react2.default.createElement(_HighlightBox2.default, {
+                            colSize: 6,
+                            value: this.props.data.averageFillingPercentage,
+                            label: _localization2.default.dashboard_average_filling
+                        })
+                    ),
+                    latestBookings && _react2.default.createElement(
+                        "div",
+                        null,
                         _react2.default.createElement(
-                            "h5",
+                            _reactMaterialize.Row,
                             null,
-                            "Derni\xE8res r\xE9servations"
+                            _react2.default.createElement(
+                                _reactMaterialize.Col,
+                                { s: 12 },
+                                _react2.default.createElement(
+                                    "h3",
+                                    null,
+                                    _localization2.default.dashboard_latest_bookings
+                                )
+                            ),
+                            latestBookings
                         )
                     )
-                ),
-                _react2.default.createElement(
-                    _reactMaterialize.Collection,
-                    null,
-                    _react2.default.createElement("li", { className: "collection-item avatar" })
                 )
             );
         }
@@ -60492,6 +60550,253 @@ exports.default = function (_ref) {
         )
     );
 };
+
+/***/ }),
+/* 561 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.loadingDashboard = loadingDashboard;
+exports.receiveDashboard = receiveDashboard;
+exports.getError = getError;
+exports.fetchDashboard = fetchDashboard;
+
+var _actionTypes = __webpack_require__(34);
+
+var types = _interopRequireWildcard(_actionTypes);
+
+var _ajaxRoutes = __webpack_require__(69);
+
+var ajaxRoutes = _interopRequireWildcard(_ajaxRoutes);
+
+var _utils = __webpack_require__(35);
+
+var utils = _interopRequireWildcard(_utils);
+
+var _localization = __webpack_require__(8);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function loadingDashboard() {
+    return {
+        type: types.LOADING_DASHBOARD
+    };
+}
+
+function receiveDashboard(data) {
+    return {
+        type: types.RECEIVE_DASHBOARD,
+        payload: data
+    };
+}
+
+function getError(message) {
+    utils.toastError(message);
+    return {
+        type: types.DASHBOARD_GET_ERROR,
+        payload: message
+    };
+}
+function fetchDashboard() {
+    return function (dispatch) {
+        dispatch(loadingDashboard());
+        fetch(ajaxRoutes.DASHBOARD_GET).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            dispatch(receiveDashboard(json));
+        }).catch(function (e) {
+            dispatch(getError(_localization2.default.dashboard_fetch_error));
+        });
+    };
+}
+
+/***/ }),
+/* 562 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactMaterialize = __webpack_require__(10);
+
+var _reactRedux = __webpack_require__(14);
+
+var _reactRouterDom = __webpack_require__(12);
+
+var _routes = __webpack_require__(16);
+
+var routes = _interopRequireWildcard(_routes);
+
+var _localization = __webpack_require__(8);
+
+var _localization2 = _interopRequireDefault(_localization);
+
+var _FixedActionButton = __webpack_require__(66);
+
+var _FixedActionButton2 = _interopRequireDefault(_FixedActionButton);
+
+var _bookingsActions = __webpack_require__(65);
+
+var actions = _interopRequireWildcard(_bookingsActions);
+
+var _moment = __webpack_require__(0);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _CSSTransitionGroup = __webpack_require__(497);
+
+var _CSSTransitionGroup2 = _interopRequireDefault(_CSSTransitionGroup);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var propTypes = {
+    dispatch: _react.PropTypes.func.isRequired,
+    firstName: _react.PropTypes.string.isRequired,
+    lastName: _react.PropTypes.string.isRequired,
+    nbExpected: _react.PropTypes.number.isRequired,
+    email: _react.PropTypes.string.isRequired
+};
+
+var BookingListItem = function (_React$Component) {
+    _inherits(BookingListItem, _React$Component);
+
+    function BookingListItem(props) {
+        _classCallCheck(this, BookingListItem);
+
+        return _possibleConstructorReturn(this, (BookingListItem.__proto__ || Object.getPrototypeOf(BookingListItem)).call(this, props));
+    }
+
+    _createClass(BookingListItem, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "li",
+                { className: "collection-item avatar unclickable" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "datetime-box booking circle" },
+                    _react2.default.createElement(
+                        "span",
+                        { className: "month-day" },
+                        this.props.nbExpected
+                    ),
+                    _react2.default.createElement(
+                        "span",
+                        { className: "year" },
+                        _localization2.default.fields.bookings.persons
+                    )
+                ),
+                _react2.default.createElement(
+                    "h4",
+                    null,
+                    this.props.lastName.toUpperCase(),
+                    " ",
+                    this.props.firstName
+                ),
+                _react2.default.createElement(
+                    "p",
+                    null,
+                    this.props.event.name,
+                    " / ",
+                    (0, _moment2.default)(this.props.event.startDate).format('DD.MM.YYYY')
+                ),
+                _react2.default.createElement(
+                    "p",
+                    null,
+                    (0, _moment2.default)(this.props.subscribeDate).fromNow()
+                )
+            );
+        }
+    }]);
+
+    return BookingListItem;
+}(_react2.default.Component);
+
+BookingListItem.propTypes = propTypes;
+
+exports.default = (0, _reactRedux.connect)(function (store) {
+    return Object.assign({}, store.bookings);
+})(BookingListItem);
+
+/***/ }),
+/* 563 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = dashboard;
+
+var _actionTypes = __webpack_require__(34);
+
+var types = _interopRequireWildcard(_actionTypes);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var initialState = {
+    data: {},
+    fetching: false,
+    error: null
+};
+
+function dashboard() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+    var action = arguments[1];
+
+    var newState = Object.assign({}, state);
+
+    switch (action.type) {
+        /**
+         * Get actions
+         */
+        case types.DASHBOARD_GET_ERROR:
+            newState.error = action.payload;
+            newState.fetching = false;
+            newState.data = {};
+            break;
+        case types.LOADING_DASHBOARD:
+            newState.fetching = true;
+            newState.error = null;
+            break;
+        case types.RECEIVE_DASHBOARD:
+            newState.data = action.payload;
+            newState.fetching = false;
+            newState.error = null;
+            break;
+    }
+
+    return newState;
+}
 
 /***/ })
 /******/ ]);

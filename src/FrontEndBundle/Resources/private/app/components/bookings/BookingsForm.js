@@ -239,7 +239,7 @@ class BookingForm extends React.Component {
 
     getFullName() {
         let fullName = '';
-        if (this.state.fields) {
+        if (this.state.fields && this.state.fields.lastName && this.state.fields.firstName) {
             fullName = this.state.fields.lastName.toUpperCase() + ' ' + this.state.fields.firstName
         }
         return fullName;

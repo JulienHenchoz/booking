@@ -18,21 +18,9 @@ export default class MainMenu extends React.Component {
 
                     <NavLink to={routes.DASHBOARD} icon="dashboard">{l10n.dashboard}</NavLink>
 
-                    <li className="no-padding">
-                        <ul className="collapsible collapsible-accordion">
-                            <li>
-                                <a className="collapsible-header">
-                                    {l10n.events_title}<i className="material-icons">event</i>
-                                </a>
-                                <div className="collapsible-body">
-                                    <ul>
-                                        <NavLink to={routes.EVENTS_LIST} icon="fast_forward">{l10n.incoming_events}</NavLink>
-                                        <NavLink to={routes.EVENTS_LIST_PAST} icon="history">{l10n.past_events}</NavLink>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
+                    <NavLink to={routes.EVENTS_LIST} icon="event">{l10n.incoming_events}</NavLink>
+                    <NavLink to={routes.EVENTS_LIST_PAST} icon="history">{l10n.past_events}</NavLink>
+
 
                     <NavLink to={routes.VENUES_LIST} icon="business">{l10n.venues_title}</NavLink>
                 </SideNav>

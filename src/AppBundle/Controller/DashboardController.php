@@ -19,7 +19,6 @@ class DashboardController extends Controller
     /**
      * @Route("/api/dashboard/get/", name="api_dashboard_get")
      * @Method({"GET"})
-     * @param Request $request
      * @return JsonResponse
      */
     public function getAction()

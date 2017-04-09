@@ -226,7 +226,7 @@ abstract class AbstractApiController extends Controller
     {
         // TODO : Add used authentication to decide which group to display : public or authenticated
         return new JsonResponse(
-            $this->getSerializer()->serialize(
+            self::getSerializer()->serialize(
                 $data,
                 'json',
                 [
@@ -246,7 +246,7 @@ abstract class AbstractApiController extends Controller
     public function normalize($object)
     {
         // TODO : Add used authentication to decide which group to display : public or authenticated
-        return $this->getSerializer()->normalize(
+        return self::getSerializer()->normalize(
             $object,
             'json',
             [
@@ -255,7 +255,7 @@ abstract class AbstractApiController extends Controller
         );
     }
 
-    public function getSerializer()
+    public static function getSerializer()
     {
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $encoder = new JsonEncoder();
