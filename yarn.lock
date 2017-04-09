@@ -1026,6 +1026,10 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
+countup.js@1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/countup.js/-/countup.js-1.8.2.tgz#24504b4d60721e40c3b97d599202bd3c8919cff8"
+
 create-ecdh@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/create-ecdh/-/create-ecdh-4.0.0.tgz#888c723596cdf7612f6498233eebd7a35301737d"
@@ -2890,6 +2894,13 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-countup@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-countup/-/react-countup-2.0.3.tgz#c6c777f90782773ea6c2ec652dfcdbd6bceb1429"
+  dependencies:
+    countup.js "1.8.2"
+    react "15.4.2"
+
 react-css-transition@^0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/react-css-transition/-/react-css-transition-0.7.4.tgz#546682a6eac87c98f6333c49cbf2dd995a93de36"
@@ -2959,7 +2970,7 @@ react-router-redux:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/react-router-redux/-/react-router-redux-4.0.8.tgz#227403596b5151e182377dab835b5d45f0f8054e"
 
-react-transition-group@^1.0.0:
+react-transition-group, react-transition-group@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-1.1.1.tgz#f9d0f0dff82f52574fc5ab30684add24948d0f23"
   dependencies:
@@ -2967,7 +2978,7 @@ react-transition-group@^1.0.0:
     dom-helpers "^3.2.0"
     warning "^3.0.0"
 
-react@^15.4.2:
+react@^15.4.2, react@15.4.2:
   version "15.4.2"
   resolved "https://registry.yarnpkg.com/react/-/react-15.4.2.tgz#41f7991b26185392ba9bae96c8889e7e018397ef"
   dependencies:

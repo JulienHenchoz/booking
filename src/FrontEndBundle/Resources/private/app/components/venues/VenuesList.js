@@ -7,7 +7,7 @@ import Reload from '../utils/Reload'
 import {Link} from 'react-router-dom';
 import l10n from "../../l10n/localization";
 import * as routes from '../../constants/routes';
-
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import * as actions from '../../actions/venuesActions';
 
@@ -25,9 +25,11 @@ const propTypes = {
 class VenuesList extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {};
     }
 
     componentWillMount() {
+        this.state.finishedRefresh = false;
         this.fetchVenues();
     }
 
@@ -41,12 +43,22 @@ class VenuesList extends React.Component {
     }
 
 
+    /**
+     * When receiving new props, update current state to get new field values and errors
+     * @param nextProps
+     */
+    componentWillReceiveProps(nextProps) {
+        this.state.finishedRefresh = true;
+    }
+
+
     render() {
         // Display the list
-        const itemList = this.props.items.map(function (venue) {
+        let itemList = this.props.items.map(function (venue) {
             return (<VenueListItem key={venue.id} {...venue} />);
         });
         let body = (
+
             <Collection>
                 {itemList}
             </Collection>
@@ -54,19 +66,25 @@ class VenuesList extends React.Component {
 
         return (
             <div>
-                <FixedNavBar title={l10n.venues_title} showAddBtn={true} addRoute={routes.VENUES_ADD} />
+                <FixedNavBar title={l10n.venues_title} showAddBtn={true} addRoute={routes.VENUES_ADD}/>
 
+                <CSSTransitionGroup
+                    transitionName="fadein"
+                    transitionEnterTimeout={200}
+                    transitionLeaveTimeout={0}>
                 {this.props.fetching &&
+
                     <Loader />
                 }
 
-                {this.props.error && !this.prop.fetching  &&
-                    <Reload onClick={this.fetchVenues.bind(this)} error={this.props.error} />
+                {this.props.error && !this.prop.fetching &&
+                <Reload onClick={this.fetchVenues.bind(this)} error={this.props.error}/>
                 }
 
-                {!this.props.fetching && !this.props.error &&
-                    body
+                {!this.props.fetching && this.state.finishedRefresh && !this.props.error &&
+                body
                 }
+                </CSSTransitionGroup>
             </div>
         )
     }
