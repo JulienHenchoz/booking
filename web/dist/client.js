@@ -60373,6 +60373,8 @@ var _BookingListItem = __webpack_require__(562);
 
 var _BookingListItem2 = _interopRequireDefault(_BookingListItem);
 
+var _reactPercentageCircle = __webpack_require__(564);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -60453,23 +60455,32 @@ var Dashboard = function (_React$Component) {
                         _reactMaterialize.Row,
                         null,
                         _react2.default.createElement(_HighlightBox2.default, {
+                            icon: "event",
                             colSize: 6,
+                            className: "blue lighten-1 white-text",
                             value: this.props.data.incomingEvents ? this.props.data.incomingEvents : 0,
                             label: _localization2.default.dashboard_incoming_events
                         }),
                         _react2.default.createElement(_HighlightBox2.default, {
+                            icon: "email",
                             colSize: 6,
+                            className: "red lighten-1 white-text",
                             value: this.props.data.totalBookings,
                             label: _localization2.default.dashboard_total_bookings
                         }),
                         _react2.default.createElement(_HighlightBox2.default, {
+                            icon: "group",
                             colSize: 6,
+                            className: "green lighten-1 white-text",
                             value: this.props.data.totalPersons,
                             label: _localization2.default.dashboard_expected_people
                         }),
                         _react2.default.createElement(_HighlightBox2.default, {
+                            className: "orange lighten-1 white-text",
+                            icon: "trending_up",
                             colSize: 6,
                             value: this.props.data.averageFillingPercentage,
+                            suffix: "%",
                             label: _localization2.default.dashboard_average_filling
                         })
                     ),
@@ -60530,23 +60541,44 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = function (_ref) {
     var colSize = _ref.colSize,
+        className = _ref.className,
         colorClassName = _ref.colorClassName,
         value = _ref.value,
         label = _ref.label,
-        suffix = _ref.suffix;
+        suffix = _ref.suffix,
+        icon = _ref.icon;
     return _react2.default.createElement(
         _reactMaterialize.Col,
         { s: colSize ? colSize : 4, className: 'highlight-box' },
         _react2.default.createElement(
-            'span',
-            { className: "number " + (colorClassName ? colorClassName : '') },
-            _react2.default.createElement(_reactCountup2.default, { duration: 4, start: 0, end: value }),
-            suffix
-        ),
-        _react2.default.createElement(
-            'span',
-            { className: 'label' },
-            label
+            'div',
+            { className: "inner " + (className ? className : '') },
+            icon && _react2.default.createElement(
+                _reactMaterialize.Icon,
+                { large: true, className: 'left hide-on-med-and-down' },
+                icon
+            ),
+            icon && _react2.default.createElement(
+                _reactMaterialize.Icon,
+                { medium: true, className: 'left visible-on-med-only' },
+                icon
+            ),
+            icon && _react2.default.createElement(
+                _reactMaterialize.Icon,
+                { small: true, className: 'left hide-on-med-and-up' },
+                icon
+            ),
+            _react2.default.createElement(
+                'span',
+                { className: "number " + (colorClassName ? colorClassName : '') },
+                _react2.default.createElement(_reactCountup2.default, { duration: 4, start: 0, end: value }),
+                suffix
+            ),
+            _react2.default.createElement(
+                'span',
+                { className: 'label' },
+                label
+            )
         )
     );
 };
@@ -60797,6 +60829,180 @@ function dashboard() {
 
     return newState;
 }
+
+/***/ }),
+/* 564 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var React = __webpack_require__(1);
+var assign = __webpack_require__(565);
+
+var defaultProps = {
+  strokeWidth: 1,
+  strokeColor: '#3FC7FA',
+  trailWidth: 1,
+  trailColor: '#D9D9D9'
+};
+
+var Caption = React.createClass({
+  displayName: 'Caption',
+
+  render: function render() {
+    var props = assign({}, this.props);
+    var text = props.text || '';
+    var className = props.className;
+    delete props.text;
+    delete props.className;
+    return React.createElement(
+      'text',
+      _extends({}, props, { className: className }),
+      text
+    );
+  }
+});
+
+var Circle = React.createClass({
+  displayName: 'Circle',
+
+  render: function render() {
+    var props = assign({}, this.props);
+    var strokeWidth = props.strokeWidth;
+    var radius = 50 - strokeWidth / 2;
+    var pathString = 'M 50,50 m 0,-' + radius + '\n     a ' + radius + ',' + radius + ' 0 1 1 0,' + 2 * radius + '\n     a ' + radius + ',' + radius + ' 0 1 1 0,-' + 2 * radius;
+    var len = Math.PI * 2 * radius;
+    var pathStyle = {
+      'strokeDasharray': len + 'px ' + len + 'px',
+      'strokeDashoffset': (100 - props.percent) / 100 * len + 'px',
+      'transition': 'stroke-dashoffset 0.6s ease 0s, stroke 0.6s ease'
+    };
+    ['strokeWidth', 'strokeColor', 'trailWidth', 'trailColor'].forEach(function (item) {
+      if (item === 'trailWidth' && !props.trailWidth && props.strokeWidth) {
+        props.trailWidth = props.strokeWidth;
+        return;
+      }
+      if (!props[item]) {
+        props[item] = defaultProps[item];
+      }
+    });
+
+    return React.createElement(
+      'svg',
+      { className: 'rc-progress-circle', viewBox: '0 0 100 100' },
+      React.createElement('path', { className: 'rc-progress-circle-trail', d: pathString, stroke: props.trailColor,
+        strokeWidth: props.trailWidth, fillOpacity: '0' }),
+      React.createElement('path', { className: 'rc-progress-circle-path', d: pathString, strokeLinecap: 'round',
+        stroke: props.strokeColor, strokeWidth: props.strokeWidth, fillOpacity: '0', style: pathStyle }),
+      this.props.children
+    );
+  }
+});
+
+module.exports = {
+  Circle: Circle,
+  Caption: Caption
+};
+
+/***/ }),
+/* 565 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+
+/* eslint-disable no-unused-vars */
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !==
+				'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (err) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (getOwnPropertySymbols) {
+			symbols = getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+
 
 /***/ })
 /******/ ]);

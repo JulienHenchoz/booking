@@ -26,6 +26,13 @@ h1 {
   }
 }
 
+.visible-on-med-only {
+  display: none;
+  @media (min-width: 600px) and (max-width: 991px) {
+    display: block;
+  }
+}
+
 .hide-on-large-only {
   @media (min-width: 767px) {
     display: none !important;
@@ -288,9 +295,33 @@ nav {
 
 .dashboard {
   .highlight-box {
+    padding: 10px !important;
+    @media (max-width: 600px) {
+      padding: 5px !important;
+    }
+    .inner {
+      padding: 20px;
+    }
+
+    text-align: right;
     font-size: 1.6em;
+    @media (max-width: 950px) {
+      font-size: 1.3em;
+    }
+    @media (max-width: 767px) {
+      font-size: 10px;
+    }
+
+    .number {
+      @media (max-width: 600px) {
+        margin-bottom: 10px;
+      }
+    }
+
     .label {
       font-size: 14px;
+      line-height: 1.2em;
+      display: inline-block;
     }
   }
 }

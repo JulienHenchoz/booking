@@ -12,6 +12,7 @@ import FixedNavBar from '../menu/FixedNavBar';
 import HighlightBox from '../utils/HighlightBox';
 import * as actions from '../../actions/dashboardActions';
 import BookingListItem from './BookingListItem';
+import { Circle } from 'react-percentage-circle';
 
 const propTypes = {
     dispatch: PropTypes.func.isRequired,
@@ -75,24 +76,34 @@ class Dashboard extends React.Component {
                 {!this.props.fetching && !this.props.error && this.props.data &&
                 <div>
                     <Row>
+
                         <HighlightBox
+                            icon="event"
                             colSize={6}
+                            className="blue lighten-1 white-text"
                             value={this.props.data.incomingEvents ? this.props.data.incomingEvents : 0}
                             label={l10n.dashboard_incoming_events}
                         />
                         <HighlightBox
+                            icon="email"
                             colSize={6}
+                            className="red lighten-1 white-text"
                             value={this.props.data.totalBookings}
                             label={l10n.dashboard_total_bookings}
                         />
                         <HighlightBox
+                            icon="group"
                             colSize={6}
+                            className="green lighten-1 white-text"
                             value={this.props.data.totalPersons}
                             label={l10n.dashboard_expected_people}
                         />
                         <HighlightBox
+                            className="orange lighten-1 white-text"
+                            icon="trending_up"
                             colSize={6}
                             value={this.props.data.averageFillingPercentage}
+                            suffix="%"
                             label={l10n.dashboard_average_filling}
                         />
                     </Row>

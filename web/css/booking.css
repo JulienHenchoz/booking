@@ -6801,6 +6801,12 @@ h1 {
   .hide-on-small-only {
     display: none !important; } }
 
+.visible-on-med-only {
+  display: none; }
+  @media (min-width: 600px) and (max-width: 991px) {
+    .visible-on-med-only {
+      display: block; } }
+
 @media (min-width: 767px) {
   .hide-on-large-only {
     display: none !important; } }
@@ -6981,6 +6987,24 @@ nav {
   transition: transform 2s; }
 
 .dashboard .highlight-box {
+  padding: 10px !important;
+  text-align: right;
   font-size: 1.6em; }
+  @media (max-width: 600px) {
+    .dashboard .highlight-box {
+      padding: 5px !important; } }
+  .dashboard .highlight-box .inner {
+    padding: 20px; }
+  @media (max-width: 950px) {
+    .dashboard .highlight-box {
+      font-size: 1.3em; } }
+  @media (max-width: 767px) {
+    .dashboard .highlight-box {
+      font-size: 10px; } }
+  @media (max-width: 600px) {
+    .dashboard .highlight-box .number {
+      margin-bottom: 10px; } }
   .dashboard .highlight-box .label {
-    font-size: 14px; }
+    font-size: 14px;
+    line-height: 1.2em;
+    display: inline-block; }
