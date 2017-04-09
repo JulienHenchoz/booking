@@ -113,6 +113,7 @@ export default {
 
     highlight_bookings: 'réservations',
     highlight_people: 'personnes',
-    hightlight_seats_left: 'places restantes'
+    hightlight_seats_left: 'places restantes',
 
+    dashboard: 'Dashboard',
 };

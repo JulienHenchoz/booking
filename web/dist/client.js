@@ -6044,6 +6044,8 @@ var BOOKINGS_LIST = exports.BOOKINGS_LIST = '/bookings/{0}';
 var BOOKINGS_ADD = exports.BOOKINGS_ADD = '/bookings/event/{0}/add/';
 var BOOKINGS_EDIT = exports.BOOKINGS_EDIT = '/bookings/event/{0}/show/{1}';
 
+var DASHBOARD = exports.DASHBOARD = '/';
+
 /***/ }),
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -34905,6 +34907,11 @@ var MainMenu = function (_React$Component) {
                             background: '/img/background.png'
                         } }),
                     _react2.default.createElement(
+                        _NavLink2.default,
+                        { to: routes.DASHBOARD, icon: 'dashboard' },
+                        _localization2.default.dashboard
+                    ),
+                    _react2.default.createElement(
                         'li',
                         { className: 'no-padding' },
                         _react2.default.createElement(
@@ -35457,27 +35464,20 @@ var VenueListItem = function (_React$Component) {
     _createClass(VenueListItem, [{
         key: "render",
         value: function render() {
-            var image = _react2.default.createElement(
+            return _react2.default.createElement(
                 "div",
-                null,
-                _react2.default.createElement(
+                { className: "collection-item avatar" },
+                this.props.image !== undefined && this.props.image && _react2.default.createElement("img", { className: "circle responsive-img", src: this.props.image }),
+                this.props.image === undefined || !this.props.image && _react2.default.createElement(
                     _reactMaterialize.Icon,
                     { className: "large hide-on-small-only circle" },
                     "business"
                 ),
-                _react2.default.createElement(
+                this.props.image === undefined || !this.props.image && _react2.default.createElement(
                     _reactMaterialize.Icon,
                     { className: "medium hide-on-large-only circle" },
                     "business"
-                )
-            );
-            if (this.props.image !== undefined && this.props.image) {
-                image = _react2.default.createElement("img", { className: "circle responsive-img", src: this.props.image });
-            }
-            return _react2.default.createElement(
-                "div",
-                { className: "collection-item avatar" },
-                image,
+                ),
                 _react2.default.createElement(
                     _reactRouterDom.Link,
                     {
@@ -35798,8 +35798,9 @@ exports.default = {
 
     highlight_bookings: 'réservations',
     highlight_people: 'personnes',
-    hightlight_seats_left: 'places restantes'
+    hightlight_seats_left: 'places restantes',
 
+    dashboard: 'Dashboard'
 };
 
 /***/ }),
@@ -60352,9 +60353,17 @@ var _routes = __webpack_require__(16);
 
 var routes = _interopRequireWildcard(_routes);
 
+var _moment = __webpack_require__(0);
+
+var _moment2 = _interopRequireDefault(_moment);
+
 var _FixedNavBar = __webpack_require__(43);
 
 var _FixedNavBar2 = _interopRequireDefault(_FixedNavBar);
+
+var _HighlightBox = __webpack_require__(560);
+
+var _HighlightBox2 = _interopRequireDefault(_HighlightBox);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -60370,8 +60379,7 @@ var propTypes = {
     dispatch: _react.PropTypes.func.isRequired,
     items: _react.PropTypes.array,
     fetching: _react.PropTypes.bool,
-    error: _react.PropTypes.string,
-    active: _react.PropTypes.bool
+    error: _react.PropTypes.string
 };
 
 var Dashboard = function (_React$Component) {
@@ -60394,7 +60402,39 @@ var Dashboard = function (_React$Component) {
     }, {
         key: "render",
         value: function render() {
-            return _react2.default.createElement("div", null);
+            return _react2.default.createElement(
+                "div",
+                { className: "dashboard" },
+                _react2.default.createElement(_FixedNavBar2.default, {
+                    title: _localization2.default.dashboard,
+                    showAddBtn: false }),
+                _react2.default.createElement(
+                    _reactMaterialize.Row,
+                    null,
+                    _react2.default.createElement(_HighlightBox2.default, { colSize: 6, value: 5, label: "spectacles \xE0 venir" }),
+                    _react2.default.createElement(_HighlightBox2.default, { colSize: 6, value: 18, label: "r\xE9servations au total" }),
+                    _react2.default.createElement(_HighlightBox2.default, { colSize: 6, value: 62, label: "personnes attendues" }),
+                    _react2.default.createElement(_HighlightBox2.default, { colSize: 6, value: 44, suffix: "%", label: "remplissage moyen" })
+                ),
+                _react2.default.createElement(
+                    _reactMaterialize.Row,
+                    null,
+                    _react2.default.createElement(
+                        _reactMaterialize.Col,
+                        { s: 12 },
+                        _react2.default.createElement(
+                            "h5",
+                            null,
+                            "Derni\xE8res r\xE9servations"
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    _reactMaterialize.Collection,
+                    null,
+                    _react2.default.createElement("li", { className: "collection-item avatar" })
+                )
+            );
         }
     }]);
 
@@ -60434,14 +60474,16 @@ exports.default = function (_ref) {
     var colSize = _ref.colSize,
         colorClassName = _ref.colorClassName,
         value = _ref.value,
-        label = _ref.label;
+        label = _ref.label,
+        suffix = _ref.suffix;
     return _react2.default.createElement(
         _reactMaterialize.Col,
         { s: colSize ? colSize : 4, className: 'highlight-box' },
         _react2.default.createElement(
             'span',
-            { className: "number " + colorClassName },
-            _react2.default.createElement(_reactCountup2.default, { duration: 4, start: 0, end: value })
+            { className: "number " + (colorClassName ? colorClassName : '') },
+            _react2.default.createElement(_reactCountup2.default, { duration: 4, start: 0, end: value }),
+            suffix
         ),
         _react2.default.createElement(
             'span',

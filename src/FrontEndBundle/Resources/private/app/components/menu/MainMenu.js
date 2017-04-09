@@ -16,6 +16,7 @@ export default class MainMenu extends React.Component {
                             background: '/img/background.png',
                         }} />
 
+                    <NavLink to={routes.DASHBOARD} icon="dashboard">{l10n.dashboard}</NavLink>
 
                     <li className="no-padding">
                         <ul className="collapsible collapsible-accordion">

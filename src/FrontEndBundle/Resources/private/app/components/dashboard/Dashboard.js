@@ -7,15 +7,15 @@ import Reload from '../utils/Reload'
 import {Link} from 'react-router-dom';
 import l10n from "../../l10n/localization";
 import * as routes from '../../constants/routes';
-
+import moment from 'moment';
 import FixedNavBar from '../menu/FixedNavBar';
+import HighlightBox from '../utils/HighlightBox';
 
 const propTypes = {
     dispatch: PropTypes.func.isRequired,
     items: PropTypes.array,
     fetching: PropTypes.bool,
     error: PropTypes.string,
-    active: PropTypes.bool
 };
 
 class Dashboard extends React.Component {
@@ -31,8 +31,28 @@ class Dashboard extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="dashboard">
+                <FixedNavBar
+                    title={l10n.dashboard}
+                    showAddBtn={false}/>
 
+                <Row>
+                    <HighlightBox colSize={6} value={5} label="spectacles à venir" />
+                    <HighlightBox colSize={6} value={18} label="réservations au total" />
+                    <HighlightBox colSize={6} value={62} label="personnes attendues" />
+                    <HighlightBox colSize={6} value={44} suffix="%" label="remplissage moyen" />
+                </Row>
+
+
+                <Row>
+                    <Col s={12}>
+                        <h5>Dernières réservations</h5>
+                    </Col>
+                </Row>
+                <Collection>
+                    <li className="collection-item avatar">
+                    </li>
+                </Collection>
             </div>
         );
     }

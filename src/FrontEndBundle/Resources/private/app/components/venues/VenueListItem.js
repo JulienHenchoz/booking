@@ -22,18 +22,20 @@ class VenueListItem extends React.Component {
     }
 
     render() {
-        let image = (
-            <div>
-                <Icon className="large hide-on-small-only circle">business</Icon>
-                <Icon className="medium hide-on-large-only circle">business</Icon>
-            </div>
-        );
-        if (this.props.image !== undefined && this.props.image) {
-            image = <img className="circle responsive-img" src={this.props.image}/>;
-        }
         return (
             <div className="collection-item avatar">
-                {image}
+                {this.props.image !== undefined && this.props.image &&
+                    <img className="circle responsive-img" src={this.props.image}/>
+                }
+
+                {this.props.image === undefined || !this.props.image &&
+                <Icon className="large hide-on-small-only circle">business</Icon>
+                }
+                {this.props.image === undefined || !this.props.image &&
+                <Icon className="medium hide-on-large-only circle">business</Icon>
+                }
+
+
                 <Link
                     to={l10n.formatString(routes.VENUES_EDIT, this.props.id)}
                     href="#">
